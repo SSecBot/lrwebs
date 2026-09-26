@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# LrWebs çalışma zamanı verileri
+/data/messages.json
+/data/.session-secret
+/data/*.tmp
+/public/uploads/*.pdf

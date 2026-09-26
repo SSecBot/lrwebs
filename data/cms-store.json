@@ -1,0 +1,830 @@
+{
+  "general": {
+    "brandName": "LrWebs",
+    "siteTitle": "LrWebs — Modern Web Geliştirme ve Dijital Ajans",
+    "siteTagline": "Sürdürülebilir kod mimarisiyle modern web deneyimleri",
+    "siteDescription": "LrWebs; işletmeler, girişimler ve kurumlar için performans odaklı web uygulamaları, ölçeklenebilir sistem mimarileri ve modern kullanıcı deneyimleri tasarlayan bir web mühendisliği ajansıdır.",
+    "siteUrl": "http://localhost:3000",
+    "keywords": [
+      "web geliştirme",
+      "web tasarım ajansı",
+      "Next.js geliştirme",
+      "kurumsal web sitesi",
+      "UI/UX tasarım",
+      "sistem mimarisi",
+      "web performans optimizasyonu"
+    ],
+    "navigation": [
+      {
+        "id": "nav-services",
+        "label": "Hizmetlerimiz",
+        "href": "/services",
+        "visible": true
+      },
+      {
+        "id": "nav-portfolio",
+        "label": "Portfolyomuz",
+        "href": "/portfolio",
+        "visible": true
+      },
+      {
+        "id": "nav-pricing",
+        "label": "Fiyatlandırma",
+        "href": "/pricing",
+        "visible": true
+      },
+      {
+        "id": "nav-blog",
+        "label": "Blog",
+        "href": "/blog",
+        "visible": true
+      },
+      {
+        "id": "nav-about",
+        "label": "Hakkımızda",
+        "href": "/about",
+        "visible": true
+      },
+      {
+        "id": "nav-contact",
+        "label": "İletişim",
+        "href": "/contact",
+        "visible": true
+      },
+      {
+        "id": "nav-admin",
+        "label": "Admin Girişi",
+        "href": "/admin",
+        "visible": true
+      }
+    ],
+    "drawerNote": "Yeni bir proje mi planlıyorsunuz? Kapsamı birlikte netleştirelim.",
+    "footer": {
+      "description": "Performans odaklı web uygulamaları, sürdürülebilir kod mimarisi ve sade kullanıcı deneyimleri geliştiren bağımsız bir mühendislik ekibiyiz.",
+      "copyright": "© {year} LrWebs. Tüm hakları saklıdır.",
+      "privacyLabel": "Gizlilik Politikası",
+      "kvkkLabel": "KVKK Metni"
+    }
+  },
+  "contact": {
+    "email": "merhaba@lrwebs.com",
+    "phone": "+90 (212) 555 01 42",
+    "address": "Maslak Mah. Büyükdere Cad. No: 255, Sarıyer / İstanbul",
+    "responseNote": "Mesajlarınızı iş günlerinde genellikle 1 iş günü içinde yanıtlıyoruz.",
+    "businessHours": [
+      {
+        "id": "bh-1",
+        "day": "Pazartesi – Cuma",
+        "hours": "09:00 – 18:30"
+      },
+      {
+        "id": "bh-2",
+        "day": "Cumartesi",
+        "hours": "10:00 – 14:00 (randevulu)"
+      },
+      {
+        "id": "bh-3",
+        "day": "Pazar",
+        "hours": "Kapalı"
+      }
+    ],
+    "details": [
+      {
+        "id": "od-1",
+        "title": "Keşif Görüşmesi",
+        "description": "İlk görüşme 30–45 dakika sürer; hedeflerinizi, mevcut altyapınızı ve takvim beklentinizi birlikte değerlendiririz.",
+        "icon": "calendar"
+      },
+      {
+        "id": "od-2",
+        "title": "Çalışma Modeli",
+        "description": "Uzaktan ve hibrit çalışıyoruz. İstanbul içindeki toplantılar için ofisimizde ya da yerinizde buluşabiliriz.",
+        "icon": "globe"
+      },
+      {
+        "id": "od-3",
+        "title": "Teklif Süreci",
+        "description": "Keşif görüşmesinin ardından kapsam dokümanı ve kalem bazlı teklif genellikle 3–5 iş günü içinde paylaşılır.",
+        "icon": "file-text"
+      }
+    ],
+    "socials": [
+      {
+        "id": "so-1",
+        "platform": "github",
+        "label": "GitHub",
+        "url": "https://github.com",
+        "visible": true
+      },
+      {
+        "id": "so-2",
+        "platform": "linkedin",
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com",
+        "visible": true
+      },
+      {
+        "id": "so-3",
+        "platform": "x",
+        "label": "X",
+        "url": "https://x.com",
+        "visible": true
+      },
+      {
+        "id": "so-4",
+        "platform": "instagram",
+        "label": "Instagram",
+        "url": "https://www.instagram.com",
+        "visible": true
+      }
+    ],
+    "form": {
+      "nameLabel": "Ad Soyad",
+      "namePlaceholder": "Adınız ve soyadınız",
+      "emailLabel": "E-posta",
+      "emailPlaceholder": "ornek@sirketiniz.com",
+      "messageLabel": "Proje Detayları",
+      "messagePlaceholder": "Projenizin amacı, kapsamı ve tahmini takvimi hakkında kısaca bilgi verin.",
+      "consentText": "Formu göndererek kişisel verilerimin KVKK Aydınlatma Metni kapsamında işlenmesini kabul ediyorum.",
+      "submitLabel": "Mesajı Gönder",
+      "successMessage": "Mesajınız alındı. En kısa sürede sizinle iletişime geçeceğiz.",
+      "errorMessage": "Mesaj gönderilemedi. Lütfen alanları kontrol edip tekrar deneyin."
+    }
+  },
+  "hero": {
+    "eyebrow": "Web Mühendisliği · Tasarım · Mimari",
+    "headline": "Web altyapınızı sürdürülebilir kod mimarisiyle",
+    "headlineAccent": "yeniden inşa ediyoruz.",
+    "description": "Next.js, TypeScript ve modern bulut altyapılarıyla hızlı, erişilebilir ve bakımı kolay web uygulamaları geliştiriyoruz. Her projede ölçülebilir performans ve sade bir kullanıcı deneyimi hedefliyoruz.",
+    "primaryCta": {
+      "label": "Detaylı Bilgi",
+      "href": "/contact"
+    },
+    "secondaryCta": {
+      "label": "Portföyümüzü İnceleyin",
+      "href": "/portfolio"
+    },
+    "badges": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Node.js",
+      "PostgreSQL"
+    ],
+    "blur": {
+      "enabled": true,
+      "mode": "cursor",
+      "intensity": 8,
+      "radius": 180,
+      "autoRevealSeconds": 6,
+      "hint": "İmleci başlığın üzerinde gezdirin ya da dokunun"
+    },
+    "devices": {
+      "defaultActive": "desktop",
+      "previewPath": "/",
+      "showLabels": true,
+      "hint": "Öne getirmek için arkadaki cihazlara tıklayın",
+      "labels": {
+        "desktop": "Masaüstü",
+        "tablet": "Tablet",
+        "mobile": "Mobil"
+      }
+    }
+  },
+  "stats": {
+    "eyebrow": "Güncel Durum",
+    "title": "Rakamlarla mühendislik pratiğimiz",
+    "items": [
+      {
+        "id": "st-1",
+        "value": "12",
+        "suffix": "",
+        "label": "Aktif Geliştirme Süreçleri",
+        "description": "Şu anda tasarım, geliştirme veya bakım aşamasında yürüttüğümüz müşteri projeleri.",
+        "icon": "activity"
+      },
+      {
+        "id": "st-2",
+        "value": "48",
+        "suffix": "+",
+        "label": "Optimize Edilmiş Web Altyapıları",
+        "description": "Performans, erişilebilirlik ve güvenlik iyileştirmesi yaparak yayına aldığımız web projeleri.",
+        "icon": "gauge"
+      }
+    ]
+  },
+  "sections": {
+    "services": {
+      "eyebrow": "Hizmetlerimiz",
+      "title": "Uçtan uca web mühendisliği",
+      "description": "Keşif ve tasarımdan canlıya alma ve bakıma kadar her aşamayı aynı ekip içinde, şeffaf bir süreçle yürütüyoruz.",
+      "linkLabel": "Tüm hizmetleri görüntüle",
+      "linkHref": "/services"
+    },
+    "about": {
+      "eyebrow": "Mühendislik Yaklaşımımız",
+      "title": "Önce mimari, sonra piksel",
+      "description": "Kısa vadeli çözümler yerine yıllarca büyüyebilecek sistemler kurmayı tercih ediyoruz.",
+      "linkLabel": "Hikâyemizi okuyun",
+      "linkHref": "/about"
+    },
+    "projects": {
+      "eyebrow": "Seçili Projeler",
+      "title": "Son dönemde yayına aldıklarımız",
+      "description": "Farklı sektörlerden işletmeler için geliştirdiğimiz web uygulamalarından bir seçki.",
+      "linkLabel": "Portfolyonun tamamı",
+      "linkHref": "/portfolio"
+    },
+    "blog": {
+      "eyebrow": "Blog",
+      "title": "Teknik notlar ve mimari yazılar",
+      "description": "Proje deneyimlerimizden çıkardığımız pratik dersleri ve mühendislik notlarını paylaşıyoruz.",
+      "linkLabel": "Tüm yazılar",
+      "linkHref": "/blog"
+    },
+    "contact": {
+      "eyebrow": "İletişim",
+      "title": "Projenizi konuşalım",
+      "description": "Kısa bir mesajla başlayın; ihtiyaçlarınızı netleştirmek için sizinle bir keşif görüşmesi planlayalım.",
+      "linkLabel": "İletişim sayfasına git",
+      "linkHref": "/contact"
+    }
+  },
+  "pages": {
+    "services": {
+      "eyebrow": "Hizmetlerimiz",
+      "title": "İhtiyacınıza göre ölçeklenen hizmetler",
+      "description": "Her hizmeti tek başına ya da bütünleşik bir proje sürecinin parçası olarak sunuyoruz. Detayları incelemek için bir karta tıklayın.",
+      "metaTitle": "Hizmetlerimiz",
+      "metaDescription": "Web geliştirme, sistem mimarisi, UI/UX tasarım, performans optimizasyonu ve bakım hizmetlerimizi inceleyin."
+    },
+    "portfolio": {
+      "eyebrow": "Portfolyomuz",
+      "title": "Gerçek ihtiyaçlar için geliştirilmiş projeler",
+      "description": "Farklı sektörlerde üstlendiğimiz projeleri kategoriye göre filtreleyin ve detaylarını inceleyin.",
+      "metaTitle": "Portfolyomuz",
+      "metaDescription": "LrWebs tarafından geliştirilen web uygulamaları, kurumsal siteler ve dijital ürünlerden seçkiler."
+    },
+    "blog": {
+      "eyebrow": "Blog",
+      "title": "Mühendislik notları",
+      "description": "Web mimarisi, performans, erişilebilirlik ve ürün geliştirme üzerine yazılar.",
+      "metaTitle": "Blog",
+      "metaDescription": "Next.js, web performansı, sistem mimarisi ve kullanıcı deneyimi üzerine teknik yazılar."
+    },
+    "pricing": {
+      "eyebrow": "Fiyatlandırma",
+      "title": "Projenize özel tahmini bütçe",
+      "description": "Temel paketi seçin, ihtiyaç duyduğunuz modülleri ekleyin ve tahmini bütçe aralığını anında görün. Kesin teklif, keşif görüşmesinin ardından hazırlanır.",
+      "metaTitle": "Fiyatlandırma",
+      "metaDescription": "Web projeniz için etkileşimli paket oluşturucu ile tahmini bütçe aralığını hesaplayın."
+    },
+    "about": {
+      "eyebrow": "Hakkımızda",
+      "title": "Mühendislik disipliniyle çalışan bir web ekibi",
+      "description": "Kod kalitesini, şeffaf iletişimi ve uzun vadeli sürdürülebilirliği merkeze alan bir çalışma kültürü inşa ediyoruz.",
+      "metaTitle": "Hakkımızda",
+      "metaDescription": "LrWebs'in mühendislik hikâyesi, kullandığı teknolojiler ve çalışma değerleri."
+    },
+    "contact": {
+      "eyebrow": "İletişim",
+      "title": "Bir sonraki adımı birlikte planlayalım",
+      "description": "Projenizle ilgili birkaç satır yazmanız yeterli. Mesajınızı inceleyip size uygun bir görüşme zamanı önereceğiz.",
+      "metaTitle": "İletişim",
+      "metaDescription": "LrWebs ile iletişime geçin: proje talebi, çalışma saatleri ve iletişim bilgileri."
+    }
+  },
+  "services": [
+    {
+      "id": "sv-web",
+      "slug": "web-uygulama-gelistirme",
+      "title": "Web Uygulama Geliştirme",
+      "icon": "code",
+      "summary": "Next.js ve TypeScript ile hızlı, güvenli ve bakımı kolay web uygulamaları ile kurumsal siteler geliştiriyoruz.",
+      "content": "## Kapsam\nKurumsal web sitelerinden müşteri panellerine, rezervasyon sistemlerinden içerik platformlarına kadar farklı ölçeklerde web uygulamaları geliştiriyoruz. Her projeye ihtiyaç analiziyle başlıyor, ardından bileşen tabanlı ve test edilebilir bir kod tabanı kuruyoruz.\n\n## Teknik Yaklaşım\nSunucu tarafı render, statik üretim ve artımlı yeniden doğrulama gibi teknikleri sayfa türüne göre birlikte kullanıyoruz. Böylece hem arama motorları hem de kullanıcılar için hızlı açılan sayfalar elde ediyoruz.\n\n- Tip güvenli TypeScript kod tabanı\n- Erişilebilirlik standartlarına uygun arayüz bileşenleri\n- Otomatik testler ve sürekli entegrasyon hatları\n\n## Teslimat\nProje sonunda kaynak kodu, dağıtım dokümantasyonu ve yönetim paneli kullanım kılavuzunu eksiksiz olarak teslim ediyoruz.",
+      "features": [
+        "Next.js & React",
+        "TypeScript",
+        "Headless CMS entegrasyonu",
+        "API geliştirme"
+      ],
+      "duration": "6–12 hafta",
+      "visible": true
+    },
+    {
+      "id": "sv-arch",
+      "slug": "sistem-mimarisi",
+      "title": "Sistem Mimarisi",
+      "icon": "server",
+      "summary": "Büyüyen trafik ve ekiplerle birlikte ölçeklenebilen, gözlemlenebilir ve güvenli altyapılar tasarlıyoruz.",
+      "content": "## Neden Önemli?\nİyi tasarlanmış bir mimari, yeni özelliklerin daha kısa sürede ve daha az riskle geliştirilmesini sağlar. Mevcut sisteminizi inceleyerek darboğazları, tekrar eden yapıları ve güvenlik açıklarını raporluyoruz.\n\n## Neler Yapıyoruz?\nVeri modelini, servis sınırlarını ve dağıtım stratejisini birlikte tasarlıyoruz. Önbellekleme katmanları, kuyruk sistemleri ve izleme araçlarıyla sistemin yük altındaki davranışını öngörülebilir hale getiriyoruz.\n\n- Mimari değerlendirme ve yol haritası\n- Veritabanı ve önbellek stratejisi\n- Loglama, metrik ve alarm altyapısı\n\n## Çıktılar\nMimari karar kayıtları, diyagramlar ve aşamalı geçiş planı ile ekibinizin kararları gerekçeleriyle takip edebilmesini sağlıyoruz.",
+      "features": [
+        "Mimari değerlendirme",
+        "Bulut altyapısı",
+        "Gözlemlenebilirlik",
+        "Güvenlik denetimi"
+      ],
+      "duration": "3–8 hafta",
+      "visible": true
+    },
+    {
+      "id": "sv-uiux",
+      "slug": "ui-ux-tasarim",
+      "title": "UI/UX Tasarım",
+      "icon": "palette",
+      "summary": "Kullanıcı araştırmasına dayanan, tutarlı bir tasarım sistemiyle desteklenen sade arayüzler tasarlıyoruz.",
+      "content": "## Araştırma\nTasarım sürecine kullanıcılarınızı ve iş hedeflerinizi anlamakla başlıyoruz. Mevcut ürünlerde kullanılabilirlik testleri ve analitik verilerle iyileştirme alanlarını belirliyoruz.\n\n## Tasarım Sistemi\nRenk, tipografi, boşluk ve bileşen kurallarını belgeleyen bir tasarım sistemi oluşturuyoruz. Bu sistem, geliştirme ekibinin arayüzü hızlı ve tutarlı biçimde uygulamasına yardımcı olur.\n\n- Kullanıcı akışları ve bilgi mimarisi\n- Etkileşimli prototipler\n- Erişilebilir renk ve tipografi seçimleri\n\n## Devir Teslim\nTasarımları geliştirici dostu belgelerle teslim ediyor, uygulama sürecinde tasarım kontrollerini birlikte yürütüyoruz.",
+      "features": [
+        "Kullanıcı araştırması",
+        "Tasarım sistemi",
+        "Prototipleme",
+        "Erişilebilirlik"
+      ],
+      "duration": "3–6 hafta",
+      "visible": true
+    },
+    {
+      "id": "sv-perf",
+      "slug": "performans-optimizasyonu",
+      "title": "Performans ve SEO Optimizasyonu",
+      "icon": "gauge",
+      "summary": "Core Web Vitals metriklerini iyileştirerek sayfalarınızın daha hızlı açılmasını ve daha iyi taranmasını sağlıyoruz.",
+      "content": "## Ölçümle Başlıyoruz\nLaboratuvar ve gerçek kullanıcı verilerini birlikte analiz ederek sayfa yükleme süresini etkileyen başlıca etkenleri tespit ediyoruz.\n\n## İyileştirme Alanları\nGörsel optimizasyonu, kod bölme, yazı tipi yükleme stratejisi ve önbellek başlıkları gibi alanlarda somut iyileştirmeler uyguluyoruz. Teknik SEO tarafında yapılandırılmış veri, site haritası ve meta etiketleri düzenliyoruz.\n\n- Core Web Vitals analizi\n- Görsel ve yazı tipi optimizasyonu\n- Teknik SEO ve yapılandırılmış veri\n\n## Raporlama\nÇalışma öncesi ve sonrası ölçümleri karşılaştırmalı bir raporla paylaşıyoruz.",
+      "features": [
+        "Core Web Vitals",
+        "Teknik SEO",
+        "Önbellek stratejisi",
+        "Raporlama"
+      ],
+      "duration": "2–4 hafta",
+      "visible": true
+    },
+    {
+      "id": "sv-ecom",
+      "slug": "e-ticaret-altyapilari",
+      "title": "E-Ticaret Altyapıları",
+      "icon": "boxes",
+      "summary": "Headless e-ticaret mimarileriyle esnek, hızlı ve entegrasyona açık online satış deneyimleri kuruyoruz.",
+      "content": "## Esnek Mimari\nÜrün yönetimini, ödeme ve kargo entegrasyonlarını birbirinden bağımsız katmanlar olarak ele alıyoruz. Bu yaklaşım, ileride yeni satış kanalları eklemeyi kolaylaştırır.\n\n## Entegrasyonlar\nYerel ödeme sağlayıcıları, ERP sistemleri ve pazaryeri entegrasyonlarını güvenli API katmanları üzerinden bağlıyoruz.\n\n- Headless vitrin geliştirme\n- Ödeme ve kargo entegrasyonları\n- Stok ve sipariş senkronizasyonu",
+      "features": [
+        "Headless vitrin",
+        "Ödeme entegrasyonu",
+        "ERP bağlantısı",
+        "Sipariş yönetimi"
+      ],
+      "duration": "8–14 hafta",
+      "visible": true
+    },
+    {
+      "id": "sv-care",
+      "slug": "bakim-ve-destek",
+      "title": "Bakım ve Teknik Destek",
+      "icon": "wrench",
+      "summary": "Güvenlik güncellemeleri, izleme ve küçük geliştirmelerle sitenizin güncel ve kararlı kalmasını sağlıyoruz.",
+      "content": "## Düzenli Bakım\nBağımlılık güncellemelerini, güvenlik yamalarını ve yedekleme kontrollerini planlı aralıklarla yapıyoruz.\n\n## İzleme\nErişilebilirlik ve hata izleme araçlarıyla sorunları kullanıcılarınız fark etmeden tespit etmeyi hedefliyoruz. Aylık raporlarda yapılan işleri ve önerilen iyileştirmeleri paylaşıyoruz.\n\n- Aylık bakım planları\n- Hata ve kesinti izleme\n- Öncelikli destek kanalı",
+      "features": [
+        "Güvenlik güncellemeleri",
+        "Kesinti izleme",
+        "Aylık rapor",
+        "Küçük geliştirmeler"
+      ],
+      "duration": "Aylık",
+      "visible": true
+    }
+  ],
+  "projects": [
+    {
+      "id": "pr-1",
+      "slug": "lojistik-takip-paneli",
+      "title": "Lojistik Takip Paneli",
+      "client": "Anadolu Lojistik",
+      "category": "Web Uygulaması",
+      "year": "2026",
+      "summary": "Sevkiyatların gerçek zamanlı izlendiği, rol tabanlı yetkilendirmeye sahip operasyon paneli.",
+      "content": "## İhtiyaç\nOperasyon ekibi sevkiyat durumlarını farklı tablolardan takip ediyordu ve bu durum veri tutarsızlıklarına yol açıyordu.\n\n## Çözüm\nTek bir panelde sevkiyat, araç ve teslimat durumlarını birleştiren bir web uygulaması geliştirdik. Rol tabanlı yetkilendirme ile her ekip yalnızca ilgili verilere erişebiliyor.\n\n- Gerçek zamanlı durum güncellemeleri\n- Filtrelenebilir raporlar ve dışa aktarma\n- Mobil uyumlu saha görünümü",
+      "tags": [
+        "Next.js",
+        "PostgreSQL",
+        "WebSocket",
+        "RBAC"
+      ],
+      "liveUrl": "https://example.com",
+      "coverImage": "/covers/project-1.svg",
+      "visible": true
+    },
+    {
+      "id": "pr-2",
+      "slug": "klinik-randevu-sistemi",
+      "title": "Klinik Randevu Sistemi",
+      "client": "Nova Sağlık",
+      "category": "Web Uygulaması",
+      "year": "2026",
+      "summary": "Hastaların uygun saatleri görüp online randevu alabildiği, SMS hatırlatmalı rezervasyon altyapısı.",
+      "content": "## İhtiyaç\nTelefonla yürütülen randevu süreci yoğun saatlerde personel üzerinde ciddi bir yük oluşturuyordu.\n\n## Çözüm\nDoktor takvimleriyle senkronize çalışan, erişilebilir bir online randevu akışı tasarladık. Hatırlatma mesajları ve iptal akışı ile boş kalan randevu saatlerinin yeniden değerlendirilmesini kolaylaştırdık.\n\n- Takvim senkronizasyonu\n- SMS ve e-posta hatırlatmaları\n- KVKK uyumlu veri saklama",
+      "tags": [
+        "React",
+        "Node.js",
+        "Takvim API",
+        "Erişilebilirlik"
+      ],
+      "liveUrl": "https://example.com",
+      "coverImage": "/covers/project-2.svg",
+      "visible": true
+    },
+    {
+      "id": "pr-3",
+      "slug": "mimarlik-ofisi-kurumsal-site",
+      "title": "Mimarlık Ofisi Kurumsal Sitesi",
+      "client": "Atölye Kerem",
+      "category": "Kurumsal Site",
+      "year": "2025",
+      "summary": "Görsel ağırlıklı projelerin hızlı yüklendiği, içerik ekibinin kolayca güncelleyebildiği kurumsal site.",
+      "content": "## İhtiyaç\nYüksek çözünürlüklü proje fotoğrafları eski sitede sayfa açılışlarını belirgin biçimde yavaşlatıyordu.\n\n## Çözüm\nModern görsel formatları, duyarlı görsel boyutlandırma ve statik sayfa üretimi ile sayfa yüklenme sürelerini iyileştirdik. Headless CMS entegrasyonuyla ekip yeni projeleri geliştirici desteğine ihtiyaç duymadan yayınlayabiliyor.",
+      "tags": [
+        "Next.js",
+        "Headless CMS",
+        "Görsel Optimizasyonu"
+      ],
+      "liveUrl": "https://example.com",
+      "coverImage": "/covers/project-3.svg",
+      "visible": true
+    },
+    {
+      "id": "pr-4",
+      "slug": "yerel-marka-e-ticaret",
+      "title": "Yerel Marka E-Ticaret Vitrini",
+      "client": "Ege Zeytincilik",
+      "category": "E-Ticaret",
+      "year": "2025",
+      "summary": "Headless mimariyle kurulan, yerel ödeme sağlayıcılarıyla entegre çalışan e-ticaret vitrini.",
+      "content": "## İhtiyaç\nMarka, pazaryerlerine bağımlılığını azaltmak ve kendi satış kanalını güçlendirmek istiyordu.\n\n## Çözüm\nÜrün kataloğunu, ödeme ve kargo süreçlerini ayrı katmanlarda ele alan headless bir vitrin geliştirdik. Stok bilgisi pazaryerleriyle düzenli olarak senkronize ediliyor.",
+      "tags": [
+        "Headless Commerce",
+        "Ödeme API",
+        "TypeScript"
+      ],
+      "liveUrl": "https://example.com",
+      "coverImage": "/covers/project-4.svg",
+      "visible": true
+    },
+    {
+      "id": "pr-5",
+      "slug": "egitim-platformu",
+      "title": "Online Eğitim Platformu",
+      "client": "Bilgi Atölyesi",
+      "category": "Platform",
+      "year": "2025",
+      "summary": "Video dersler, ilerleme takibi ve eğitmen paneli içeren ölçeklenebilir öğrenme platformu.",
+      "content": "## İhtiyaç\nKurum, yüz yüze verdiği eğitimleri çevrim içi ortama taşımak için esnek bir platform arıyordu.\n\n## Çözüm\nVideo içerik dağıtımı, öğrenci ilerleme takibi ve eğitmen paneli içeren modüler bir platform geliştirdik. İçerik dağıtım ağı ve önbellek stratejisiyle yoğun dönemlerde kararlı bir deneyim hedefledik.",
+      "tags": [
+        "Next.js",
+        "Video Streaming",
+        "Stripe",
+        "Redis"
+      ],
+      "liveUrl": "https://example.com",
+      "coverImage": "/covers/project-5.svg",
+      "visible": true
+    },
+    {
+      "id": "pr-6",
+      "slug": "belediye-veri-portali",
+      "title": "Açık Veri Portalı",
+      "client": "Kent Veri Ofisi",
+      "category": "Platform",
+      "year": "2024",
+      "summary": "Kamuya açık veri setlerinin aranabildiği, görselleştirilebildiği ve indirilebildiği erişilebilir portal.",
+      "content": "## İhtiyaç\nVeri setleri farklı birimlerin sitelerinde dağınık halde yayımlanıyordu.\n\n## Çözüm\nTüm veri setlerini tek bir katalogda toplayan, filtrelenebilir ve erişilebilirlik yönergelerine uygun bir portal tasarladık. Basit grafik önizlemeleriyle verilerin hızlıca incelenmesini sağladık.",
+      "tags": [
+        "Erişilebilirlik",
+        "Veri Görselleştirme",
+        "API"
+      ],
+      "liveUrl": "https://example.com",
+      "coverImage": "/covers/project-6.svg",
+      "visible": true
+    }
+  ],
+  "blog": [
+    {
+      "id": "bl-1",
+      "slug": "nextjs-app-router-ile-olceklenebilir-mimari",
+      "title": "Next.js App Router ile Ölçeklenebilir Proje Mimarisi",
+      "excerpt": "App Router'ın sunucu bileşenleri ve önbellekleme modeli, klasör yapısından veri erişim katmanına kadar birçok mimari kararı etkiler.",
+      "content": "## Giriş\nNext.js App Router, sunucu bileşenlerini varsayılan hale getirerek web uygulamalarının nasıl yapılandırıldığını önemli ölçüde değiştirdi. Bu yazıda, orta ve büyük ölçekli projelerde uyguladığımız klasör yapısını ve veri erişim yaklaşımını paylaşıyoruz. Amacımız, ekip büyüdükçe kod tabanının okunabilir kalmasını sağlamak.\n\n## Klasör Yapısı\nRota klasörlerini yalnızca sayfa ve düzen dosyaları için kullanıyoruz. İş mantığını ve veri erişimini ayrı bir katmanda tutmak, rotaların sade kalmasını sağlıyor. Bileşenleri ise alan bazlı klasörlerde gruplandırıyoruz. Bu yapı, yeni bir geliştiricinin projeye uyum süresini kısaltıyor.\n\n## Veri Erişim Katmanı\nTüm veri okuma ve yazma işlemlerini tek bir veri erişim katmanında topluyoruz. Bu katman, yetkilendirme kontrollerini ve doğrulama kurallarını merkezi olarak uygular. Sunucu bileşenleri doğrudan bu katmanı çağırır; istemci bileşenlerine ise yalnızca ihtiyaç duydukları veriler aktarılır. Böylece hassas alanların yanlışlıkla istemciye gönderilmesi riskini azaltıyoruz.\n\n## Önbellekleme Kararları\nHer sayfa için içeriğin ne sıklıkla değiştiğini değerlendiriyoruz. Nadiren değişen içerikleri statik olarak üretiyor, yönetim panelinden güncellenen içerikler için yol bazlı yeniden doğrulama kullanıyoruz. Bu yaklaşım, hem hızlı sayfa açılışları hem de güncel içerik sağlar.\n\n## Sonuç\nApp Router ile çalışırken en önemli kazanım, sunucu ve istemci sorumluluklarının net biçimde ayrılmasıdır. Bu ayrımı proje başında netleştirmek, ilerleyen aylarda teknik borcun birikmesini önemli ölçüde yavaşlatır.",
+      "author": "Levent Arslan",
+      "category": "Mimari",
+      "tags": [
+        "Next.js",
+        "Mimari",
+        "Önbellekleme"
+      ],
+      "coverImage": "/covers/blog-1.svg",
+      "publishedAt": "2026-09-08",
+      "visible": true
+    },
+    {
+      "id": "bl-2",
+      "slug": "core-web-vitals-pratik-rehber",
+      "title": "Core Web Vitals İçin Pratik Bir İyileştirme Rehberi",
+      "excerpt": "LCP, INP ve CLS metriklerini iyileştirirken en sık karşılaştığımız sorunlar ve uyguladığımız çözümler.",
+      "content": "## Metrikleri Anlamak\nCore Web Vitals; sayfanın ne kadar hızlı yüklendiğini, etkileşimlere ne kadar hızlı yanıt verdiğini ve görsel olarak ne kadar kararlı olduğunu ölçer. Bu metrikleri iyileştirmeye başlamadan önce gerçek kullanıcı verilerini toplamak gerekir. Laboratuvar ölçümleri yol gösterir, ancak kararlarımızı gerçek kullanıcı verilerine dayandırıyoruz.\n\n## LCP: En Büyük İçerikli Boyama\nLCP sorunlarının büyük kısmı optimize edilmemiş kahraman görsellerinden kaynaklanır. Görselleri modern formatlarda sunmak, doğru boyutlandırmak ve öncelikli yüklemek genellikle belirgin bir iyileşme sağlar. Yazı tiplerinin yüklenme stratejisi de LCP üzerinde etkilidir.\n\n## INP: Etkileşimden Sonraki Boyama\nINP, kullanıcı etkileşimlerine verilen yanıtın gecikmesini ölçer. Uzun süren JavaScript görevlerini bölmek ve gereksiz yeniden render işlemlerini azaltmak bu metrikte en etkili yöntemlerdir. Üçüncü taraf betikleri de düzenli olarak gözden geçirilmelidir.\n\n## CLS: Kümülatif Düzen Kayması\nBoyutu belirtilmemiş görseller ve sonradan yüklenen reklam alanları düzen kaymasının başlıca nedenleridir. Her medya öğesi için yer ayırmak, bu sorunun büyük bölümünü çözer.\n\n## Sonuç\nPerformans çalışması tek seferlik bir iş değildir. Metrikleri düzenli olarak izlemek ve her sürümde regresyon kontrolü yapmak, elde edilen iyileştirmelerin kalıcı olmasını sağlar.",
+      "author": "Deniz Yalçın",
+      "category": "Performans",
+      "tags": [
+        "Performans",
+        "Core Web Vitals",
+        "SEO"
+      ],
+      "coverImage": "/covers/blog-2.svg",
+      "publishedAt": "2026-08-21",
+      "visible": true
+    },
+    {
+      "id": "bl-3",
+      "slug": "tasarim-sistemi-kurmak",
+      "title": "Küçük Ekipler İçin Tasarım Sistemi Kurmak",
+      "excerpt": "Tasarım sistemi yalnızca büyük şirketlere özgü değildir. Küçük ekipler için sade ve sürdürülebilir bir başlangıç önerisi.",
+      "content": "## Neden Tasarım Sistemi?\nTasarım sistemi, arayüz kararlarının tekrar tekrar tartışılmasını önler. Küçük ekiplerde bile renk, tipografi ve boşluk kurallarını belgelemek, tutarlılığı belirgin şekilde artırır.\n\n## Token'larla Başlayın\nRenkleri, yazı boyutlarını ve boşlukları tasarım token'ları olarak tanımlamak ilk ve en değerli adımdır. Bu token'lar hem tasarım aracında hem de kod tarafında aynı isimlerle kullanılmalıdır.\n\n## Bileşen Kütüphanesi\nButon, form alanı ve kart gibi temel bileşenlerle başlamak yeterlidir. Her bileşenin durumlarını ve erişilebilirlik gereksinimlerini belgelemek, ekip içi iletişimi kolaylaştırır.\n\n## Sürdürülebilirlik\nTasarım sistemi yaşayan bir üründür. Değişiklikleri sürümlemek ve kısa notlarla duyurmak, sistemin ekip tarafından benimsenmesine yardımcı olur.",
+      "author": "Ece Korkmaz",
+      "category": "Tasarım",
+      "tags": [
+        "UI/UX",
+        "Tasarım Sistemi",
+        "Tailwind CSS"
+      ],
+      "coverImage": "/covers/blog-3.svg",
+      "publishedAt": "2026-07-30",
+      "visible": true
+    },
+    {
+      "id": "bl-4",
+      "slug": "typescript-ile-guvenli-api-katmani",
+      "title": "TypeScript ile Güvenli Bir API Katmanı Tasarlamak",
+      "excerpt": "Çalışma zamanı doğrulaması ve tip çıkarımını birlikte kullanarak istemci ile sunucu arasında güvenli bir sözleşme kurmak.",
+      "content": "## Problem\nTypeScript tipleri derleme zamanında güvenlik sağlar, ancak ağ üzerinden gelen veriler çalışma zamanında doğrulanmadıkça bu güvenlik yanıltıcı olabilir. Harici kaynaklardan gelen her veri doğrulanmalıdır.\n\n## Şema Tabanlı Doğrulama\nGiriş verilerini şemalarla doğrulamak ve tipleri bu şemalardan türetmek, tek bir doğruluk kaynağı oluşturur. Böylece tip tanımları ile doğrulama kuralları birbirinden kopmaz.\n\n## Hata Yönetimi\nDoğrulama hatalarını kullanıcıya anlaşılır mesajlarla, geliştiriciye ise ayrıntılı kayıtlarla iletmek gerekir. Alan bazlı hata mesajları, form deneyimini önemli ölçüde iyileştirir.\n\n## Sonuç\nGüvenli bir API katmanı; doğrulama, yetkilendirme ve tutarlı hata yanıtlarından oluşur. Bu üç unsuru merkezi olarak ele almak, uygulama büyüdükçe güvenlik açıklarının oluşma ihtimalini azaltır.",
+      "author": "Levent Arslan",
+      "category": "Geliştirme",
+      "tags": [
+        "TypeScript",
+        "API",
+        "Güvenlik"
+      ],
+      "coverImage": "/covers/blog-4.svg",
+      "publishedAt": "2026-07-12",
+      "visible": true
+    },
+    {
+      "id": "bl-5",
+      "slug": "erisilebilirlik-kontrol-listesi",
+      "title": "Yayına Almadan Önce Erişilebilirlik Kontrol Listesi",
+      "excerpt": "Klavye gezintisinden renk kontrastına kadar her sürümden önce kontrol ettiğimiz temel erişilebilirlik maddeleri.",
+      "content": "## Klavye ile Gezinme\nTüm etkileşimli öğelere klavyeyle ulaşılabildiğini ve odak göstergesinin açıkça göründüğünü kontrol ediyoruz. Modal pencerelerde odak, pencere kapanana kadar içeride kalmalıdır.\n\n## Renk Kontrastı\nMetin ve arka plan renkleri arasındaki kontrast oranını WCAG yönergelerine göre ölçüyoruz. Yalnızca renkle aktarılan bilgilerin yanına ikon veya metin ekliyoruz.\n\n## Anlamlı İşaretleme\nBaşlık hiyerarşisinin doğru kurulması, form alanlarının etiketlerle ilişkilendirilmesi ve görsellerin alternatif metinlere sahip olması ekran okuyucu kullanıcıları için kritik önemdedir.\n\n## Hareket ve Animasyon\nHareket azaltma tercihini etkinleştiren kullanıcılar için animasyonları sadeleştiriyoruz. Otomatik oynayan içeriklerde durdurma imkânı sunuyoruz.",
+      "author": "Ece Korkmaz",
+      "category": "Erişilebilirlik",
+      "tags": [
+        "Erişilebilirlik",
+        "WCAG",
+        "UI/UX"
+      ],
+      "coverImage": "/covers/blog-5.svg",
+      "publishedAt": "2026-06-18",
+      "visible": true
+    }
+  ],
+  "pricing": {
+    "currency": "₺",
+    "builderTitle": "Paket Oluşturucu",
+    "builderDescription": "Bir temel paket seçin, ardından ek modülleri ve sayfa sayısını ihtiyacınıza göre ayarlayın.",
+    "extraPageLabel": "Ek sayfa / şablon sayısı",
+    "extraPagePrice": 4500,
+    "maxExtraPages": 20,
+    "rushLabel": "Öncelikli teslim takvimi",
+    "rushMultiplier": 1.25,
+    "note": "Gösterilen tutarlar KDV hariç tahmini aralıklardır. Kesin teklif, keşif görüşmesi ve kapsam dokümanının ardından hazırlanır.",
+    "summaryCtaLabel": "Bu kapsamla teklif iste",
+    "summaryCtaHref": "/contact",
+    "packages": [
+      {
+        "id": "pk-start",
+        "name": "Başlangıç",
+        "description": "Kurumsal kimliğini dijitale taşımak isteyen küçük işletmeler için sade ve hızlı bir web sitesi.",
+        "priceMin": 45000,
+        "priceMax": 70000,
+        "timeline": "3–4 hafta",
+        "features": [
+          "5 sayfaya kadar özel tasarım",
+          "Mobil uyumlu arayüz",
+          "Temel teknik SEO",
+          "İletişim formu",
+          "Yönetim paneli"
+        ],
+        "highlighted": false,
+        "ctaLabel": "Başlangıç paketini seç",
+        "ctaHref": "/contact",
+        "visible": true
+      },
+      {
+        "id": "pk-growth",
+        "name": "Büyüme",
+        "description": "İçerik üreten ve dönüşüm odaklı çalışan ekipler için genişletilebilir bir web platformu.",
+        "priceMin": 95000,
+        "priceMax": 150000,
+        "timeline": "6–8 hafta",
+        "features": [
+          "12 sayfaya kadar özel tasarım",
+          "Headless CMS entegrasyonu",
+          "Blog ve içerik modülü",
+          "Performans optimizasyonu",
+          "Analitik kurulumu"
+        ],
+        "highlighted": true,
+        "ctaLabel": "Büyüme paketini seç",
+        "ctaHref": "/contact",
+        "visible": true
+      },
+      {
+        "id": "pk-enterprise",
+        "name": "Kurumsal",
+        "description": "Özel iş akışları, entegrasyonlar ve yüksek trafik gereksinimleri olan kurumlar için.",
+        "priceMin": 220000,
+        "priceMax": 400000,
+        "timeline": "10–16 hafta",
+        "features": [
+          "Özel web uygulaması",
+          "Rol tabanlı yetkilendirme",
+          "Harici sistem entegrasyonları",
+          "Yük testi ve izleme",
+          "Mimari dokümantasyon"
+        ],
+        "highlighted": false,
+        "ctaLabel": "Kurumsal paketi seç",
+        "ctaHref": "/contact",
+        "visible": true
+      }
+    ],
+    "addons": [
+      {
+        "id": "ad-i18n",
+        "label": "Çoklu dil desteği",
+        "description": "İçerik yönetimiyle entegre çok dilli yapı.",
+        "priceMin": 15000,
+        "priceMax": 25000,
+        "visible": true
+      },
+      {
+        "id": "ad-ecom",
+        "label": "E-ticaret modülü",
+        "description": "Ürün kataloğu, sepet ve ödeme entegrasyonu.",
+        "priceMin": 45000,
+        "priceMax": 80000,
+        "visible": true
+      },
+      {
+        "id": "ad-booking",
+        "label": "Rezervasyon / randevu",
+        "description": "Takvim tabanlı rezervasyon akışı ve bildirimler.",
+        "priceMin": 25000,
+        "priceMax": 40000,
+        "visible": true
+      },
+      {
+        "id": "ad-member",
+        "label": "Üyelik ve kullanıcı paneli",
+        "description": "Kayıt, giriş ve kişisel kullanıcı alanı.",
+        "priceMin": 30000,
+        "priceMax": 50000,
+        "visible": true
+      },
+      {
+        "id": "ad-integration",
+        "label": "Harici API entegrasyonu",
+        "description": "ERP, CRM veya üçüncü taraf servis bağlantısı.",
+        "priceMin": 20000,
+        "priceMax": 45000,
+        "visible": true
+      },
+      {
+        "id": "ad-care",
+        "label": "6 aylık bakım planı",
+        "description": "Güncellemeler, izleme ve aylık raporlama.",
+        "priceMin": 18000,
+        "priceMax": 30000,
+        "visible": true
+      }
+    ]
+  },
+  "about": {
+    "summary": "LrWebs, web projelerini bir mühendislik disipliniyle ele alan bir ekiptir. Her projede önce ihtiyaçları ve teknik kısıtları netleştiriyor, ardından okunabilir, test edilebilir ve belgelenmiş bir kod tabanı kuruyoruz. Hedefimiz, bugün hızlı çalışan ve yarın kolayca geliştirilebilen dijital ürünler teslim etmek.",
+    "storyTitle": "Hikâyemiz",
+    "story": "## Nasıl Başladık?\nLrWebs, farklı ölçeklerdeki yazılım ekiplerinde yıllarca çalışmış geliştiricilerin ortak bir gözleminden doğdu: Web projelerinin önemli bir kısmı, ilk sürümden sonra bakımı zorlaşan kod tabanları nedeniyle yavaşlıyordu.\n\n## Ne Yapıyoruz?\nBu nedenle projelerimize mimari kararlarla başlıyoruz. Veri modelini, bileşen yapısını ve dağıtım sürecini baştan tasarlıyor; tasarım ve geliştirme ekiplerini aynı sistem üzerinde buluşturuyoruz.\n\n## Nasıl Çalışıyoruz?\nKısa geliştirme döngüleriyle ilerliyor, her aşamanın sonunda çalışan bir sürümü sizinle paylaşıyoruz. Kararları gerekçeleriyle belgeliyor, proje tesliminden sonra da ekibinizin sistemi rahatça sürdürebilmesini önemsiyoruz.",
+    "valuesTitle": "Temel Değerlerimiz",
+    "values": [
+      {
+        "id": "va-1",
+        "title": "Sürdürülebilir Kod",
+        "description": "Okunabilir, test edilebilir ve belgelenmiş kod tabanları kuruyoruz.",
+        "icon": "code"
+      },
+      {
+        "id": "va-2",
+        "title": "Şeffaf İletişim",
+        "description": "İlerlemeyi düzenli demolar ve açık raporlarla paylaşıyoruz.",
+        "icon": "users"
+      },
+      {
+        "id": "va-3",
+        "title": "Performans Odaklılık",
+        "description": "Kararlarımızı ölçümlere dayandırıyor, hızı bir özellik olarak ele alıyoruz.",
+        "icon": "gauge"
+      },
+      {
+        "id": "va-4",
+        "title": "Güvenlik ve Gizlilik",
+        "description": "Veri güvenliğini ve KVKK gerekliliklerini tasarım aşamasından itibaren gözetiyoruz.",
+        "icon": "shield"
+      }
+    ],
+    "stackTitle": "Teknoloji Yığınımız",
+    "techStack": [
+      {
+        "id": "ts-1",
+        "category": "Ön Yüz",
+        "items": [
+          "Next.js",
+          "React",
+          "TypeScript",
+          "Tailwind CSS"
+        ]
+      },
+      {
+        "id": "ts-2",
+        "category": "Arka Uç",
+        "items": [
+          "Node.js",
+          "PostgreSQL",
+          "Redis",
+          "REST & GraphQL"
+        ]
+      },
+      {
+        "id": "ts-3",
+        "category": "Altyapı",
+        "items": [
+          "Docker",
+          "Vercel",
+          "AWS",
+          "GitHub Actions"
+        ]
+      },
+      {
+        "id": "ts-4",
+        "category": "Kalite",
+        "items": [
+          "Playwright",
+          "Vitest",
+          "Lighthouse CI",
+          "Sentry"
+        ]
+      }
+    ],
+    "processTitle": "Çalışma Sürecimiz",
+    "process": [
+      {
+        "id": "ps-1",
+        "title": "Keşif",
+        "description": "Hedefleri, kullanıcıları ve teknik kısıtları birlikte netleştiriyoruz."
+      },
+      {
+        "id": "ps-2",
+        "title": "Mimari & Tasarım",
+        "description": "Veri modeli, bilgi mimarisi ve arayüz tasarımını birlikte kurguluyoruz."
+      },
+      {
+        "id": "ps-3",
+        "title": "Geliştirme",
+        "description": "Kısa döngülerle ilerliyor, her aşamada çalışan bir sürüm paylaşıyoruz."
+      },
+      {
+        "id": "ps-4",
+        "title": "Yayın & Bakım",
+        "description": "Ölçümlerle yayına alıyor, izleme ve bakım süreçlerini başlatıyoruz."
+      }
+    ]
+  },
+  "legal": {
+    "privacy": {
+      "title": "Gizlilik Politikası",
+      "content": "## Genel Bilgi\nLrWebs olarak ziyaretçilerimizin gizliliğine önem veriyoruz. Bu politika, web sitemizi kullanırken hangi bilgilerin toplandığını ve bu bilgilerin nasıl kullanıldığını açıklar.\n\n## Toplanan Bilgiler\nİletişim formu aracılığıyla paylaştığınız ad, e-posta adresi ve mesaj içeriği yalnızca talebinize yanıt vermek amacıyla işlenir. Sitemiz, temel işlevler için zorunlu olan çerezler dışında izleme çerezi kullanmaz.\n\n## Bilgilerin Kullanımı\nPaylaştığınız bilgiler üçüncü taraflarla satılmaz veya kiralanmaz. Yasal yükümlülükler dışında bilgileriniz yalnızca sizinle iletişim kurmak için kullanılır.\n\n## Veri Güvenliği\nVerilerinizi yetkisiz erişime karşı korumak için makul teknik ve idari önlemler alıyoruz.\n\n## İletişim\nGizlilik politikamızla ilgili sorularınız için merhaba@lrwebs.com adresinden bize ulaşabilirsiniz.",
+      "pdfUrl": "",
+      "updatedAt": "2026-09-01"
+    },
+    "kvkk": {
+      "title": "KVKK Aydınlatma Metni",
+      "content": "## Veri Sorumlusu\n6698 sayılı Kişisel Verilerin Korunması Kanunu (\"KVKK\") uyarınca kişisel verileriniz, veri sorumlusu sıfatıyla LrWebs tarafından aşağıda açıklanan kapsamda işlenmektedir.\n\n## İşlenen Kişisel Veriler\nİletişim formu aracılığıyla ad-soyad, e-posta adresi ve mesaj içeriğinde paylaştığınız bilgiler işlenmektedir.\n\n## İşleme Amaçları\nKişisel verileriniz; taleplerinize yanıt verilmesi, teklif süreçlerinin yürütülmesi ve yasal yükümlülüklerin yerine getirilmesi amaçlarıyla işlenir.\n\n## Hukuki Sebep ve Toplama Yöntemi\nVerileriniz, KVKK'nın 5. maddesinde belirtilen \"bir sözleşmenin kurulması veya ifasıyla doğrudan ilgili olması\" ve \"ilgili kişinin temel hak ve özgürlüklerine zarar vermemek kaydıyla veri sorumlusunun meşru menfaati\" hukuki sebeplerine dayanılarak elektronik ortamda toplanır.\n\n## Haklarınız\nKVKK'nın 11. maddesi kapsamında; kişisel verilerinizin işlenip işlenmediğini öğrenme, düzeltilmesini veya silinmesini talep etme ve işlemeye itiraz etme haklarına sahipsiniz. Taleplerinizi merhaba@lrwebs.com adresine iletebilirsiniz.",
+      "pdfUrl": "",
+      "updatedAt": "2026-09-01"
+    }
+  },
+  "updatedAt": "2026-09-26T17:21:38.484Z"
+}

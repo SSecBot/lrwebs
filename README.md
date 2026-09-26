@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LrWebs
 
-## Getting Started
+Modern web geliştirme ve dijital ajans platformu. Next.js 16 (App Router), TypeScript (strict), Tailwind CSS v4 ve dosya tabanlı bir CMS ile geliştirilmiştir.
 
-First, run the development server:
+## Başlangıç
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run build      # üretim derlemesi
+npm run start      # üretim sunucusu
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Yönetim paneli: `/admin` — varsayılan parola `admin123`. Üretimde `.env.example` dosyasını `.env.local` olarak kopyalayıp `ADMIN_PASSCODE` ve `ADMIN_SESSION_SECRET` değerlerini değiştirin.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Mimari
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Katman | Konum |
+| --- | --- |
+| Veri modeli | `types/cms.ts` |
+| İçerik deposu | `data/cms-store.json` (tüm site metinleri, bağlantılar, sıralamalar) |
+| Veri erişim katmanı | `lib/cms.ts` — atomik yazma, yazma kuyruğu, `revalidatePath` |
+| Doğrulama & temizleme | `lib/validation.ts` (zod), `lib/sanitize.ts` |
+| Özetleyici | `lib/summarizer.ts` — bağımlılıksız TF tabanlı çıkarımsal özet |
+| Güvenli Markdown | `lib/markdown.ts` + `components/rich-text.tsx` (HTML enjekte etmez) |
+| Oturum | `lib/auth.ts` — HMAC imzalı, httpOnly, SameSite=Strict çerez |
+| Sunucu eylemleri | `app/actions/admin.ts`, `app/actions/contact.ts` |
+| PDF yükleme | `app/api/admin/upload` → `public/uploads/`, sunum `app/api/uploads/[file]` |
 
-## Learn More
+Yönetim panelinden yapılan her kayıt `data/cms-store.json` dosyasına yazılır ve tüm site anında yeniden doğrulanır. İletişim formu mesajları `data/messages.json` dosyasında tutulur ve panelde "Gelen Mesajlar" sekmesinden yönetilir.
 
-To learn more about Next.js, take a look at the following resources:
+## Notlar
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- İçerik alanları sade bir Markdown alt kümesini destekler: `## başlık`, `- liste`, `1. liste`, `> alıntı`, `**kalın**`, `` `kod` ``, `[bağlantı](https://…)`.
+- PDF yüklemeleri MIME türü, uzantı, boyut (10 MB) ve `%PDF-` imzası ile doğrulanır.
+- Veriler yerel dosya sisteminde saklandığından uygulama kalıcı diske sahip bir Node.js sunucusunda çalıştırılmalıdır (salt okunur sunucusuz ortamlar desteklenmez).
