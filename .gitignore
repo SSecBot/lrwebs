@@ -44,4 +44,8 @@ next-env.d.ts
 /data/messages.json
 /data/.session-secret
 /data/*.tmp
-/public/uploads/*.pdf
+/data/.revoked-sessions.json
+/data/*.lock
+/data/*.bak
+/public/uploads/*
+!/public/uploads/.gitkeep

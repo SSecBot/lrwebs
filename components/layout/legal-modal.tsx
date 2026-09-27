@@ -13,10 +13,14 @@ interface LegalLinksProps {
   className?: string;
 }
 
+const SAFE_PDF = /^\/api\/uploads\/(privacy|kvkk)-\d{10,16}-[a-f0-9]{8}\.pdf$/;
+
 /** Gizlilik Politikası ve KVKK metinlerini sayfadan ayrılmadan açan bağlantılar. */
 export function LegalLinks({ documents, labels, className }: LegalLinksProps) {
   const [active, setActive] = useState<LegalKind | null>(null);
-  const doc = active ? documents[active] : null;
+  const raw = active ? documents[active] : null;
+  // Savunma katmanı: yalnızca sunucunun ürettiği yükleme adreslerine izin verilir.
+  const doc = raw ? { ...raw, pdfUrl: SAFE_PDF.test(raw.pdfUrl) ? raw.pdfUrl : "" } : null;
 
   return (
     <>

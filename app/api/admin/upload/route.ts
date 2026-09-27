@@ -1,33 +1,48 @@
-import { randomBytes } from "node:crypto";
-import { promises as fs } from "node:fs";
-import path from "node:path";
 import { NextResponse } from "next/server";
+import type { CmsStore } from "@/types/cms";
 import { isAuthenticated } from "@/lib/auth";
-import { UPLOAD_DIR, deleteUpload, getCms, updateCms } from "@/lib/cms";
-import type { LegalKind } from "@/types/cms";
+import { mutateCms } from "@/lib/cms";
+import { deleteUpload, isUploadKind, maxBytesFor, storeUpload, UPLOAD_URL, validateUpload } from "@/lib/uploads";
 
 export const runtime = "nodejs";
 
-const MAX_BYTES = 10 * 1024 * 1024; // 10 MB
-const KINDS: LegalKind[] = ["privacy", "kvkk"];
-
 function fail(message: string, status = 400) {
-  return NextResponse.json({ ok: false, message }, { status });
+  return NextResponse.json({ ok: false, message }, { status, headers: { "Cache-Control": "no-store" } });
+}
+
+/** Aynı kökenden gelmeyen (CSRF) istekleri reddeder. Origin başlığı zorunludur. */
+function isSameOrigin(request: Request): boolean {
+  const origin = request.headers.get("origin");
+  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
+  if (!origin || !host) return false;
+  const site = request.headers.get("sec-fetch-site");
+  if (site && site !== "same-origin") return false;
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
 }
 
 /**
- * Yasal metinler için PDF yükleme.
- * Doğrulamalar: oturum, aynı köken, dosya boyutu, MIME türü, uzantı ve "%PDF-" imzası.
+ * Yönetim paneli dosya yükleme uç noktası.
+ * - kind=privacy|kvkk → PDF (≤10 MB), yasal metin modalında gösterilir.
+ * - kind=favicon → .ico / .png / .svg (≤512 KB), tarayıcı sekmesi ikonu olur.
+ * Kimlik doğrulama, köken, boyut, uzantı, MIME ve dosya imzası sunucuda doğrulanır;
+ * dosya adı sunucu tarafından üretilir.
  */
 export async function POST(request: Request) {
   if (!(await isAuthenticated())) return fail("Yetkisiz işlem. Lütfen yeniden giriş yapın.", 401);
+  if (!isSameOrigin(request)) return fail("Geçersiz istek kaynağı.", 403);
 
-  const origin = request.headers.get("origin");
-  const host = request.headers.get("host");
-  if (origin && host && new URL(origin).host !== host) return fail("Geçersiz istek kaynağı.", 403);
+  const kindParam = new URL(request.url).searchParams.get("kind");
+  if (!isUploadKind(kindParam)) return fail("Geçersiz yükleme türü.");
+  const kind = kindParam;
 
-  const length = Number(request.headers.get("content-length") ?? 0);
-  if (length > MAX_BYTES + 64 * 1024) return fail("Dosya boyutu en fazla 10 MB olabilir.", 413);
+  // Gövde okunmadan önce boyut sınırı uygulanır (çok parçalı form ek yükü için pay bırakılır).
+  const length = Number(request.headers.get("content-length") ?? NaN);
+  if (!Number.isFinite(length)) return fail("İstek boyutu belirtilmemiş.", 411);
+  if (length > maxBytesFor(kind) + 64 * 1024) return fail("Dosya boyutu sınırı aşıldı.", 413);
 
   let form: FormData;
   try {
@@ -35,33 +50,40 @@ export async function POST(request: Request) {
   } catch {
     return fail("Form verisi okunamadı.");
   }
-
-  const kind = form.get("kind");
   const file = form.get("file");
-  if (typeof kind !== "string" || !KINDS.includes(kind as LegalKind)) return fail("Geçersiz belge türü.");
-  if (!(file instanceof File)) return fail("Lütfen bir PDF dosyası seçin.");
-  if (file.size === 0) return fail("Dosya boş görünüyor.");
-  if (file.size > MAX_BYTES) return fail("Dosya boyutu en fazla 10 MB olabilir.", 413);
-  if (file.type !== "application/pdf") return fail("Yalnızca PDF dosyaları yüklenebilir.");
-  if (!/\.pdf$/i.test(file.name)) return fail("Dosya uzantısı .pdf olmalıdır.");
+  if (!(file instanceof File)) return fail("Lütfen bir dosya seçin.");
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  if (buffer.subarray(0, 5).toString("latin1") !== "%PDF-") return fail("Dosya içeriği geçerli bir PDF değil.");
+  const checked = await validateUpload(kind, file);
+  if (!checked.ok) return fail(checked.message, checked.status);
 
-  await fs.mkdir(UPLOAD_DIR, { recursive: true });
-  const name = `${kind}-${Date.now()}-${randomBytes(4).toString("hex")}.pdf`;
-  await fs.writeFile(path.join(UPLOAD_DIR, name), buffer);
+  const url = await storeUpload(kind, checked.ext, checked.buffer);
 
-  const cms = await getCms();
-  const previous = cms.legal[kind as LegalKind].pdfUrl;
-  const pdfUrl = `/api/uploads/${name}`;
-  await updateCms({
-    legal: {
-      ...cms.legal,
-      [kind]: { ...cms.legal[kind as LegalKind], pdfUrl, updatedAt: new Date().toISOString().slice(0, 10) },
-    },
-  });
-  if (previous && previous !== pdfUrl) await deleteUpload(previous);
+  let previous = "";
+  let store: CmsStore;
+  try {
+    store = await mutateCms((current) => {
+      if (kind === "favicon") {
+        previous = current.general.faviconUrl;
+        return { general: { ...current.general, faviconUrl: url } };
+      }
+      previous = current.legal[kind].pdfUrl;
+      return {
+        legal: {
+          ...current.legal,
+          [kind]: { ...current.legal[kind], pdfUrl: url, updatedAt: new Date().toISOString().slice(0, 10) },
+        },
+      };
+    });
+  } catch (error) {
+    await deleteUpload(url);
+    throw error;
+  }
 
-  return NextResponse.json({ ok: true, message: "PDF yüklendi ve yayına alındı.", pdfUrl });
+  // Yalnızca yükleme ile oluşturulmuş eski dosyalar silinir.
+  if (previous && previous !== url && UPLOAD_URL.test(previous)) await deleteUpload(previous);
+
+  const message = kind === "favicon" ? "Sekme ikonu yüklendi ve yayına alındı." : "PDF yüklendi ve yayına alındı.";
+  // İstemci, kaydedilmiş sürümünü sunucudakiyle birebir eşitleyebilsin diye etkilenen bölüm döndürülür.
+  const section = kind === "favicon" ? { general: store.general } : { legal: store.legal };
+  return NextResponse.json({ ok: true, message, url, ...section }, { headers: { "Cache-Control": "no-store" } });
 }

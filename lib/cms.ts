@@ -12,13 +12,30 @@ import type { CmsSectionKey, CmsStore, ContactMessage } from "@/types/cms";
  * Tüm site içeriği data/cms-store.json dosyasında tutulur. Okuma ve yazma işlemleri
  * yalnızca bu modül üzerinden yapılır; böylece depolama katmanı ileride bir veritabanı
  * ile değiştirilmek istendiğinde yalnızca bu dosyanın güncellenmesi yeterli olur.
+ *
+ * Bütünlük garantileri:
+ *  - Süreç içi yazma kuyruğu + süreçler arası kilit dosyası (O_EXCL) ile yazmalar sıralanır.
+ *  - Her okuma-değiştirme-yazma döngüsü kilit altında, diskteki en güncel veriyle yapılır.
+ *  - Yeni içerik önce geçici dosyaya yazılıp fsync edilir, ardından atomik rename yapılır.
+ *  - Bir önceki sürüm .bak olarak saklanır; ana dosya bozulursa okuma yedekten yapılır.
  */
 
 const DATA_DIR = path.join(process.cwd(), "data");
 const STORE_FILE = path.join(DATA_DIR, "cms-store.json");
 const MESSAGES_FILE = path.join(DATA_DIR, "messages.json");
 
-/* Aynı süreç içindeki eşzamanlı yazma işlemlerini sıraya koyar. */
+const LOCK_STALE_MS = 15_000;
+const LOCK_TIMEOUT_MS = 10_000;
+
+export class CmsConflictError extends Error {
+  constructor(public readonly sections: CmsSectionKey[]) {
+    super("Bu bölümler siz düzenlerken başka bir oturumda değiştirildi.");
+    this.name = "CmsConflictError";
+  }
+}
+
+/* ---------- Kilitleme ---------- */
+
 let writeQueue: Promise<unknown> = Promise.resolve();
 
 function enqueue<T>(task: () => Promise<T>): Promise<T> {
@@ -27,48 +44,120 @@ function enqueue<T>(task: () => Promise<T>): Promise<T> {
   return run;
 }
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** Birden fazla Node sürecinin (ör. küme/çoklu worker) aynı dosyaya eşzamanlı yazmasını engeller. */
+async function withFileLock<T>(file: string, task: () => Promise<T>): Promise<T> {
+  const lock = `${file}.lock`;
+  const started = Date.now();
+  for (;;) {
+    try {
+      const handle = await fs.open(lock, "wx");
+      await handle.writeFile(`${process.pid}:${Date.now()}`);
+      await handle.close();
+      break;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+      const stat = await fs.stat(lock).catch(() => null);
+      if (stat && Date.now() - stat.mtimeMs > LOCK_STALE_MS) {
+        await fs.rm(lock, { force: true }); // çökmüş bir süreçten kalan kilit
+        continue;
+      }
+      if (Date.now() - started > LOCK_TIMEOUT_MS)
+        throw new Error("Veri dosyası kilitli. Lütfen birkaç saniye sonra tekrar deneyin.");
+      await sleep(40 + Math.random() * 60);
+    }
+  }
+  try {
+    return await task();
+  } finally {
+    await fs.rm(lock, { force: true });
+  }
+}
+
+const locked = <T>(file: string, task: () => Promise<T>) => enqueue(() => withFileLock(file, task));
+
+/* ---------- Okuma / yazma ---------- */
+
 async function readJson<T>(file: string, fallback: T): Promise<T> {
   try {
-    const raw = await fs.readFile(file, "utf8");
-    return JSON.parse(raw) as T;
+    return JSON.parse(await fs.readFile(file, "utf8")) as T;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return fallback;
     throw error;
   }
 }
 
-/** Önce geçici dosyaya yazar, ardından atomik olarak yer değiştirir. */
-async function writeJsonAtomic(file: string, data: unknown): Promise<void> {
+/** Geçici dosyaya yazar, diske zorlar (fsync) ve atomik olarak yer değiştirir. */
+async function writeJsonAtomic(file: string, data: unknown, { backup = false } = {}): Promise<void> {
   await fs.mkdir(path.dirname(file), { recursive: true });
-  const tmp = `${file}.${process.pid}.${Date.now()}.tmp`;
-  await fs.writeFile(tmp, `${JSON.stringify(data, null, 2)}\n`, "utf8");
+  const tmp = `${file}.${process.pid}.${Date.now()}.${Math.random().toString(36).slice(2, 8)}.tmp`;
+  const handle = await fs.open(tmp, "wx", 0o600);
   try {
-    await fs.rename(tmp, file);
-  } catch {
-    // Windows'ta hedef dosya kilitliyse doğrudan yazmaya geri dön.
-    await fs.writeFile(file, `${JSON.stringify(data, null, 2)}\n`, "utf8");
-    await fs.rm(tmp, { force: true });
+    await handle.writeFile(`${JSON.stringify(data, null, 2)}\n`, "utf8");
+    await handle.sync();
+  } finally {
+    await handle.close();
+  }
+
+  if (backup) await fs.copyFile(file, `${file}.bak`).catch(() => undefined);
+
+  // Windows'ta hedef dosya kısa süreli olarak başka bir okuyucu tarafından açık olabilir;
+  // atomikliği bozmadan birkaç kez yeniden dene.
+  for (let attempt = 0; ; attempt++) {
+    try {
+      await fs.rename(tmp, file);
+      return;
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (attempt < 8 && (code === "EPERM" || code === "EBUSY" || code === "EACCES")) {
+        await sleep(25 * (attempt + 1));
+        continue;
+      }
+      await fs.rm(tmp, { force: true });
+      throw error;
+    }
   }
 }
 
 async function readStore(): Promise<CmsStore> {
-  const raw = await fs.readFile(STORE_FILE, "utf8");
-  return JSON.parse(raw) as CmsStore;
+  try {
+    return JSON.parse(await fs.readFile(STORE_FILE, "utf8")) as CmsStore;
+  } catch (error) {
+    // Ana dosya bozulmuşsa son sağlam yedekten devam et.
+    if (error instanceof SyntaxError) {
+      console.error("[cms] cms-store.json okunamadı, yedekten yükleniyor:", error.message);
+      return JSON.parse(await fs.readFile(`${STORE_FILE}.bak`, "utf8")) as CmsStore;
+    }
+    throw error;
+  }
 }
 
 /** İstek başına tekilleştirilmiş CMS okuması. */
 export const getCms = cache(readStore);
 
-/** Belirtilen bölümleri günceller ve sitenin tamamını yeniden doğrular. */
-export async function updateCms(patch: Partial<Pick<CmsStore, CmsSectionKey>>): Promise<CmsStore> {
-  const next = await enqueue(async () => {
+export type CmsPatch = Partial<Pick<CmsStore, CmsSectionKey>>;
+
+/**
+ * Kilit altında, diskteki en güncel veriyle okuma-değiştirme-yazma yapar.
+ * `mutate` fonksiyonu güncel veriyi alır ve uygulanacak bölümleri döndürür
+ * (çakışma tespiti için hata da fırlatabilir).
+ */
+export async function mutateCms(mutate: (current: CmsStore) => CmsPatch | Promise<CmsPatch>): Promise<CmsStore> {
+  const next = await locked(STORE_FILE, async () => {
     const current = await readStore();
+    const patch = await mutate(current);
     const merged: CmsStore = { ...current, ...patch, updatedAt: new Date().toISOString() };
-    await writeJsonAtomic(STORE_FILE, merged);
+    await writeJsonAtomic(STORE_FILE, merged, { backup: true });
     return merged;
   });
   revalidateSite();
   return next;
+}
+
+/** Belirtilen bölümleri günceller ve sitenin tamamını yeniden doğrular. */
+export function updateCms(patch: CmsPatch): Promise<CmsStore> {
+  return mutateCms(() => patch);
 }
 
 export function revalidateSite() {
@@ -83,7 +172,7 @@ export async function getMessages(): Promise<ContactMessage[]> {
 }
 
 export async function addMessage(message: ContactMessage): Promise<void> {
-  await enqueue(async () => {
+  await locked(MESSAGES_FILE, async () => {
     const list = await readJson<ContactMessage[]>(MESSAGES_FILE, []);
     list.push(message);
     // Dosyanın kontrolsüz büyümesini engellemek için son 1000 mesaj tutulur.
@@ -92,18 +181,8 @@ export async function addMessage(message: ContactMessage): Promise<void> {
 }
 
 export async function updateMessages(mutate: (list: ContactMessage[]) => ContactMessage[]): Promise<void> {
-  await enqueue(async () => {
+  await locked(MESSAGES_FILE, async () => {
     const list = await readJson<ContactMessage[]>(MESSAGES_FILE, []);
     await writeJsonAtomic(MESSAGES_FILE, mutate(list));
   });
-}
-
-/* ---------- Yüklenen dosyalar ---------- */
-
-export const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
-
-export async function deleteUpload(publicUrl: string): Promise<void> {
-  const match = /^\/api\/uploads\/([a-z0-9-]+\.pdf)$/.exec(publicUrl);
-  if (!match) return;
-  await fs.rm(path.join(UPLOAD_DIR, match[1]), { force: true });
 }

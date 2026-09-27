@@ -1,0 +1,22 @@
+.git
+.gitignore
+.next
+node_modules
+npm-debug.log*
+.claude
+.vscode
+*.md
+!README.md
+
+# Ortam ve sırlar imaja girmemeli
+.env
+.env.*
+!.env.example
+
+# Çalışma zamanı verileri (yalnızca cms-store.json başlangıç içeriği olarak kopyalanır)
+data/*
+!data/cms-store.json
+public/uploads/*
+!public/uploads/.gitkeep
+
+deploy/*.local

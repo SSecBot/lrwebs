@@ -1,14 +1,15 @@
 "use client";
 
-import { ExternalLink, FileText, LoaderCircle, Mail, MailOpen, Trash2, UploadCloud, Wand2, X } from "lucide-react";
-import { useRef, useState, useTransition } from "react";
+import { ExternalLink, FileText, Mail, MailOpen, Trash2, Wand2, X } from "lucide-react";
+import { useState, useTransition } from "react";
 import { deleteMessageAction, removeLegalPdfAction, setMessageReadAction } from "@/app/actions/admin";
 import { Grid, IconField, NumberField, Panel, SmallButton, TagsField, TextField, Toggle } from "@/components/admin/fields";
+import { FileDropzone } from "@/components/admin/file-dropzone";
 import { ListEditor } from "@/components/admin/list-editor";
 import { MarkdownEditor, SummaryField } from "@/components/admin/markdown-editor";
 import type { TabProps } from "@/components/admin/tabs-settings";
 import { useToast } from "@/components/ui/toast";
-import { cn, formatDate, formatPrice, slugify, uid } from "@/lib/utils";
+import { cn, formatDate, formatPrice, safeHref, slugify, uid } from "@/lib/utils";
 import type {
   BlogPost,
   ContactMessage,
@@ -186,7 +187,7 @@ export function ProjectsTab({ value, onChange }: TabProps<Project[]>) {
             </Grid>
             {p.coverImage ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={p.coverImage} alt="" className="h-28 w-48 rounded-lg border border-line object-cover" />
+              <img src={safeHref(p.coverImage)} alt="" className="h-28 w-48 rounded-lg border border-line object-cover" />
             ) : null}
             <MarkdownEditor label="Vaka çalışması" value={p.content} onChange={(v) => update({ content: v })} rows={8} />
             <SummaryField
@@ -460,104 +461,38 @@ export function PricingTab({ value: pricing, onChange }: TabProps<PricingSetting
 
 /* ---------- 8. Yasal Metinler & KVKK ---------- */
 
-function PdfDropzone({
+function LegalPdfControls({
   kind,
   doc,
-  onUploaded,
-  onRemoved,
+  onSynced,
 }: {
   kind: LegalKind;
   doc: LegalDocument;
-  onUploaded: (pdfUrl: string) => void;
-  onRemoved: () => void;
+  onSynced: (legal: LegalSettings) => void;
 }) {
   const toast = useToast();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [dragging, setDragging] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [removing, startRemove] = useTransition();
-
-  const upload = async (file: File | undefined) => {
-    if (!file) return;
-    if (file.type !== "application/pdf" || !/\.pdf$/i.test(file.name)) {
-      toast.error("Yalnızca PDF dosyaları yüklenebilir.");
-      return;
-    }
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("Dosya boyutu en fazla 10 MB olabilir.");
-      return;
-    }
-    setUploading(true);
-    try {
-      const body = new FormData();
-      body.set("kind", kind);
-      body.set("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body });
-      const json = (await res.json()) as { ok: boolean; message: string; pdfUrl?: string };
-      if (!json.ok || !json.pdfUrl) throw new Error(json.message);
-      onUploaded(json.pdfUrl);
-      toast.success(json.message);
-    } catch (error) {
-      toast.error(error instanceof Error && error.message ? error.message : "Yükleme başarısız oldu.");
-    } finally {
-      setUploading(false);
-      if (inputRef.current) inputRef.current.value = "";
-    }
-  };
 
   const remove = () =>
     startRemove(async () => {
       const result = await removeLegalPdfAction(kind);
-      if (result.ok) {
-        onRemoved();
+      if (result.ok && result.data) {
+        onSynced(result.data.store.legal);
         toast.success(result.message);
       } else toast.error(result.message);
     });
 
   return (
     <div className="space-y-3">
-      <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDragging(true);
-        }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={(e) => {
-          e.preventDefault();
-          setDragging(false);
-          void upload(e.dataTransfer.files[0]);
-        }}
-        onClick={() => inputRef.current?.click()}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            inputRef.current?.click();
-          }
-        }}
-        role="button"
-        tabIndex={0}
-        aria-label="PDF dosyası seçin veya sürükleyip bırakın"
-        className={cn(
-          "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed px-4 py-8 text-center transition",
-          dragging ? "border-primary bg-primary/5" : "border-line hover:border-primary/50",
-        )}
-      >
-        {uploading ? (
-          <LoaderCircle className="h-6 w-6 animate-spin text-primary" aria-hidden="true" />
-        ) : (
-          <UploadCloud className="h-6 w-6 text-primary" aria-hidden="true" />
-        )}
-        <p className="text-sm text-fg">{uploading ? "Yükleniyor…" : "PDF’i buraya sürükleyin veya seçmek için tıklayın"}</p>
-        <p className="text-[11px] text-muted">Yalnızca application/pdf · en fazla 10 MB · yükleme anında yayına alınır</p>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="application/pdf,.pdf"
-          className="sr-only"
-          onChange={(e) => void upload(e.target.files?.[0])}
-          tabIndex={-1}
-        />
-      </div>
+      <FileDropzone
+        kind={kind}
+        accept="application/pdf,.pdf"
+        extensions={["pdf"]}
+        maxBytes={10 * 1024 * 1024}
+        title="PDF’i buraya sürükleyin veya seçmek için tıklayın"
+        hint="Yalnızca .pdf · en fazla 10 MB · yükleme anında yayına alınır"
+        onUploaded={(res) => res.legal && onSynced(res.legal)}
+      />
 
       {doc.pdfUrl ? (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/30 bg-primary/5 px-4 py-3">
@@ -567,7 +502,7 @@ function PdfDropzone({
           </span>
           <div className="flex gap-2">
             <a
-              href={doc.pdfUrl}
+              href={safeHref(doc.pdfUrl)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 rounded-lg border border-line px-2.5 py-1.5 text-xs text-muted transition hover:text-fg"
@@ -591,9 +526,10 @@ function PdfDropzone({
 export function LegalTab({
   value: legal,
   onChange,
-  onPdfChange,
+  onSynced,
 }: TabProps<LegalSettings> & {
-  onPdfChange: (kind: LegalKind, pdfUrl: string) => void;
+  /** Yükleme/kaldırma sonrası sunucudaki güncel yasal metin bölümü. */
+  onSynced: (legal: LegalSettings) => void;
 }) {
   const docs: { kind: LegalKind; label: string }[] = [
     { kind: "privacy", label: "Gizlilik Politikası" },
@@ -620,12 +556,7 @@ export function LegalTab({
                 onChange={(v) => update({ updatedAt: v })}
               />
             </Grid>
-            <PdfDropzone
-              kind={kind}
-              doc={doc}
-              onUploaded={(url) => onPdfChange(kind, url)}
-              onRemoved={() => onPdfChange(kind, "")}
-            />
+            <LegalPdfControls kind={kind} doc={doc} onSynced={onSynced} />
             <MarkdownEditor label="Metin içeriği" value={doc.content} onChange={(v) => update({ content: v })} rows={14} />
           </Panel>
         );

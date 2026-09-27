@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { isSafeUrl, isValidEmail, sanitizeRichText, sanitizeText } from "@/lib/sanitize";
+import { isSafeSitePath, isSafeUrl, isValidEmail, sanitizeRichText, sanitizeText } from "@/lib/sanitize";
+import { isSafeIconUrl } from "@/lib/site-identity";
 import type {
   AboutSettings,
   BlogPost,
@@ -46,6 +47,9 @@ const isoDate = () =>
 
 const linkAction = z.object({ label: required(60), href: url() });
 
+const FAVICON_MESSAGE =
+  "Sekme ikonu .ico, .png veya .svg uzantılı bir site içi yol (ör. /favicon.svg) ya da https:// adresi olmalıdır.";
+
 function uniqueBy<T>(key: keyof T, message: string) {
   return (items: T[], ctx: z.RefinementCtx) => {
     const seen = new Set<unknown>();
@@ -62,13 +66,18 @@ function uniqueBy<T>(key: keyof T, message: string) {
 export const generalSchema: z.ZodType<GeneralSettings> = z.object({
   brandName: required(40),
   siteTitle: required(120),
+  titleTemplate: text(80).refine(
+    (v) => v === "" || (v.split("%s").length === 2 && v.length > 2),
+    'Başlık şablonu tam olarak bir kez "%s" içermelidir (ör. "%s | LrWebs") veya boş bırakılmalıdır.',
+  ),
+  faviconUrl: z.string().max(300).transform(sanitizeText).refine(isSafeIconUrl, FAVICON_MESSAGE),
   siteTagline: text(200),
   siteDescription: required(400),
   siteUrl: z
     .string()
     .max(200)
     .transform(sanitizeText)
-    .refine((v) => /^https?:\/\/[^\s]+$/i.test(v), "Site adresi http:// veya https:// ile başlamalıdır."),
+    .refine((v) => /^https?:\/\//i.test(v) && isSafeUrl(v), "Site adresi geçerli bir http:// veya https:// adresi olmalıdır."),
   keywords: tags(30),
   navigation: z
     .array(z.object({ id: id(), label: required(60), href: url(), visible: z.boolean() }))
@@ -141,7 +150,10 @@ export const heroSchema: z.ZodType<HeroSettings> = z.object({
       .string()
       .max(200)
       .transform(sanitizeText)
-      .refine((v) => v.startsWith("/") && !v.startsWith("//"), "Önizleme yolu / ile başlayan site içi bir yol olmalıdır."),
+      .refine(
+        (v) => isSafeSitePath(v) && !v.startsWith("/api/") && !v.startsWith("/admin"),
+        "Önizleme yolu / ile başlayan, yönetim paneli veya API dışındaki site içi bir yol olmalıdır.",
+      ),
     showLabels: z.boolean(),
     hint: text(160),
     labels: z.object({ desktop: required(30), tablet: required(30), mobile: required(30) }),
@@ -322,7 +334,7 @@ const legalDocument = z.object({
   pdfUrl: z
     .string()
     .max(300)
-    .refine((v) => v === "" || /^\/api\/uploads\/[a-z0-9-]+\.pdf$/.test(v), "Geçersiz PDF yolu."),
+    .refine((v) => v === "" || /^\/api\/uploads\/(privacy|kvkk)-\d{10,16}-[a-f0-9]{8}\.pdf$/.test(v), "Geçersiz PDF yolu."),
   updatedAt: isoDate(),
 });
 
@@ -366,11 +378,17 @@ export function flattenIssues(error: z.ZodError): Record<string, string> {
 export const contactMessageSchema = z.object({
   name: z
     .string()
+    .max(500, "Ad çok uzun.")
     .transform(sanitizeText)
     .pipe(z.string().min(2, "Lütfen adınızı girin.").max(100, "Ad en fazla 100 karakter olabilir.")),
-  email: z.string().transform(sanitizeText).pipe(z.string().max(200).refine(isValidEmail, "Geçerli bir e-posta adresi girin.")),
+  email: z
+    .string()
+    .max(500, "E-posta çok uzun.")
+    .transform(sanitizeText)
+    .pipe(z.string().max(200).refine(isValidEmail, "Geçerli bir e-posta adresi girin.")),
   message: z
     .string()
+    .max(12000, "Mesaj çok uzun.")
     .transform(sanitizeText)
     .pipe(z.string().min(20, "Proje detayları en az 20 karakter olmalıdır.").max(4000, "Mesaj en fazla 4000 karakter olabilir.")),
   consent: z.literal(true, { error: "Devam etmek için aydınlatma metnini onaylayın." }),

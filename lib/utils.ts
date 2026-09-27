@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { isSafeUrl } from "@/lib/sanitize";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -60,10 +61,7 @@ export function uid(prefix = "id"): string {
 export function safeHref(href: string | undefined | null): string {
   if (!href) return "#";
   const value = href.trim();
-  if (value.startsWith("/") && !value.startsWith("//")) return value;
-  if (value.startsWith("#")) return value;
-  if (/^(https?:|mailto:|tel:)/i.test(value)) return value;
-  return "#";
+  return value && isSafeUrl(value) ? value : "#";
 }
 
 export function isExternalHref(href: string): boolean {

@@ -3,6 +3,7 @@
 import { Grid, IconField, Panel, RangeField, SelectField, TagsField, TextField, Toggle } from "@/components/admin/fields";
 import { ListEditor } from "@/components/admin/list-editor";
 import { MarkdownEditor, SummaryField } from "@/components/admin/markdown-editor";
+import { SiteIdentityPanel } from "@/components/admin/site-identity-panel";
 import { uid } from "@/lib/utils";
 import type {
   AboutSettings,
@@ -39,21 +40,22 @@ export function GeneralTab({
   contact,
   onGeneral,
   onContact,
+  onGeneralSynced,
 }: {
   general: GeneralSettings;
   contact: ContactSettings;
   onGeneral: (v: GeneralSettings) => void;
   onContact: (v: ContactSettings) => void;
+  onGeneralSynced: (v: GeneralSettings) => void;
 }) {
   const g = <K extends keyof GeneralSettings>(key: K, v: GeneralSettings[K]) => onGeneral({ ...general, [key]: v });
   const c = <K extends keyof ContactSettings>(key: K, v: ContactSettings[K]) => onContact({ ...contact, [key]: v });
 
   return (
     <div className="space-y-6">
-      <Panel
-        title="Site kimliği ve SEO"
-        description="Tarayıcı sekmesi, arama motorları ve sosyal paylaşımlarda kullanılan bilgiler."
-      >
+      <SiteIdentityPanel general={general} onChange={onGeneral} onSynced={onGeneralSynced} />
+
+      <Panel title="Marka ve SEO" description="Arama motorları ve sosyal paylaşımlarda kullanılan bilgiler.">
         <Grid>
           <TextField
             label="Marka adı"
@@ -62,7 +64,6 @@ export function GeneralTab({
             maxLength={40}
             hint="Header ve footer'da görünür"
           />
-          <TextField label="Site başlığı (title)" value={general.siteTitle} onChange={(v) => g("siteTitle", v)} maxLength={120} />
           <TextField
             label="Slogan"
             value={general.siteTagline}

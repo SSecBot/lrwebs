@@ -29,7 +29,12 @@ export interface SocialLink {
 
 export interface GeneralSettings {
   brandName: string;
+  /** Ana sayfada tarayıcı sekmesinde görünen başlık (varsayılan <title>). */
   siteTitle: string;
+  /** Alt sayfalar için başlık şablonu; "%s" sayfa adıyla değiştirilir (ör. "%s | LrWebs"). */
+  titleTemplate: string;
+  /** Sekme ikonu: /favicon.svg, /favicon.ico, yüklenen dosya (/api/uploads/…) veya https:// adresi. */
+  faviconUrl: string;
   siteTagline: string;
   siteDescription: string;
   siteUrl: string;

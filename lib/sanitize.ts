@@ -38,12 +38,34 @@ export function sanitizeRichText(value: string): string {
     .trim();
 }
 
+/*
+ * Site içi yol: "/" ile başlar, ikinci karakter "/" veya "\" olamaz; boşluk, sekme,
+ * ters eğik çizgi ve tırnak içeremez. Tarayıcılar sekme/satır sonlarını silip "\"
+ * karakterini "/" gibi yorumladığından "/\t/evil.com" gibi değerler aksi halde
+ * harici bir adrese (//evil.com) dönüşebilir.
+ */
+const SITE_PATH = /^\/(?![/\\])[A-Za-z0-9\-._~!$&()*+,;=:@%/?#]*$/;
+const HASH_LINK = /^#[A-Za-z0-9\-._:%]*$/;
+const HTTP_URL = /^https?:\/\/[^\s<>"'`\\]+$/i;
+
+/** Aynı site içindeki güvenli bir yol mu? (açık yönlendirme / protokol kaçırma engellenir) */
+export function isSafeSitePath(value: string): boolean {
+  return SITE_PATH.test(value);
+}
+
 /** Bağlantılar için güvenli protokol kontrolü. Boş değerlere izin verilir. */
 export function isSafeUrl(value: string): boolean {
-  if (value === "" || value === "#") return true;
-  if (value.startsWith("/") && !value.startsWith("//")) return true;
-  if (value.startsWith("#")) return true;
-  return /^(https?:\/\/[^\s<>"']+|mailto:[^\s<>"']+|tel:[+\d\s()-]+)$/i.test(value);
+  if (value === "") return true;
+  if (HASH_LINK.test(value) || isSafeSitePath(value)) return true;
+  if (HTTP_URL.test(value)) {
+    try {
+      const url = new URL(value);
+      return (url.protocol === "http:" || url.protocol === "https:") && Boolean(url.hostname);
+    } catch {
+      return false;
+    }
+  }
+  return /^mailto:[^\s<>"'\\]+$/i.test(value) || /^tel:[+\d ()-]+$/i.test(value);
 }
 
 export function isValidEmail(value: string): boolean {

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Poppins } from "next/font/google";
 import { ToastProvider } from "@/components/ui/toast";
 import { getCms } from "@/lib/cms";
+import { iconMimeType, resolveFavicon, resolveTitleTemplate } from "@/lib/site-identity";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -20,9 +21,23 @@ const jetbrains = JetBrains_Mono({
 
 export async function generateMetadata(): Promise<Metadata> {
   const { general } = await getCms();
+  // Tüm sekme kimliği yönetim panelinden gelir; hatalı/elle bozulmuş değerlerde güvenli varsayılana düşülür.
+  const favicon = resolveFavicon(general);
+  const iconType = iconMimeType(favicon);
+  let metadataBase: URL | undefined;
+  try {
+    metadataBase = new URL(general.siteUrl);
+  } catch {
+    metadataBase = undefined;
+  }
   return {
-    metadataBase: new URL(general.siteUrl),
-    title: { default: general.siteTitle, template: `%s | ${general.brandName}` },
+    metadataBase,
+    title: { default: general.siteTitle, template: resolveTitleTemplate(general) },
+    icons: {
+      icon: [{ url: favicon, type: iconType }],
+      shortcut: [{ url: favicon, type: iconType }],
+      apple: [{ url: favicon, type: iconType }],
+    },
     description: general.siteDescription,
     keywords: general.keywords,
     applicationName: general.brandName,

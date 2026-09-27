@@ -27,8 +27,9 @@ import { logoutAction, saveSectionsAction } from "@/app/actions/admin";
 import { BlogTab, LegalTab, MessagesTab, PricingTab, ProjectsTab, ServicesTab } from "@/components/admin/tabs-collections";
 import { AboutTab, ContactTab, CopyTab, GeneralTab, HeroTab, StatsTab } from "@/components/admin/tabs-settings";
 import { useToast } from "@/components/ui/toast";
+import { contentHash } from "@/lib/hash";
 import { cn } from "@/lib/utils";
-import type { CmsSectionKey, CmsStore, ContactMessage, LegalKind } from "@/types/cms";
+import type { CmsSectionKey, CmsStore, ContactMessage, GeneralSettings, LegalSettings } from "@/types/cms";
 
 type TabId =
   | "general"
@@ -89,16 +90,24 @@ export function AdminDashboard({ initialStore, initialMessages }: { initialStore
 
   const save = () => {
     if (!isDirty || saving) return;
+    const sent = cms;
     const patch = Object.fromEntries(dirtyKeys.map((k) => [k, cms[k]]));
+    // Düzenlemenin başladığı sürümün özetleri: sunucu bu arada değişmişse kayıt reddedilir.
+    const base = Object.fromEntries(dirtyKeys.map((k) => [k, contentHash(saved[k])]));
     startSaving(async () => {
       try {
-        const result = await saveSectionsAction(patch);
+        const result = await saveSectionsAction(patch, base);
         if (result.ok && result.data) {
-          setSaved(result.data.store);
-          // Sunucuda temizlenmiş değerleri forma yansıt.
+          const store = result.data.store;
+          setSaved(store);
+          // Sunucuda temizlenmiş değerleri forma yansıt; kayıt sürerken yapılan yeni düzenlemeleri koru.
           setCms((current) => {
-            const next = { ...current, updatedAt: result.data!.store.updatedAt };
-            for (const k of dirtyKeys) (next as Record<string, unknown>)[k] = result.data!.store[k];
+            const next = { ...current, updatedAt: store.updatedAt };
+            for (const k of Object.keys(store) as CmsSectionKey[]) {
+              if (k in sent && JSON.stringify(current[k]) === JSON.stringify(sent[k])) {
+                (next as Record<string, unknown>)[k] = store[k];
+              }
+            }
             return next;
           });
           setErrors({});
@@ -125,10 +134,25 @@ export function AdminDashboard({ initialStore, initialMessages }: { initialStore
     toast.info("Kaydedilmemiş değişiklikler geri alındı.");
   };
 
-  const onPdfChange = (kind: LegalKind, pdfUrl: string) => {
-    const patchLegal = (s: CmsStore): CmsStore => ({ ...s, legal: { ...s.legal, [kind]: { ...s.legal[kind], pdfUrl } } });
-    setCms(patchLegal);
-    setSaved(patchLegal);
+  /*
+   * Yükleme uç noktası veriyi doğrudan kaydeder. Kaydedilmiş sürüm sunucudakiyle birebir
+   * eşitlenir; formda yalnızca yüklemenin değiştirdiği alanlar güncellenir, böylece
+   * kaydedilmemiş diğer düzenlemeler korunur ve sonraki kayıtta sahte çakışma oluşmaz.
+   */
+  const onLegalSynced = (legal: LegalSettings) => {
+    setSaved((s) => ({ ...s, legal }));
+    setCms((c) => ({
+      ...c,
+      legal: {
+        privacy: { ...c.legal.privacy, pdfUrl: legal.privacy.pdfUrl, updatedAt: legal.privacy.updatedAt },
+        kvkk: { ...c.legal.kvkk, pdfUrl: legal.kvkk.pdfUrl, updatedAt: legal.kvkk.updatedAt },
+      },
+    }));
+  };
+
+  const onGeneralSynced = (general: GeneralSettings) => {
+    setSaved((s) => ({ ...s, general }));
+    setCms((c) => ({ ...c, general: { ...c.general, faviconUrl: general.faviconUrl } }));
   };
 
   // Ctrl/Cmd + S ile kaydet, kaydedilmemiş değişiklik varken sayfadan ayrılmayı uyar.
@@ -262,7 +286,13 @@ export function AdminDashboard({ initialStore, initialMessages }: { initialStore
             ) : null}
 
             {tab === "general" && (
-              <GeneralTab general={cms.general} contact={cms.contact} onGeneral={set("general")} onContact={set("contact")} />
+              <GeneralTab
+                general={cms.general}
+                contact={cms.contact}
+                onGeneral={set("general")}
+                onContact={set("contact")}
+                onGeneralSynced={onGeneralSynced}
+              />
             )}
             {tab === "hero" && <HeroTab value={cms.hero} onChange={set("hero")} />}
             {tab === "stats" && <StatsTab value={cms.stats} onChange={set("stats")} />}
@@ -270,7 +300,7 @@ export function AdminDashboard({ initialStore, initialMessages }: { initialStore
             {tab === "projects" && <ProjectsTab value={cms.projects} onChange={set("projects")} />}
             {tab === "blog" && <BlogTab value={cms.blog} onChange={set("blog")} />}
             {tab === "pricing" && <PricingTab value={cms.pricing} onChange={set("pricing")} />}
-            {tab === "legal" && <LegalTab value={cms.legal} onChange={set("legal")} onPdfChange={onPdfChange} />}
+            {tab === "legal" && <LegalTab value={cms.legal} onChange={set("legal")} onSynced={onLegalSynced} />}
             {tab === "about" && <AboutTab value={cms.about} onChange={set("about")} />}
             {tab === "contact" && <ContactTab value={cms.contact} onChange={set("contact")} />}
             {tab === "copy" && (

@@ -1,8 +1,7 @@
 "use server";
 
-import { headers } from "next/headers";
 import { randomUUID } from "node:crypto";
-import { rateLimit } from "@/lib/auth";
+import { clientIp, rateLimit } from "@/lib/auth";
 import { addMessage } from "@/lib/cms";
 import { contactMessageSchema, flattenIssues } from "@/lib/validation";
 import type { ActionResult } from "@/types/cms";
@@ -17,21 +16,23 @@ export interface ContactInput {
 }
 
 export async function submitContact(input: ContactInput): Promise<ActionResult> {
+  // Sunucu eylemleri herkese açık uç noktalardır; gövde biçimi istemciye güvenilmeden doğrulanır.
+  if (typeof input !== "object" || input === null) return { ok: false, message: "Geçersiz istek." };
   if (input.website) {
     // Botlara başarılı görünen ancak hiçbir şey kaydetmeyen yanıt ver.
     return { ok: true, message: "Mesajınız alındı." };
   }
 
-  const h = await headers();
-  const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip") || "local";
-  if (!rateLimit(`contact:${ip}`, 5, 10 * 60 * 1000)) {
+  const ip = await clientIp();
+  // IP başına ve toplam (IP sahteciliğine / dağıtık spam'e karşı) gönderim sınırı.
+  if (!rateLimit(`contact:${ip}`, 5, 10 * 60 * 1000) || !rateLimit("contact:global", 60, 10 * 60 * 1000)) {
     return { ok: false, message: "Çok fazla deneme yapıldı. Lütfen birkaç dakika sonra tekrar deneyin." };
   }
 
   const parsed = contactMessageSchema.safeParse({
-    name: String(input.name ?? ""),
-    email: String(input.email ?? ""),
-    message: String(input.message ?? ""),
+    name: typeof input.name === "string" ? input.name : "",
+    email: typeof input.email === "string" ? input.email : "",
+    message: typeof input.message === "string" ? input.message : "",
     consent: input.consent === true,
   });
 

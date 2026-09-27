@@ -2,6 +2,8 @@
   "general": {
     "brandName": "LrWebs",
     "siteTitle": "LrWebs — Modern Web Geliştirme ve Dijital Ajans",
+    "titleTemplate": "%s | LrWebs",
+    "faviconUrl": "/favicon.svg",
     "siteTagline": "Sürdürülebilir kod mimarisiyle modern web deneyimleri",
     "siteDescription": "LrWebs; işletmeler, girişimler ve kurumlar için performans odaklı web uygulamaları, ölçeklenebilir sistem mimarileri ve modern kullanıcı deneyimleri tasarlayan bir web mühendisliği ajansıdır.",
     "siteUrl": "http://localhost:3000",
@@ -49,12 +51,6 @@
         "id": "nav-contact",
         "label": "İletişim",
         "href": "/contact",
-        "visible": true
-      },
-      {
-        "id": "nav-admin",
-        "label": "Admin Girişi",
-        "href": "/admin",
         "visible": true
       }
     ],
@@ -300,7 +296,7 @@
       "slug": "web-uygulama-gelistirme",
       "title": "Web Uygulama Geliştirme",
       "icon": "code",
-      "summary": "Next.js ve TypeScript ile hızlı, güvenli ve bakımı kolay web uygulamaları ile kurumsal siteler geliştiriyoruz.",
+      "summary": "Kurumsal web sitelerinden müşteri panellerine, rezervasyon sistemlerinden içerik platformlarına kadar farklı ölçeklerde web uygulamaları geliştiriyoruz.",
       "content": "## Kapsam\nKurumsal web sitelerinden müşteri panellerine, rezervasyon sistemlerinden içerik platformlarına kadar farklı ölçeklerde web uygulamaları geliştiriyoruz. Her projeye ihtiyaç analiziyle başlıyor, ardından bileşen tabanlı ve test edilebilir bir kod tabanı kuruyoruz.\n\n## Teknik Yaklaşım\nSunucu tarafı render, statik üretim ve artımlı yeniden doğrulama gibi teknikleri sayfa türüne göre birlikte kullanıyoruz. Böylece hem arama motorları hem de kullanıcılar için hızlı açılan sayfalar elde ediyoruz.\n\n- Tip güvenli TypeScript kod tabanı\n- Erişilebilirlik standartlarına uygun arayüz bileşenleri\n- Otomatik testler ve sürekli entegrasyon hatları\n\n## Teslimat\nProje sonunda kaynak kodu, dağıtım dokümantasyonu ve yönetim paneli kullanım kılavuzunu eksiksiz olarak teslim ediyoruz.",
       "features": [
         "Next.js & React",
@@ -826,5 +822,5 @@
       "updatedAt": "2026-09-01"
     }
   },
-  "updatedAt": "2026-09-26T17:21:38.484Z"
+  "updatedAt": "2026-09-26T20:47:37.903Z"
 }

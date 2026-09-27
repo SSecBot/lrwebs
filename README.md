@@ -11,6 +11,8 @@ npm run build      # üretim derlemesi
 npm run start      # üretim sunucusu
 ```
 
+**Yayınlamak için:** [DEPLOY.md](DEPLOY.md) — Docker + otomatik HTTPS ile adım adım yayın rehberi.
+
 Yönetim paneli: `/admin` — varsayılan parola `admin123`. Üretimde `.env.example` dosyasını `.env.local` olarak kopyalayıp `ADMIN_PASSCODE` ve `ADMIN_SESSION_SECRET` değerlerini değiştirin.
 
 ## Mimari
@@ -28,6 +30,14 @@ Yönetim paneli: `/admin` — varsayılan parola `admin123`. Üretimde `.env.exa
 | PDF yükleme | `app/api/admin/upload` → `public/uploads/`, sunum `app/api/uploads/[file]` |
 
 Yönetim panelinden yapılan her kayıt `data/cms-store.json` dosyasına yazılır ve tüm site anında yeniden doğrulanır. İletişim formu mesajları `data/messages.json` dosyasında tutulur ve panelde "Gelen Mesajlar" sekmesinden yönetilir.
+
+## Güvenlik
+
+- Tüm veri değiştiren sunucu eylemleri ve `/api/admin/upload` oturumu sunucu tarafında doğrular; yükleme ucu ayrıca aynı kökeni (Origin) zorunlu tutar.
+- Oturum çerezi HMAC imzalıdır, parolaya bağlıdır (parola değişince oturumlar düşer) ve çıkışta sunucuda iptal edilir.
+- Yüklemeler: yalnızca `.pdf` (yasal metinler) ve `.ico/.png/.svg` (sekme ikonu); uzantı + MIME + dosya imzası doğrulanır, dosya adı sunucuda üretilir, SVG'lerde betik/olay/harici referans reddedilir ve SVG'ler `sandbox` CSP ile sunulur.
+- `next.config.ts` CSP, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy ve (üretimde) HSTS başlıklarını ekler.
+- `data/cms-store.json` yazımları kilit dosyası + fsync + atomik rename ile yapılır; önceki sürüm `.bak` olarak saklanır. Eşzamanlı düzenlemeler bölüm bazında tespit edilir ve sessizce üzerine yazılmaz.
 
 ## Notlar
 

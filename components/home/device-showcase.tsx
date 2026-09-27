@@ -2,6 +2,7 @@
 
 import { Monitor, Smartphone, Tablet } from "lucide-react";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { isSafeSitePath } from "@/lib/sanitize";
 import { cn } from "@/lib/utils";
 import type { DeviceKind, HeroSettings } from "@/types/cms";
 
@@ -185,7 +186,11 @@ export function DeviceShowcase({ devices }: { devices: HeroSettings["devices"] }
             >
               <DeviceFrame kind={kind}>
                 {canEmbed && loaded.has(kind) ? (
-                  <LivePreview kind={kind} src={devices.previewPath} interactive={isFront} />
+                  <LivePreview
+                    kind={kind}
+                    src={isSafeSitePath(devices.previewPath) ? devices.previewPath : "/"}
+                    interactive={isFront}
+                  />
                 ) : (
                   <StaticPreview kind={kind} />
                 )}

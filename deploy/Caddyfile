@@ -1,0 +1,14 @@
+# Caddy, DOMAIN için Let's Encrypt sertifikasını otomatik alır ve yeniler.
+# www. alt alan adını ana alan adına yönlendirmek için alttaki bloğun yorumunu kaldırın.
+
+{$DOMAIN} {
+	encode zstd gzip
+	request_body {
+		max_size 12MB
+	}
+	reverse_proxy lrwebs:3000
+}
+
+# www.{$DOMAIN} {
+# 	redir https://{$DOMAIN}{uri} permanent
+# }
