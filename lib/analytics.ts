@@ -1,27 +1,23 @@
 /**
- * Google Analytics 4 yardımcıları (istemci + sunucu ortak).
+ * Dahili analitik: istemci + sunucu ortak yardımcılar.
+ *
+ * Ziyaretçi tarayıcısında hiçbir şey saklanmaz (çerez, localStorage vb. yok); ziyaretçiler
+ * sunucuda, her gün değişen gizli bir tuzla üretilen tek yönlü bir özetle sayılır. Bu yüzden
+ * çerez onayı banner'ı gerekmez ve veriler üçüncü taraflara gönderilmez.
  */
 
-const MEASUREMENT_ID = /\bG-[A-Z0-9]{4,15}\b/i;
+export const COLLECT_ENDPOINT = "/api/analytics";
 
-/**
- * Yönetim panelinde girilen değerden GA4 Ölçüm Kimliğini ayıklar.
- * Doğrudan "G-XXXXXXX" ya da Google'ın verdiği <script> parçacığının tamamı yapıştırılabilir;
- * her iki durumda da yalnızca kimlik saklanır, betik kodu asla sayfaya gömülmez.
- */
-export function extractMeasurementId(input: string): string | null {
-  const match = MEASUREMENT_ID.exec(input ?? "");
-  return match ? match[0].toUpperCase() : null;
-}
+/** Özel olaylar için okunabilir adlar (yönetim paneli). Listede olmayan adlar olduğu gibi gösterilir. */
+export const EVENT_LABELS: Record<string, string> = {
+  generate_lead: "İletişim formu gönderildi",
+  pricing_quote_request: "Fiyat teklifi istendi",
+  pricing_package_select: "Fiyat paketi seçildi",
+};
 
-export function isValidMeasurementId(id: string): boolean {
-  return /^G-[A-Z0-9]{4,15}$/.test(id);
-}
+export type EventProps = Record<string, string | number | boolean | undefined>;
 
-export const CONSENT_STORAGE_KEY = "lrwebs-analytics-consent";
-export const OPEN_CONSENT_EVENT = "lrwebs:open-consent";
-
-/** Para birimi simgesini GA4'ün beklediği ISO 4217 koduna çevirir. */
+/** Para birimi simgesini ISO 4217 koduna çevirir (olay özelliklerinde tutarlı görünüm için). */
 export function currencyCode(symbol: string): string | undefined {
   const s = symbol.trim().toUpperCase();
   if (s === "₺" || s === "TL" || s === "TRY") return "TRY";
@@ -31,11 +27,28 @@ export function currencyCode(symbol: string): string | undefined {
   return undefined;
 }
 
-type Gtag = (...args: unknown[]) => void;
+type AnalyticsWindow = Window & { __lrwebsAnalytics?: boolean };
 
-/** GA4 olayı gönderir; analitik yüklü değilse (onay yok, kapalı vb.) sessizce yok sayılır. */
-export function trackEvent(name: string, params: Record<string, string | number | boolean | undefined> = {}) {
+/** Ham veri gönderimi: sayfa kapanırken de ulaşması için sendBeacon, yoksa keepalive fetch. */
+export function sendAnalytics(payload: Record<string, unknown>) {
+  if (typeof window === "undefined" || !(window as AnalyticsWindow).__lrwebsAnalytics) return;
+  const body = JSON.stringify(payload);
+  try {
+    if (navigator.sendBeacon?.(COLLECT_ENDPOINT, new Blob([body], { type: "text/plain" }))) return;
+  } catch {
+    /* sendBeacon kullanılamıyorsa fetch ile dene */
+  }
+  void fetch(COLLECT_ENDPOINT, {
+    method: "POST",
+    body,
+    keepalive: true,
+    credentials: "same-origin",
+    headers: { "Content-Type": "text/plain" },
+  }).catch(() => undefined);
+}
+
+/** Özel olay kaydeder; analitik kapalıysa veya ziyaretçi ölçülmüyorsa sessizce yok sayılır. */
+export function trackEvent(name: string, props: EventProps = {}) {
   if (typeof window === "undefined") return;
-  const gtag = (window as unknown as { gtag?: Gtag }).gtag;
-  if (typeof gtag === "function") gtag("event", name, params);
+  sendAnalytics({ type: "event", name, path: window.location.pathname, props });
 }

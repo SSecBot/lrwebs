@@ -280,20 +280,20 @@ export interface LegalSettings {
   kvkk: LegalDocument;
 }
 
-/** Google Analytics 4. Yalnızca Ölçüm Kimliği saklanır; ham betik kodu asla saklanmaz/gömülmez. */
+/**
+ * Dahili (kendi sunucumuzda çalışan) ziyaretçi analitiği.
+ * Çerez veya cihazda saklanan kimlik kullanılmaz; IP adresi saklanmaz.
+ */
 export interface AnalyticsSettings {
   enabled: boolean;
-  /** GA4 Ölçüm Kimliği, ör. "G-ABC123XYZ9". */
-  measurementId: string;
-  /** Açıksa (önerilen, KVKK) analitik yalnızca ziyaretçi çerez onayı verdikten sonra yüklenir. */
-  requireConsent: boolean;
-  consent: {
-    title: string;
-    text: string;
-    acceptLabel: string;
-    rejectLabel: string;
-    settingsLabel: string;
-  };
+  /** Tarayıcısında "İzleme" (Do Not Track / GPC) sinyali açık olan ziyaretçileri ölçme. */
+  respectDoNotTrack: boolean;
+  /** Yönetim panelinde oturum açmış tarayıcıların ziyaretlerini sayma. */
+  excludeAdmins: boolean;
+  /** Ham kayıtların saklanma süresi (gün); süresi dolanlar otomatik silinir. */
+  retentionDays: number;
+  /** Ölçülmeyecek yollar (ön ek, ör. "/tesekkurler"). */
+  excludedPaths: string[];
 }
 
 /** Sitedeki yazı tipleri (anahtarlar lib/font-catalog.ts). */

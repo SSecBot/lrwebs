@@ -10,18 +10,13 @@ const isDev = process.env.NODE_ENV !== "production";
  * - frame-src/frame-ancestors 'self': cihaz vitrini ve PDF görüntüleyici yalnızca aynı kökeni gömer;
  *   site başka alan adlarında çerçevelenemez (clickjacking koruması).
  */
-// Google Analytics 4 (gtag.js) için gereken kaynaklar. Betik yalnızca yönetim panelinde bir
-// Ölçüm Kimliği girildiğinde ve (açıksa) ziyaretçi onay verdiğinde yüklenir.
-const GA_SCRIPT = "https://www.googletagmanager.com";
-const GA_CONNECT = "https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com";
-
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' ${GA_SCRIPT}${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  `connect-src 'self' ${GA_CONNECT}${isDev ? " ws: wss:" : ""}`,
+  `connect-src 'self'${isDev ? " ws: wss:" : ""}`,
   "frame-src 'self'",
   "frame-ancestors 'self'",
   "object-src 'none'",

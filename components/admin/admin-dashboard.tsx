@@ -32,7 +32,8 @@ import { BackupTab } from "@/components/admin/backup-tab";
 import { FooterCreditTab } from "@/components/admin/footer-credit-tab";
 import { TypographyTab } from "@/components/admin/typography-tab";
 import { BlogTab, LegalTab, MessagesTab, PricingTab, ProjectsTab, ServicesTab } from "@/components/admin/tabs-collections";
-import { AboutTab, AnalyticsTab, ContactTab, CopyTab, GeneralTab, HeroTab, StatsTab } from "@/components/admin/tabs-settings";
+import { AnalyticsTab } from "@/components/admin/analytics-tab";
+import { AboutTab, ContactTab, CopyTab, GeneralTab, HeroTab, StatsTab } from "@/components/admin/tabs-settings";
 import { useToast } from "@/components/ui/toast";
 import { contentHash } from "@/lib/hash";
 import { cn } from "@/lib/utils";
@@ -70,7 +71,7 @@ const TABS: { id: TabId; label: string; icon: LucideIcon; keys: CmsSectionKey[];
   { id: "copy", label: "Bölüm & Sayfa Metinleri", icon: Type, keys: ["sections", "pages"], group: "Site" },
   { id: "footerCredit", label: "Footer Metni", icon: PanelBottom, keys: ["footerCredit"], group: "Site" },
   { id: "typography", label: "Yazı Tipleri", icon: TypeOutline, keys: ["typography"], group: "Site" },
-  { id: "analytics", label: "Analitik (GA4)", icon: ChartLine, keys: ["analytics"], group: "Site" },
+  { id: "analytics", label: "Analitik", icon: ChartLine, keys: ["analytics"], group: "Site" },
   { id: "backup", label: "Yedekleme", icon: ArchiveRestore, keys: [], group: "Site" },
   { id: "messages", label: "Gelen Mesajlar", icon: Inbox, keys: [], group: "Gelen Kutusu" },
 ];
@@ -321,7 +322,9 @@ export function AdminDashboard({ initialStore, initialMessages }: { initialStore
             {tab === "copy" && (
               <CopyTab sections={cms.sections} pages={cms.pages} onSections={set("sections")} onPages={set("pages")} />
             )}
-            {tab === "analytics" && <AnalyticsTab value={cms.analytics} onChange={set("analytics")} />}
+            {tab === "analytics" && (
+              <AnalyticsTab value={cms.analytics} onChange={set("analytics")} savedEnabled={saved.analytics.enabled} />
+            )}
             {tab === "footerCredit" && <FooterCreditTab value={cms.footerCredit} onChange={set("footerCredit")} />}
             {tab === "typography" && <TypographyTab value={cms.typography} onChange={set("typography")} />}
             {tab === "backup" && <BackupTab isDirty={isDirty} />}

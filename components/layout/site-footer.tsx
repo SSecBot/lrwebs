@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { FooterCredit } from "@/components/layout/footer-credit";
-import { ConsentSettingsButton } from "@/components/layout/google-analytics";
 import { LegalLinks } from "@/components/layout/legal-modal";
 import { SocialIcon } from "@/lib/icons";
 import { safeHref } from "@/lib/utils";
 import type { CmsStore } from "@/types/cms";
 
 export function SiteFooter({ cms }: { cms: CmsStore }) {
-  const { general, contact, legal, analytics } = cms;
+  const { general, contact, legal } = cms;
   const year = new Date().getFullYear();
   const nav = general.navigation.filter((n) => n.visible);
 
@@ -97,9 +96,6 @@ export function SiteFooter({ cms }: { cms: CmsStore }) {
               documents={legal}
               labels={{ privacy: general.footer.privacyLabel, kvkk: general.footer.kvkkLabel }}
             />
-            {analytics.enabled && analytics.requireConsent && analytics.measurementId ? (
-              <ConsentSettingsButton label={analytics.consent.settingsLabel} />
-            ) : null}
           </div>
         </div>
       </div>

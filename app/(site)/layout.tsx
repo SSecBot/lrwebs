@@ -1,5 +1,5 @@
-import { GoogleAnalytics } from "@/components/layout/google-analytics";
 import { InteractiveBackground } from "@/components/layout/interactive-background";
+import { SiteAnalytics } from "@/components/layout/site-analytics";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { getCms } from "@/lib/cms";
@@ -28,7 +28,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       </main>
       <SiteFooter cms={cms} />
       {/* Yalnızca herkese açık site sayfalarında; yönetim paneli ölçülmez. */}
-      <GoogleAnalytics settings={cms.analytics} />
+      {cms.analytics.enabled ? <SiteAnalytics respectDoNotTrack={cms.analytics.respectDoNotTrack} /> : null}
     </>
   );
 }

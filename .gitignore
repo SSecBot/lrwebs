@@ -48,6 +48,7 @@ next-env.d.ts
 /data/*.lock
 /data/*.bak
 /data/backups/
+/data/analytics/
 /public/uploads/*
 !/public/uploads/.gitkeep
 *.lrwebs

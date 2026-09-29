@@ -27,7 +27,7 @@ const SECTION_LABELS: Record<CmsSectionKey, string> = {
   pricing: "Fiyatlandırma",
   about: "Hakkımızda",
   legal: "Yasal Metinler",
-  analytics: "Analitik (GA4)",
+  analytics: "Analitik",
   typography: "Yazı Tipleri",
   footerCredit: "Footer Metni",
 };

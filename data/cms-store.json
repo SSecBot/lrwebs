@@ -46,15 +46,10 @@
   },
   "analytics": {
     "enabled": false,
-    "measurementId": "",
-    "requireConsent": true,
-    "consent": {
-      "title": "Çerez tercihleri",
-      "text": "Sitemizi nasıl kullandığınızı anlamak ve deneyimi iyileştirmek için, onay vermeniz hâlinde Google Analytics analitik çerezlerini kullanırız. Zorunlu çerezler dışında hiçbir çerez onayınız olmadan yerleştirilmez.",
-      "acceptLabel": "Kabul et",
-      "rejectLabel": "Reddet",
-      "settingsLabel": "Çerez Tercihleri"
-    }
+    "respectDoNotTrack": true,
+    "excludeAdmins": true,
+    "retentionDays": 365,
+    "excludedPaths": []
   },
   "general": {
     "brandName": "LrWebs",
@@ -879,5 +874,5 @@
       "updatedAt": "2026-09-01"
     }
   },
-  "updatedAt": "2026-09-29T22:29:17.485Z"
+  "updatedAt": "2026-09-29T22:57:09.404Z"
 }

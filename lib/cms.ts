@@ -120,6 +120,11 @@ async function writeJsonAtomic(file: string, data: unknown, { backup = false } =
   }
 }
 
+function pick<T extends object>(value: T | undefined, keys: string[]): Partial<T> {
+  if (!value || typeof value !== "object") return {};
+  return Object.fromEntries(Object.entries(value).filter(([k]) => keys.includes(k))) as Partial<T>;
+}
+
 /** Sonradan eklenen bölümler için varsayılanlar (eski veri dosyalarıyla geriye dönük uyum). */
 const SECTION_DEFAULTS: Pick<CmsStore, "analytics" | "typography" | "footerCredit"> = {
   typography: { headingFont: "pacifico", bodyFont: "poppins", brandFont: "pacifico", headingWeight: 400, baseSize: "md" },
@@ -131,25 +136,31 @@ const SECTION_DEFAULTS: Pick<CmsStore, "analytics" | "typography" | "footerCredi
     segments: [
       { id: "fc-1", type: "text", text: "© {year}", href: "", newTab: false, color: "", imageUrl: "", imageHeight: 20 },
       { id: "fc-2", type: "link", text: "LrWebs", href: "/", newTab: false, color: "", imageUrl: "", imageHeight: 20 },
-      { id: "fc-3", type: "text", text: "Tüm hakları saklıdır.", href: "", newTab: false, color: "", imageUrl: "", imageHeight: 20 },
+      {
+        id: "fc-3",
+        type: "text",
+        text: "Tüm hakları saklıdır.",
+        href: "",
+        newTab: false,
+        color: "",
+        imageUrl: "",
+        imageHeight: 20,
+      },
     ],
   },
   analytics: {
     enabled: false,
-    measurementId: "",
-    requireConsent: true,
-    consent: {
-      title: "Çerez tercihleri",
-      text: "Sitemizi nasıl kullandığınızı anlamak ve deneyimi iyileştirmek için, onay vermeniz hâlinde Google Analytics analitik çerezlerini kullanırız.",
-      acceptLabel: "Kabul et",
-      rejectLabel: "Reddet",
-      settingsLabel: "Çerez Tercihleri",
-    },
+    respectDoNotTrack: true,
+    excludeAdmins: true,
+    retentionDays: 365,
+    excludedPaths: [],
   },
 };
 
 export function withDefaults(store: CmsStore): CmsStore {
-  return { ...SECTION_DEFAULTS, ...store };
+  // Nesne bölümlerinde eksik alanlar da doldurulur (ör. eski GA4 ayarları → dahili analitik).
+  const analytics = { ...SECTION_DEFAULTS.analytics, ...pick(store.analytics, Object.keys(SECTION_DEFAULTS.analytics)) };
+  return { ...SECTION_DEFAULTS, ...store, analytics };
 }
 
 async function readStore(): Promise<CmsStore> {

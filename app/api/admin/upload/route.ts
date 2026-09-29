@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { CmsStore } from "@/types/cms";
 import { isAuthenticated } from "@/lib/auth";
+import { isSameOrigin } from "@/lib/request";
 import { mutateCms } from "@/lib/cms";
 import { deleteUpload, isUploadKind, maxBytesFor, storeUpload, UPLOAD_URL, validateUpload } from "@/lib/uploads";
 
@@ -8,20 +9,6 @@ export const runtime = "nodejs";
 
 function fail(message: string, status = 400) {
   return NextResponse.json({ ok: false, message }, { status, headers: { "Cache-Control": "no-store" } });
-}
-
-/** Aynı kökenden gelmeyen (CSRF) istekleri reddeder. Origin başlığı zorunludur. */
-function isSameOrigin(request: Request): boolean {
-  const origin = request.headers.get("origin");
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host");
-  if (!origin || !host) return false;
-  const site = request.headers.get("sec-fetch-site");
-  if (site && site !== "same-origin") return false;
-  try {
-    return new URL(origin).host === host;
-  } catch {
-    return false;
-  }
 }
 
 /**
