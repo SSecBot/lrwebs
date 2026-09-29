@@ -22,7 +22,7 @@ export function StatsSection({ stats }: { stats: StatsSettings }) {
       <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           {stats.eyebrow ? <p className="eyebrow mb-2">{stats.eyebrow}</p> : null}
-          <h2 id="stats-title" className="font-mono text-xl font-bold text-fg sm:text-2xl">
+          <h2 id="stats-title" className="font-display text-xl font-normal text-fg sm:text-2xl">
             {stats.title}
           </h2>
         </div>
@@ -32,7 +32,7 @@ export function StatsSection({ stats }: { stats: StatsSettings }) {
           <article key={item.id} className="card card-hover group relative overflow-hidden p-6 sm:p-8 lg:p-10">
             <div className="flex items-start justify-between gap-6">
               <div>
-                <p className="font-mono text-5xl font-bold tracking-tight text-fg sm:text-6xl lg:text-7xl">
+                <p className="text-5xl font-bold tracking-tight text-fg sm:text-6xl lg:text-7xl">
                   {item.value}
                   <span className={i === 0 ? "text-primary" : "text-warm"}>{item.suffix}</span>
                 </p>
@@ -69,9 +69,9 @@ export function ServicesPreview({ copy, services }: { copy: SectionCopy; service
               <span className="rounded-xl border border-line bg-deep p-2.5">
                 <CmsIcon name={service.icon} className="h-5 w-5 text-primary" />
               </span>
-              <span className="font-mono text-xs text-muted/70">{String(i + 1).padStart(2, "0")}</span>
+              <span className="text-xs text-muted/70">{String(i + 1).padStart(2, "0")}</span>
             </div>
-            <h3 className="mt-6 font-mono text-lg font-bold text-fg">{service.title}</h3>
+            <h3 className="mt-6 font-display text-lg font-normal text-fg">{service.title}</h3>
             <p className="mt-3 flex-1 text-sm leading-6 text-muted">{service.summary}</p>
             <div className="mt-5 flex flex-wrap gap-1.5">
               {service.features.slice(0, 3).map((f) => (
@@ -97,7 +97,7 @@ export function AboutSummary({ copy, about }: { copy: SectionCopy; about: AboutS
       <div className="card grid gap-10 p-6 sm:p-10 lg:grid-cols-[1fr_1.3fr] lg:p-14">
         <div>
           {copy.eyebrow ? <p className="eyebrow mb-3">{copy.eyebrow}</p> : null}
-          <h2 id="about-summary-title" className="font-mono text-2xl font-bold leading-snug text-fg sm:text-3xl lg:text-4xl">
+          <h2 id="about-summary-title" className="font-display text-2xl font-normal leading-snug text-fg sm:text-3xl lg:text-4xl">
             {copy.title}
           </h2>
           {copy.description ? <p className="mt-4 text-sm leading-7 text-muted">{copy.description}</p> : null}
@@ -142,16 +142,16 @@ function ProjectCard({ project, hidden = false }: { project: Project; hidden?: b
           label={project.title.slice(0, 2)}
           className="transition duration-500 group-hover:scale-[1.03]"
         />
-        <span className="absolute top-3 left-3 rounded-md border border-line bg-deep/80 px-2 py-0.5 font-mono text-[11px] text-fg backdrop-blur">
+        <span className="absolute top-3 left-3 rounded-md border border-line bg-deep/80 px-2 py-0.5 text-[11px] text-fg backdrop-blur">
           {project.category}
         </span>
       </div>
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-center justify-between gap-3 text-xs text-muted">
           <span>{project.client}</span>
-          <span className="font-mono">{project.year}</span>
+          <span>{project.year}</span>
         </div>
-        <h3 className="mt-2 font-mono text-base font-bold text-fg">{project.title}</h3>
+        <h3 className="mt-2 font-display text-base font-normal text-fg">{project.title}</h3>
         <p className="mt-2 line-clamp-2 flex-1 text-sm leading-6 text-muted">{project.summary}</p>
         <div className="mt-4 flex flex-wrap gap-1.5">
           {project.tags.slice(0, 3).map((t) => (
@@ -228,7 +228,7 @@ export function BlogCard({ post, priority = false }: { post: BlogPost; priority?
       </div>
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
-          <span className="font-mono text-primary">{post.category}</span>
+          <span className="text-primary">{post.category}</span>
           <span aria-hidden="true">·</span>
           <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
           <span aria-hidden="true">·</span>
@@ -239,7 +239,9 @@ export function BlogCard({ post, priority = false }: { post: BlogPost; priority?
         </div>
         <h3
           className={
-            priority ? "mt-3 font-mono text-xl font-bold text-fg" : "mt-3 font-mono text-base font-bold text-fg sm:text-lg"
+            priority
+              ? "mt-3 font-display text-xl font-normal text-fg"
+              : "mt-3 font-display text-base font-normal text-fg sm:text-lg"
           }
         >
           {post.title}

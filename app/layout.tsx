@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono, Poppins } from "next/font/google";
+import { Pacifico, Poppins } from "next/font/google";
 import { ToastProvider } from "@/components/ui/toast";
 import { getCms } from "@/lib/cms";
 import { iconMimeType, resolveFavicon, resolveTitleTemplate } from "@/lib/site-identity";
@@ -12,10 +12,11 @@ const poppins = Poppins({
   display: "swap",
 });
 
-const jetbrains = JetBrains_Mono({
-  variable: "--font-jetbrains",
+// Başlıklar: Pacifico (tek ağırlık, 400). latin-ext Türkçe karakterleri (ğ, ş, ı, İ) kapsar.
+const pacifico = Pacifico({
+  variable: "--font-pacifico",
   subsets: ["latin", "latin-ext"],
-  weight: ["700"],
+  weight: "400",
   display: "swap",
 });
 
@@ -71,7 +72,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="tr" className={`${poppins.variable} ${jetbrains.variable} antialiased`}>
+    <html lang="tr" className={`${poppins.variable} ${pacifico.variable} antialiased`}>
       <body className="min-h-dvh">
         <ToastProvider>{children}</ToastProvider>
       </body>

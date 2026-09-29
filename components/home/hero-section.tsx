@@ -30,7 +30,7 @@ export function HeroSection({ hero }: { hero: HeroSettings }) {
         {hero.badges.length ? (
           <ul className="mt-10 flex flex-wrap gap-2" aria-label="Kullandığımız teknolojiler">
             {hero.badges.map((badge) => (
-              <li key={badge} className="rounded-md border border-line px-2.5 py-1 font-mono text-[11px] text-muted">
+              <li key={badge} className="rounded-md border border-line px-2.5 py-1 text-[11px] text-muted">
                 {badge}
               </li>
             ))}

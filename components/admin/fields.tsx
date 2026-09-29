@@ -24,7 +24,7 @@ export function Panel({
     <section className={cn("rounded-2xl border border-line bg-surface/60", className)}>
       <header className="flex flex-col gap-3 border-b border-line px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="font-mono text-sm font-bold text-fg">{title}</h2>
+          <h2 className="text-sm font-semibold text-fg">{title}</h2>
           {description ? <p className="mt-1 text-xs leading-5 text-muted">{description}</p> : null}
         </div>
         {actions ? <div className="flex shrink-0 flex-wrap gap-2">{actions}</div> : null}

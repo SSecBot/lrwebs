@@ -35,7 +35,8 @@ export function BlurHeadline({ headline, accent, blur }: BlurHeadlineProps) {
   );
 
   const classes =
-    "font-mono text-[1.9rem] leading-[1.15] font-bold tracking-tight text-fg sm:text-5xl lg:text-[2.6rem] xl:text-5xl 2xl:text-6xl";
+    // Pacifico el yazısı bir fonttur; uzun çıkıntıları kesilmesin diye satır yüksekliği geniş tutulur.
+    "font-display text-[1.9rem] leading-[1.4] font-normal text-fg sm:text-5xl sm:leading-[1.35] lg:text-[2.6rem] xl:text-5xl 2xl:text-6xl";
 
   if (!blur.enabled) {
     return <h1 className={classes}>{text}</h1>;
@@ -93,7 +94,7 @@ export function BlurHeadline({ headline, accent, blur }: BlurHeadlineProps) {
       {blur.hint && !revealed ? (
         <p
           className={cn(
-            "mt-4 flex items-center gap-2 font-mono text-[11px] tracking-wide text-muted transition-opacity duration-300",
+            "mt-4 flex items-center gap-2 text-[11px] tracking-wide text-muted transition-opacity duration-300",
             hovering ? "opacity-0" : "opacity-100",
           )}
         >

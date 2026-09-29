@@ -120,14 +120,34 @@ async function writeJsonAtomic(file: string, data: unknown, { backup = false } =
   }
 }
 
+/** Sonradan eklenen bölümler için varsayılanlar (eski veri dosyalarıyla geriye dönük uyum). */
+const SECTION_DEFAULTS: Pick<CmsStore, "analytics"> = {
+  analytics: {
+    enabled: false,
+    measurementId: "",
+    requireConsent: true,
+    consent: {
+      title: "Çerez tercihleri",
+      text: "Sitemizi nasıl kullandığınızı anlamak ve deneyimi iyileştirmek için, onay vermeniz hâlinde Google Analytics analitik çerezlerini kullanırız.",
+      acceptLabel: "Kabul et",
+      rejectLabel: "Reddet",
+      settingsLabel: "Çerez Tercihleri",
+    },
+  },
+};
+
+function withDefaults(store: CmsStore): CmsStore {
+  return { ...SECTION_DEFAULTS, ...store };
+}
+
 async function readStore(): Promise<CmsStore> {
   try {
-    return JSON.parse(await fs.readFile(STORE_FILE, "utf8")) as CmsStore;
+    return withDefaults(JSON.parse(await fs.readFile(STORE_FILE, "utf8")) as CmsStore);
   } catch (error) {
     // Ana dosya bozulmuşsa son sağlam yedekten devam et.
     if (error instanceof SyntaxError) {
       console.error("[cms] cms-store.json okunamadı, yedekten yükleniyor:", error.message);
-      return JSON.parse(await fs.readFile(`${STORE_FILE}.bak`, "utf8")) as CmsStore;
+      return withDefaults(JSON.parse(await fs.readFile(`${STORE_FILE}.bak`, "utf8")) as CmsStore);
     }
     throw error;
   }

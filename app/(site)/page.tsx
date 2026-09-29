@@ -37,7 +37,7 @@ export default async function HomePage() {
       <AboutSummary copy={cms.sections.about} about={cms.about} />
       <ProjectsCarousel copy={cms.sections.projects} projects={projects} />
       <BlogGrid copy={cms.sections.blog} posts={posts} />
-      <ContactSection copy={cms.sections.contact} contact={cms.contact} />
+      <ContactSection copy={cms.sections.contact} contact={cms.contact} pricing={cms.pricing} />
     </>
   );
 }

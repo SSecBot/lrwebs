@@ -1,15 +1,26 @@
 "use client";
 
 import { Check, LoaderCircle, Send } from "lucide-react";
-import { useId, useState, useTransition } from "react";
+import { useId, useState, useSyncExternalStore, useTransition } from "react";
 import { submitContact } from "@/app/actions/contact";
+import { QuoteSummary } from "@/components/contact/quote-summary";
 import { useToast } from "@/components/ui/toast";
+import { currencyCode, trackEvent } from "@/lib/analytics";
+import { computeEstimate, normalizeSelection, selectionFromSearch } from "@/lib/pricing";
 import { isValidEmail } from "@/lib/sanitize";
 import { cn } from "@/lib/utils";
-import type { ContactSettings } from "@/types/cms";
+import type { ContactSettings, PricingSettings } from "@/types/cms";
 
 type Field = "name" | "email" | "message" | "consent";
 type Values = { name: string; email: string; message: string; consent: boolean; website: string };
+
+/* Fiyatlandırmadan gelen seçimler URL sorgusunda taşınır (?paket=…&modul=…). */
+const subscribeLocation = (onChange: () => void) => {
+  window.addEventListener("popstate", onChange);
+  return () => window.removeEventListener("popstate", onChange);
+};
+const getSearch = () => window.location.search;
+const getServerSearch = () => "";
 
 const EMPTY: Values = { name: "", email: "", message: "", consent: false, website: "" };
 const MESSAGE_MAX = 4000;
@@ -24,8 +35,29 @@ function validate(values: Values): Partial<Record<Field, string>> {
   return errors;
 }
 
-export function ContactForm({ form, className }: { form: ContactSettings["form"]; className?: string }) {
+export function ContactForm({
+  form,
+  pricing,
+  className,
+}: {
+  form: ContactSettings["form"];
+  /** Verilirse fiyatlandırma seçimleri formda gösterilir ve mesaja eklenir. */
+  pricing?: PricingSettings;
+  className?: string;
+}) {
   const toast = useToast();
+  const search = useSyncExternalStore(subscribeLocation, getSearch, getServerSearch);
+  const [dismissedSearch, setDismissedSearch] = useState<string | null>(null);
+  const selection = pricing && search !== dismissedSearch ? normalizeSelection(pricing, selectionFromSearch(search)) : null;
+  const estimate = pricing && selection ? computeEstimate(pricing, selection) : null;
+
+  const removeQuote = () => {
+    setDismissedSearch(window.location.search);
+    // Seçimleri adres çubuğundan da temizle (paylaşılan bağlantıda tekrar görünmesin).
+    const url = new URL(window.location.href);
+    for (const key of ["paket", "modul", "sayfa", "oncelik"]) url.searchParams.delete(key);
+    window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+  };
   const uid = useId();
   const [values, setValues] = useState<Values>(EMPTY);
   const [touched, setTouched] = useState<Partial<Record<Field, boolean>>>({});
@@ -51,8 +83,15 @@ export function ContactForm({ form, className }: { form: ContactSettings["form"]
     }
     startTransition(async () => {
       try {
-        const result = await submitContact(values);
+        const result = await submitContact({ ...values, quote: estimate ? selection : null });
         if (result.ok) {
+          trackEvent("generate_lead", {
+            form: "contact",
+            quote_package: estimate?.packageName,
+            value: estimate?.min,
+            currency: estimate && pricing ? currencyCode(pricing.currency) : undefined,
+          });
+          if (estimate) removeQuote();
           toast.success(form.successMessage);
           setValues(EMPTY);
           setTouched({});
@@ -72,6 +111,7 @@ export function ContactForm({ form, className }: { form: ContactSettings["form"]
 
   return (
     <form onSubmit={onSubmit} noValidate className={cn("space-y-5", className)}>
+      {estimate && pricing ? <QuoteSummary estimate={estimate} currency={pricing.currency} onRemove={removeQuote} /> : null}
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label htmlFor={fieldId("name")} className="mb-1.5 block text-sm font-medium text-fg">
@@ -139,7 +179,7 @@ export function ContactForm({ form, className }: { form: ContactSettings["form"]
           <label htmlFor={fieldId("message")} className="block text-sm font-medium text-fg">
             {form.messageLabel}
           </label>
-          <span className={cn("font-mono text-[11px]", values.message.length > MESSAGE_MAX ? "text-red-400" : "text-muted")}>
+          <span className={cn("text-[11px]", values.message.length > MESSAGE_MAX ? "text-red-400" : "text-muted")}>
             {values.message.length}/{MESSAGE_MAX}
           </span>
         </div>

@@ -20,12 +20,14 @@ export function ButtonLink({
   className,
   children,
   arrow = false,
+  onClick,
 }: {
   href: string;
   variant?: Variant;
   className?: string;
   children: ReactNode;
   arrow?: boolean;
+  onClick?: () => void;
 }) {
   const target = safeHref(href);
   const content = (
@@ -39,6 +41,7 @@ export function ButtonLink({
       <a
         href={target}
         className={buttonStyles(variant, className)}
+        onClick={onClick}
         {...(isExternalHref(target) ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       >
         {content}
@@ -46,7 +49,7 @@ export function ButtonLink({
     );
   }
   return (
-    <Link href={target} className={buttonStyles(variant, className)}>
+    <Link href={target} className={buttonStyles(variant, className)} onClick={onClick}>
       {content}
     </Link>
   );
@@ -92,7 +95,7 @@ export function SectionHeading({
         <Tag
           id={id}
           className={cn(
-            "font-mono font-bold tracking-tight text-fg",
+            "font-display font-normal text-fg",
             Tag === "h1" ? "text-3xl leading-tight sm:text-4xl lg:text-5xl" : "text-2xl leading-snug sm:text-3xl lg:text-4xl",
           )}
         >
@@ -109,7 +112,7 @@ export function Tag({ children, className }: { children: ReactNode; className?: 
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-md border border-line bg-deep/60 px-2 py-0.5 font-mono text-[11px] text-muted",
+        "inline-flex items-center rounded-md border border-line bg-deep/60 px-2 py-0.5 text-[11px] text-muted",
         className,
       )}
     >
@@ -148,7 +151,7 @@ export function CoverImage({ src, alt, label, className }: { src: string; alt: s
           backgroundSize: "24px 24px",
         }}
       />
-      <span className="relative font-mono text-2xl font-bold text-primary/80">{label ?? "LrWebs"}</span>
+      <span className="relative font-display text-2xl font-normal text-primary/80">{label ?? "LrWebs"}</span>
     </div>
   );
 }

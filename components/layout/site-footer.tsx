@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { ConsentSettingsButton } from "@/components/layout/google-analytics";
 import { LegalLinks } from "@/components/layout/legal-modal";
 import { SocialIcon } from "@/lib/icons";
 import { safeHref } from "@/lib/utils";
 import type { CmsStore } from "@/types/cms";
 
 export function SiteFooter({ cms }: { cms: CmsStore }) {
-  const { general, contact, legal } = cms;
+  const { general, contact, legal, analytics } = cms;
   const year = new Date().getFullYear();
   const nav = general.navigation.filter((n) => n.visible);
 
@@ -14,7 +15,7 @@ export function SiteFooter({ cms }: { cms: CmsStore }) {
     <footer className="relative mt-24 border-t border-line bg-deep/80 backdrop-blur">
       <div className="container-wide grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
         <div className="max-w-md space-y-4">
-          <Link href="/" className="font-mono text-xl font-bold">
+          <Link href="/" className="font-display text-xl font-normal">
             {general.brandName.slice(0, 2)}
             <span className="text-primary">{general.brandName.slice(2)}</span>
           </Link>
@@ -85,11 +86,16 @@ export function SiteFooter({ cms }: { cms: CmsStore }) {
       <div className="border-t border-line">
         <div className="container-wide flex flex-col gap-3 py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>{general.footer.copyright.replace("{year}", String(year))}</p>
-          <LegalLinks
-            className="flex flex-wrap gap-x-6 gap-y-2"
-            documents={legal}
-            labels={{ privacy: general.footer.privacyLabel, kvkk: general.footer.kvkkLabel }}
-          />
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <LegalLinks
+              className="flex flex-wrap gap-x-6 gap-y-2"
+              documents={legal}
+              labels={{ privacy: general.footer.privacyLabel, kvkk: general.footer.kvkkLabel }}
+            />
+            {analytics.enabled && analytics.requireConsent && analytics.measurementId ? (
+              <ConsentSettingsButton label={analytics.consent.settingsLabel} />
+            ) : null}
+          </div>
         </div>
       </div>
     </footer>

@@ -67,7 +67,7 @@ function StaticPreview({ kind }: { kind: DeviceKind }) {
           <span className="h-[2px] w-3 rounded bg-fg/70" />
           <span className="h-[2px] w-3 rounded bg-fg/70" />
         </div>
-        <span className="font-mono text-[8px] font-bold text-fg">
+        <span className="font-display text-[8px] font-normal text-fg">
           Lr<span className="text-primary">Webs</span>
         </span>
         <span className="h-2 w-3" />
@@ -236,7 +236,7 @@ export function DeviceShowcase({ devices }: { devices: HeroSettings["devices"] }
               );
             })}
           </div>
-          {devices.hint ? <p className="text-center font-mono text-[11px] text-muted">{devices.hint}</p> : null}
+          {devices.hint ? <p className="text-center text-[11px] text-muted">{devices.hint}</p> : null}
         </div>
       ) : null}
     </div>

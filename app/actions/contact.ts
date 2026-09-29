@@ -2,7 +2,8 @@
 
 import { randomUUID } from "node:crypto";
 import { clientIp, rateLimit } from "@/lib/auth";
-import { addMessage } from "@/lib/cms";
+import { addMessage, getCms } from "@/lib/cms";
+import { buildQuoteSnapshot, normalizeSelection, type QuoteSelection } from "@/lib/pricing";
 import { contactMessageSchema, flattenIssues } from "@/lib/validation";
 import type { ActionResult } from "@/types/cms";
 
@@ -13,6 +14,8 @@ export interface ContactInput {
   consent: boolean;
   /** Bal küpü alanı: gerçek kullanıcılar bu alanı görmez ve boş bırakır. */
   website?: string;
+  /** Fiyatlandırma sayfasından taşınan seçimler (fiyatlar sunucuda yeniden hesaplanır). */
+  quote?: QuoteSelection | null;
 }
 
 export async function submitContact(input: ContactInput): Promise<ActionResult> {
@@ -40,6 +43,14 @@ export async function submitContact(input: ContactInput): Promise<ActionResult> 
     return { ok: false, message: "Lütfen işaretli alanları kontrol edin.", fieldErrors: flattenIssues(parsed.error) };
   }
 
+  // İstemcinin gönderdiği tutarlara güvenilmez: yalnızca seçimler alınır, fiyat güncel CMS'ten hesaplanır.
+  let quote;
+  if (input.quote) {
+    const { pricing } = await getCms();
+    const selection = normalizeSelection(pricing, input.quote);
+    quote = selection ? (buildQuoteSnapshot(pricing, selection) ?? undefined) : undefined;
+  }
+
   await addMessage({
     id: randomUUID(),
     name: parsed.data.name,
@@ -47,6 +58,7 @@ export async function submitContact(input: ContactInput): Promise<ActionResult> 
     message: parsed.data.message,
     createdAt: new Date().toISOString(),
     read: false,
+    ...(quote ? { quote } : {}),
   });
 
   return { ok: true, message: "Mesajınız alındı." };

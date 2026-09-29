@@ -4,9 +4,12 @@ import { Grid, IconField, Panel, RangeField, SelectField, TagsField, TextField, 
 import { ListEditor } from "@/components/admin/list-editor";
 import { MarkdownEditor, SummaryField } from "@/components/admin/markdown-editor";
 import { SiteIdentityPanel } from "@/components/admin/site-identity-panel";
-import { uid } from "@/lib/utils";
+import { CircleAlert, CircleCheck } from "lucide-react";
+import { extractMeasurementId } from "@/lib/analytics";
+import { cn, uid } from "@/lib/utils";
 import type {
   AboutSettings,
+  AnalyticsSettings,
   ContactSettings,
   GeneralSettings,
   HeroSettings,
@@ -736,6 +739,112 @@ export function AboutTab({ value: about, onChange }: TabProps<AboutSettings>) {
             </>
           )}
         />
+      </Panel>
+    </div>
+  );
+}
+
+/* ---------- Analitik (Google Analytics 4) ---------- */
+
+export function AnalyticsTab({ value: analytics, onChange }: TabProps<AnalyticsSettings>) {
+  const set = <K extends keyof AnalyticsSettings>(key: K, v: AnalyticsSettings[K]) => onChange({ ...analytics, [key]: v });
+  const consent = (patch: Partial<AnalyticsSettings["consent"]>) => set("consent", { ...analytics.consent, ...patch });
+  const extracted = extractMeasurementId(analytics.measurementId);
+  const pastedSnippet = analytics.measurementId.trim() !== "" && analytics.measurementId.trim() !== extracted;
+  const live = analytics.enabled && Boolean(extracted);
+
+  return (
+    <div className="space-y-6">
+      <Panel
+        title="Google Analytics 4"
+        description="Ölçüm Kimliğini girin veya Google'ın verdiği kod parçacığının tamamını yapıştırın; kimlik otomatik olarak ayıklanır."
+      >
+        <div
+          className={cn(
+            "flex items-start gap-3 rounded-xl border px-4 py-3 text-xs leading-5",
+            live ? "border-primary/40 bg-primary/5 text-fg" : "border-line bg-deep/60 text-muted",
+          )}
+        >
+          {live ? (
+            <CircleCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+          ) : (
+            <CircleAlert className="mt-0.5 h-4 w-4 shrink-0 text-warm" aria-hidden="true" />
+          )}
+          <span>
+            {live
+              ? `Kaydettiğinizde ${extracted} kimliği ile ölçüm tüm herkese açık sayfalarda etkinleşir${
+                  analytics.requireConsent ? " (ziyaretçi çerez onayı verdikten sonra)" : ""
+                }.`
+              : analytics.enabled
+                ? "Geçerli bir Ölçüm Kimliği bulunamadı. Kimlik G- ile başlar, ör. G-ABC123XYZ9."
+                : "Analitik şu anda kapalı; sitede hiçbir Google betiği yüklenmez."}
+          </span>
+        </div>
+
+        <Toggle label="Google Analytics'i etkinleştir" checked={analytics.enabled} onChange={(v) => set("enabled", v)} />
+
+        <TextField
+          label="Ölçüm Kimliği veya Google etiket kodu"
+          value={analytics.measurementId}
+          onChange={(v) => set("measurementId", v)}
+          multiline
+          rows={pastedSnippet ? 5 : 1}
+          mono
+          placeholder="G-ABC123XYZ9"
+          hint="GA4 › Yönetici › Veri akışları › Web akışı"
+        />
+        {pastedSnippet && extracted ? (
+          <p className="flex items-center gap-2 text-xs text-primary">
+            <CircleCheck className="h-3.5 w-3.5" aria-hidden="true" />
+            Kod parçacığından ayıklanan kimlik: <span className="font-mono">{extracted}</span> — kaydettiğinizde yalnızca bu
+            kimlik saklanır.
+            <button type="button" onClick={() => set("measurementId", extracted)} className="underline underline-offset-2">
+              Alanı sadeleştir
+            </button>
+          </p>
+        ) : null}
+
+        <Toggle
+          label="Çerez onayı iste (KVKK — önerilir)"
+          description="Açıkken Google Analytics, ziyaretçi banner'da 'Kabul et' diyene kadar hiç yüklenmez. Footer'a 'Çerez Tercihleri' bağlantısı eklenir."
+          checked={analytics.requireConsent}
+          onChange={(v) => set("requireConsent", v)}
+        />
+
+        <ul className="space-y-1.5 rounded-xl border border-line bg-deep/60 px-4 py-3 text-[11px] leading-5 text-muted">
+          <li>• Yönetim paneli ve cihaz vitrinindeki önizlemeler ölçülmez.</li>
+          <li>
+            • Sayfa geçişleri GA4&apos;ün <span className="text-fg">Gelişmiş ölçüm › Tarayıcı geçmişi olayları</span> ayarıyla
+            otomatik ölçülür (varsayılan olarak açıktır).
+          </li>
+          <li>
+            • Ek olaylar: <span className="font-mono text-fg">generate_lead</span> (iletişim formu),{" "}
+            <span className="font-mono text-fg">pricing_quote_request</span>,{" "}
+            <span className="font-mono text-fg">pricing_package_select</span>.
+          </li>
+          <li>• Doğrulama: siteyi açıp onay verin, ardından GA4 › Raporlar › Gerçek zamanlı ekranını kontrol edin.</li>
+        </ul>
+      </Panel>
+
+      <Panel title="Çerez onayı banner'ı" description="Onay istendiğinde sitenin altında gösterilen metinler.">
+        <TextField label="Başlık" value={analytics.consent.title} onChange={(v) => consent({ title: v })} maxLength={80} />
+        <TextField
+          label="Açıklama"
+          multiline
+          rows={3}
+          value={analytics.consent.text}
+          onChange={(v) => consent({ text: v })}
+          maxLength={500}
+        />
+        <Grid cols={3}>
+          <TextField label="Kabul butonu" value={analytics.consent.acceptLabel} onChange={(v) => consent({ acceptLabel: v })} />
+          <TextField label="Ret butonu" value={analytics.consent.rejectLabel} onChange={(v) => consent({ rejectLabel: v })} />
+          <TextField
+            label="Footer bağlantısı"
+            value={analytics.consent.settingsLabel}
+            onChange={(v) => consent({ settingsLabel: v })}
+          />
+        </Grid>
       </Panel>
     </div>
   );

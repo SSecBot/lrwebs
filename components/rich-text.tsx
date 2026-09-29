@@ -53,13 +53,17 @@ export function RichText({ content, className, compact = false }: { content: str
         switch (block.type) {
           case "h2":
             return (
-              <h2 key={i} id={block.id} className="scroll-mt-28 pt-4 font-mono text-lg font-bold text-fg first:pt-0 sm:text-xl">
+              <h2
+                key={i}
+                id={block.id}
+                className="scroll-mt-28 pt-4 font-display text-lg font-normal text-fg first:pt-0 sm:text-xl"
+              >
                 {block.text}
               </h2>
             );
           case "h3":
             return (
-              <h3 key={i} id={block.id} className="scroll-mt-28 pt-2 font-mono text-base font-bold text-fg">
+              <h3 key={i} id={block.id} className="scroll-mt-28 pt-2 font-display text-base font-normal text-fg">
                 {block.text}
               </h3>
             );
@@ -81,7 +85,7 @@ export function RichText({ content, className, compact = false }: { content: str
               <ol key={i} className="space-y-2 pl-1">
                 {block.items.map((item, j) => (
                   <li key={j} className="flex gap-3">
-                    <span className="font-mono text-sm text-primary">{String(j + 1).padStart(2, "0")}</span>
+                    <span className="text-sm text-primary">{String(j + 1).padStart(2, "0")}</span>
                     <span>
                       <InlineText text={item} />
                     </span>

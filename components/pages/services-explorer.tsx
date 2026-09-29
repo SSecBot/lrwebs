@@ -59,7 +59,7 @@ export function ServicesExplorer({ services }: { services: Service[] }) {
             onChange={(e) => setQuery(e.target.value)}
           />
         </label>
-        <p className="font-mono text-xs text-muted">{filtered.length} hizmet listeleniyor</p>
+        <p className="text-xs text-muted">{filtered.length} hizmet listeleniyor</p>
       </div>
 
       {filtered.length === 0 ? (
@@ -72,9 +72,9 @@ export function ServicesExplorer({ services }: { services: Service[] }) {
                 <span className="rounded-xl border border-line bg-deep p-3">
                   <CmsIcon name={service.icon} className="h-6 w-6 text-primary" />
                 </span>
-                <span className="font-mono text-xs text-muted/70">{String(i + 1).padStart(2, "0")}</span>
+                <span className="text-xs text-muted/70">{String(i + 1).padStart(2, "0")}</span>
               </div>
-              <h2 className="mt-6 font-mono text-xl font-bold text-fg">{service.title}</h2>
+              <h2 className="mt-6 font-display text-xl font-normal text-fg">{service.title}</h2>
               <p className="mt-3 flex-1 text-sm leading-7 text-muted">{service.summary}</p>
               <div className="mt-5 flex flex-wrap gap-1.5">
                 {service.features.map((f) => (

@@ -13,8 +13,10 @@
   --color-warm: #f59e08;
   --color-line: #1e293b;
 
+  /* Gövde ve arayüz: Poppins · Başlıklar: Pacifico · Yalnızca kod: sistem eş aralıklı fontu */
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+  --font-display: var(--font-pacifico), "Brush Script MT", cursive;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --animate-marquee: marquee var(--marquee-duration, 60s) linear infinite;
   --animate-fade-in: fade-in 0.25s ease-out both;
@@ -105,7 +107,8 @@
   }
 
   .eyebrow {
-    font-family: var(--font-mono);
+    font-family: var(--font-sans);
+    font-weight: 500;
     font-size: 0.75rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;

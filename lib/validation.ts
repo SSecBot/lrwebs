@@ -1,8 +1,10 @@
 import { z } from "zod";
 import { isSafeSitePath, isSafeUrl, isValidEmail, sanitizeRichText, sanitizeText } from "@/lib/sanitize";
 import { isSafeIconUrl } from "@/lib/site-identity";
+import { extractMeasurementId } from "@/lib/analytics";
 import type {
   AboutSettings,
+  AnalyticsSettings,
   BlogPost,
   CmsSectionKey,
   CmsStore,
@@ -343,6 +345,36 @@ export const legalSchema: z.ZodType<LegalSettings> = z.object({
   kvkk: legalDocument,
 });
 
+export const analyticsSchema: z.ZodType<AnalyticsSettings> = z
+  .object({
+    enabled: z.boolean(),
+    // Kimlik veya Google'ın tüm kod parçacığı kabul edilir; yalnızca "G-…" kimliği saklanır.
+    measurementId: z
+      .string()
+      .max(5000)
+      .transform((v, ctx) => {
+        if (v.trim() === "") return "";
+        const id = extractMeasurementId(v);
+        if (!id) {
+          ctx.addIssue({ code: "custom", message: "Geçerli bir GA4 Ölçüm Kimliği bulunamadı (ör. G-ABC123XYZ9)." });
+          return z.NEVER;
+        }
+        return id;
+      }),
+    requireConsent: z.boolean(),
+    consent: z.object({
+      title: required(80),
+      text: required(500),
+      acceptLabel: required(40),
+      rejectLabel: required(40),
+      settingsLabel: required(40),
+    }),
+  })
+  .refine((a) => !a.enabled || a.measurementId !== "", {
+    message: "Analitiği etkinleştirmek için Ölçüm Kimliği girin.",
+    path: ["measurementId"],
+  });
+
 export const sectionSchemas: { [K in CmsSectionKey]: z.ZodType<CmsStore[K]> } = {
   general: generalSchema,
   contact: contactSchema,
@@ -356,6 +388,7 @@ export const sectionSchemas: { [K in CmsSectionKey]: z.ZodType<CmsStore[K]> } = 
   pricing: pricingSchema,
   about: aboutSchema,
   legal: legalSchema,
+  analytics: analyticsSchema,
 };
 
 export const cmsStoreSchema: z.ZodType<CmsStore> = z.object({

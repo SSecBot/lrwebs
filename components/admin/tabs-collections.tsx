@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, FileText, Mail, MailOpen, Trash2, Wand2, X } from "lucide-react";
+import { Calculator, ExternalLink, FileText, Mail, MailOpen, Trash2, Wand2, X } from "lucide-react";
 import { useState, useTransition } from "react";
 import { deleteMessageAction, removeLegalPdfAction, setMessageReadAction } from "@/app/actions/admin";
 import { Grid, IconField, NumberField, Panel, SmallButton, TagsField, TextField, Toggle } from "@/components/admin/fields";
@@ -18,6 +18,7 @@ import type {
   LegalSettings,
   PricingSettings,
   Project,
+  QuoteSnapshot,
   Service,
 } from "@/types/cms";
 
@@ -567,6 +568,56 @@ export function LegalTab({
 
 /* ---------- Mesajlar ---------- */
 
+/** Mesajla birlikte gelen fiyatlandırma seçimleri (gönderim anındaki fiyatlarla). */
+function QuoteDetails({ quote }: { quote: QuoteSnapshot }) {
+  const price = (n: number) => formatPrice(n, quote.currency);
+  return (
+    <div className="rounded-xl border border-warm/30 bg-warm/5 p-4">
+      <p className="flex items-center gap-2 text-xs font-semibold text-warm">
+        <Calculator className="h-4 w-4" aria-hidden="true" />
+        Fiyatlandırmada seçilenler
+      </p>
+      <dl className="mt-3 grid gap-x-6 gap-y-2 text-xs sm:grid-cols-2">
+        <div>
+          <dt className="text-muted">Paket</dt>
+          <dd className="text-fg">
+            {quote.packageName}
+            {quote.timeline ? <span className="text-muted"> · {quote.timeline}</span> : null}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-muted">Ek modüller</dt>
+          <dd className="text-fg">{quote.addons.length ? quote.addons.join(", ") : "—"}</dd>
+        </div>
+        <div>
+          <dt className="text-muted">Ek sayfa</dt>
+          <dd className="text-fg">{quote.extraPages || "—"}</dd>
+        </div>
+        <div>
+          <dt className="text-muted">{quote.rushLabel}</dt>
+          <dd className="text-fg">{quote.rush ? "Evet" : "Hayır"}</dd>
+        </div>
+      </dl>
+      <ul className="mt-3 space-y-1 border-t border-line pt-3 text-xs">
+        {quote.lines.map((line) => (
+          <li key={line.label} className="flex justify-between gap-4">
+            <span className="text-muted">{line.label}</span>
+            <span className="font-mono text-fg/90">
+              {price(line.min)} – {price(line.max)}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 flex justify-between gap-4 border-t border-line pt-3 text-sm">
+        <span className="text-muted">Tahmini bütçe</span>
+        <span className="font-semibold text-fg">
+          {price(quote.min)} – {price(quote.max)}
+        </span>
+      </p>
+    </div>
+  );
+}
+
 export function MessagesTab({
   messages,
   onChange,
@@ -624,7 +675,15 @@ export function MessagesTab({
                   )}
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-baseline justify-between gap-x-3">
-                      <span className={cn("text-sm", m.read ? "text-fg/80" : "font-semibold text-fg")}>{m.name}</span>
+                      <span className="flex min-w-0 items-center gap-2">
+                        <span className={cn("text-sm", m.read ? "text-fg/80" : "font-semibold text-fg")}>{m.name}</span>
+                        {m.quote ? (
+                          <span className="inline-flex items-center gap-1 rounded-md border border-warm/40 bg-warm/10 px-1.5 py-0.5 text-[10px] font-medium text-warm">
+                            <Calculator className="h-3 w-3" aria-hidden="true" />
+                            {m.quote.packageName}
+                          </span>
+                        ) : null}
+                      </span>
                       <span className="font-mono text-[10px] text-muted">
                         {new Intl.DateTimeFormat("tr-TR", { dateStyle: "medium", timeStyle: "short" }).format(
                           new Date(m.createdAt),
@@ -638,6 +697,7 @@ export function MessagesTab({
                 </button>
                 {open ? (
                   <div className="space-y-4 border-t border-line px-4 py-4">
+                    {m.quote ? <QuoteDetails quote={m.quote} /> : null}
                     <p className="text-sm leading-6 whitespace-pre-wrap text-fg/90">{m.message}</p>
                     <div className="flex flex-wrap gap-2">
                       <a

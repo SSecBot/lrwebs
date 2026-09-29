@@ -280,6 +280,22 @@ export interface LegalSettings {
   kvkk: LegalDocument;
 }
 
+/** Google Analytics 4. Yalnızca Ölçüm Kimliği saklanır; ham betik kodu asla saklanmaz/gömülmez. */
+export interface AnalyticsSettings {
+  enabled: boolean;
+  /** GA4 Ölçüm Kimliği, ör. "G-ABC123XYZ9". */
+  measurementId: string;
+  /** Açıksa (önerilen, KVKK) analitik yalnızca ziyaretçi çerez onayı verdikten sonra yüklenir. */
+  requireConsent: boolean;
+  consent: {
+    title: string;
+    text: string;
+    acceptLabel: string;
+    rejectLabel: string;
+    settingsLabel: string;
+  };
+}
+
 export interface CmsStore {
   general: GeneralSettings;
   contact: ContactSettings;
@@ -293,12 +309,28 @@ export interface CmsStore {
   pricing: PricingSettings;
   about: AboutSettings;
   legal: LegalSettings;
+  analytics: AnalyticsSettings;
   updatedAt: string;
 }
 
 export type CmsSectionKey = Exclude<keyof CmsStore, "updatedAt">;
 
 export type LegalKind = keyof LegalSettings;
+
+/** Fiyatlandırma sayfasından gelen seçimlerin, gönderim anındaki fiyatlarla dondurulmuş özeti. */
+export interface QuoteSnapshot {
+  packageId: string;
+  packageName: string;
+  timeline: string;
+  addons: string[];
+  extraPages: number;
+  rush: boolean;
+  rushLabel: string;
+  lines: { label: string; min: number; max: number }[];
+  min: number;
+  max: number;
+  currency: string;
+}
 
 export interface ContactMessage {
   id: string;
@@ -307,6 +339,8 @@ export interface ContactMessage {
   message: string;
   createdAt: string;
   read: boolean;
+  /** Fiyatlandırma üzerinden gelindiyse seçilen paket ve tahmini bütçe. */
+  quote?: QuoteSnapshot;
 }
 
 export type ActionResult<T = undefined> =

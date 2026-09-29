@@ -69,7 +69,7 @@ export function BlogExplorer({ posts }: { posts: BlogPost[] }) {
       </div>
 
       <div className="mb-10 flex flex-wrap items-center gap-1.5">
-        <span className="mr-1 font-mono text-[11px] tracking-wider text-muted uppercase">Etiket:</span>
+        <span className="mr-1 text-[11px] tracking-wider text-muted uppercase">Etiket:</span>
         {tags.map((t) => (
           <button
             key={t}
@@ -77,7 +77,7 @@ export function BlogExplorer({ posts }: { posts: BlogPost[] }) {
             onClick={() => setTag((cur) => (cur === t ? null : t))}
             aria-pressed={tag === t}
             className={cn(
-              "rounded-md border px-2 py-0.5 font-mono text-[11px] transition",
+              "rounded-md border px-2 py-0.5 text-[11px] transition",
               tag === t ? "border-warm bg-warm/10 text-warm" : "border-line text-muted hover:text-fg",
             )}
           >

@@ -23,14 +23,14 @@ export default async function AboutPage() {
       <section className="container-wide" aria-labelledby="story-title">
         <div className="card grid gap-10 p-6 sm:p-10 lg:grid-cols-[1fr_1.6fr] lg:p-14">
           <div className="space-y-8">
-            <h2 id="story-title" className="font-mono text-2xl font-bold text-fg sm:text-3xl">
+            <h2 id="story-title" className="font-display text-2xl font-normal text-fg sm:text-3xl">
               {about.storyTitle}
             </h2>
             <p className="text-base leading-8 text-fg/90">{about.summary}</p>
             <div className="grid grid-cols-2 gap-3">
               {stats.items.map((item, i) => (
                 <div key={item.id} className="rounded-xl border border-line bg-deep/60 p-4">
-                  <p className="font-mono text-3xl font-bold text-fg">
+                  <p className="text-3xl font-semibold text-fg">
                     {item.value}
                     <span className={i === 0 ? "text-primary" : "text-warm"}>{item.suffix}</span>
                   </p>
@@ -45,7 +45,7 @@ export default async function AboutPage() {
 
       {/* Değerler */}
       <section className="container-wide py-20" aria-labelledby="values-title">
-        <h2 id="values-title" className="font-mono text-2xl font-bold text-fg sm:text-3xl">
+        <h2 id="values-title" className="font-display text-2xl font-normal text-fg sm:text-3xl">
           {about.valuesTitle}
         </h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -54,7 +54,7 @@ export default async function AboutPage() {
               <span className="inline-flex rounded-xl border border-line bg-deep p-2.5">
                 <CmsIcon name={value.icon} className="h-5 w-5 text-primary" />
               </span>
-              <h3 className="mt-5 font-mono text-base font-bold text-fg">{value.title}</h3>
+              <h3 className="mt-5 font-display text-base font-normal text-fg">{value.title}</h3>
               <p className="mt-2 text-sm leading-6 text-muted">{value.description}</p>
             </article>
           ))}
@@ -63,7 +63,7 @@ export default async function AboutPage() {
 
       {/* Teknoloji yığını */}
       <section className="container-wide" aria-labelledby="stack-title">
-        <h2 id="stack-title" className="font-mono text-2xl font-bold text-fg sm:text-3xl">
+        <h2 id="stack-title" className="font-display text-2xl font-normal text-fg sm:text-3xl">
           {about.stackTitle}
         </h2>
         <div className="mt-8 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 xl:grid-cols-4">
@@ -85,14 +85,14 @@ export default async function AboutPage() {
 
       {/* Süreç */}
       <section className="container-wide py-20" aria-labelledby="process-title">
-        <h2 id="process-title" className="font-mono text-2xl font-bold text-fg sm:text-3xl">
+        <h2 id="process-title" className="font-display text-2xl font-normal text-fg sm:text-3xl">
           {about.processTitle}
         </h2>
         <ol className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {about.process.map((step, i) => (
             <li key={step.id} className="card relative p-6">
-              <span className="font-mono text-4xl font-bold text-line">{String(i + 1).padStart(2, "0")}</span>
-              <h3 className="mt-3 font-mono text-base font-bold text-fg">{step.title}</h3>
+              <span className="text-4xl font-semibold text-line">{String(i + 1).padStart(2, "0")}</span>
+              <h3 className="mt-3 font-display text-base font-normal text-fg">{step.title}</h3>
               <p className="mt-2 text-sm leading-6 text-muted">{step.description}</p>
               {i < about.process.length - 1 ? (
                 <span className="absolute top-1/2 -right-3 hidden h-px w-6 bg-line xl:block" aria-hidden="true" />

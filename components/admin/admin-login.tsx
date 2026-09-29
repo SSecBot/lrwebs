@@ -40,7 +40,7 @@ export function AdminLogin({ brandName }: { brandName: string }) {
           <span className="inline-flex rounded-xl border border-line bg-deep p-3">
             <Lock className="h-5 w-5 text-primary" aria-hidden="true" />
           </span>
-          <h1 className="mt-5 font-mono text-xl font-bold text-fg">
+          <h1 className="mt-5 font-display text-xl font-normal text-fg">
             {brandName} <span className="text-primary">Yönetim</span>
           </h1>
           <p className="mt-2 text-sm leading-6 text-muted">İçerik yönetim paneline erişmek için yönetici parolasını girin.</p>

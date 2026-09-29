@@ -3,6 +3,8 @@
 import { ArrowRight, Check, Minus, Plus, RotateCcw, Timer } from "lucide-react";
 import { useState } from "react";
 import { ButtonLink, SmartLink } from "@/components/ui/primitives";
+import { currencyCode, trackEvent } from "@/lib/analytics";
+import { computeEstimate, withQuote, type QuoteSelection } from "@/lib/pricing";
 import { cn, formatPrice } from "@/lib/utils";
 import type { PricingSettings } from "@/types/cms";
 
@@ -18,30 +20,23 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
 
   const selected = packages.find((p) => p.id === packageId) ?? packages[0];
 
-  const estimate = (() => {
-    if (!selected) return { min: 0, max: 0, lines: [] as { label: string; min: number; max: number }[] };
-    const lines = [{ label: `${selected.name} paketi`, min: selected.priceMin, max: selected.priceMax }];
-    for (const addon of addons) {
-      if (selectedAddons.has(addon.id)) lines.push({ label: addon.label, min: addon.priceMin, max: addon.priceMax });
-    }
-    if (extraPages > 0) {
-      const cost = extraPages * pricing.extraPagePrice;
-      lines.push({ label: `${extraPages} ek sayfa`, min: cost, max: Math.round(cost * 1.2) });
-    }
-    let min = lines.reduce((sum, l) => sum + l.min, 0);
-    let max = lines.reduce((sum, l) => sum + l.max, 0);
-    if (rush) {
-      lines.push({
-        label: `${pricing.rushLabel} (×${pricing.rushMultiplier.toLocaleString("tr-TR")})`,
-        min: Math.round(min * (pricing.rushMultiplier - 1)),
-        max: Math.round(max * (pricing.rushMultiplier - 1)),
-      });
-      min = Math.round(min * pricing.rushMultiplier);
-      max = Math.round(max * pricing.rushMultiplier);
-    }
-    // Sonuçları okunabilirlik için 500'lük dilimlere yuvarla.
-    return { min: Math.round(min / 500) * 500, max: Math.round(max / 500) * 500, lines };
-  })();
+  const selection: QuoteSelection = {
+    packageId: selected?.id ?? "",
+    addonIds: addons.filter((a) => selectedAddons.has(a.id)).map((a) => a.id),
+    extraPages,
+    rush,
+  };
+  const estimate = computeEstimate(pricing, selection) ?? { min: 0, max: 0, lines: [] };
+
+  // Seçimler, "teklif iste" bağlantısıyla iletişim formuna taşınır ve mesaja eklenir.
+  const quoteHref = withQuote(pricing.summaryCtaHref, selection);
+  const onQuoteRequest = () =>
+    trackEvent("pricing_quote_request", {
+      package: selected?.name,
+      addons: selection.addonIds.length,
+      value: estimate.min,
+      currency: currencyCode(pricing.currency),
+    });
 
   const toggleAddon = (id: string) =>
     setSelectedAddons((set) => {
@@ -66,10 +61,8 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
     <section className="container-wide pb-10">
       {/* Adım 1: Paket seçimi */}
       <div className="mb-4 flex items-center gap-3">
-        <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line font-mono text-xs text-primary">
-          01
-        </span>
-        <h2 className="font-mono text-lg font-bold text-fg">Temel paketi seçin</h2>
+        <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-xs text-primary">01</span>
+        <h2 className="font-display text-lg font-normal text-fg">Temel paketi seçin</h2>
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" role="radiogroup" aria-label="Temel paket">
         {packages.map((pkg) => {
@@ -90,7 +83,7 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
                 className="flex flex-1 flex-col rounded-2xl p-6 text-left sm:p-7"
               >
                 {pkg.highlighted ? (
-                  <span className="absolute top-5 right-5 rounded-md bg-warm/10 px-2 py-0.5 font-mono text-[10px] tracking-wider text-warm uppercase">
+                  <span className="absolute top-5 right-5 rounded-md bg-warm/10 px-2 py-0.5 text-[10px] tracking-wider text-warm uppercase">
                     Önerilen
                   </span>
                 ) : null}
@@ -103,9 +96,9 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
                 >
                   {active ? <Check className="h-3 w-3 text-deep" /> : null}
                 </span>
-                <h3 className="font-mono text-xl font-bold text-fg">{pkg.name}</h3>
+                <h3 className="font-display text-xl font-normal text-fg">{pkg.name}</h3>
                 <p className="mt-2 text-sm leading-6 text-muted">{pkg.description}</p>
-                <p className="mt-5 font-mono text-lg font-bold text-fg">
+                <p className="mt-5 text-lg font-semibold text-fg">
                   {formatPrice(pkg.priceMin, pricing.currency)}
                   <span className="text-muted"> – </span>
                   {formatPrice(pkg.priceMax, pricing.currency)}
@@ -126,7 +119,8 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
               {pkg.ctaLabel ? (
                 <div className="border-t border-line px-6 py-4 sm:px-7">
                   <SmartLink
-                    href={pkg.ctaHref}
+                    href={withQuote(pkg.ctaHref, { packageId: pkg.id })}
+                    onClick={() => trackEvent("pricing_package_select", { package: pkg.name })}
                     className="inline-flex items-center gap-1.5 text-sm font-medium text-primary transition hover:text-fg"
                   >
                     {pkg.ctaLabel}
@@ -145,10 +139,10 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
           {addons.length ? (
             <div>
               <div className="mb-4 flex items-center gap-3">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line font-mono text-xs text-primary">
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-xs text-primary">
                   02
                 </span>
-                <h2 className="font-mono text-lg font-bold text-fg">Ek modülleri işaretleyin</h2>
+                <h2 className="font-display text-lg font-normal text-fg">Ek modülleri işaretleyin</h2>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 {addons.map((addon) => {
@@ -174,7 +168,7 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
                       <span className="min-w-0 flex-1">
                         <span className="block text-sm font-medium text-fg">{addon.label}</span>
                         <span className="mt-1 block text-xs leading-5 text-muted">{addon.description}</span>
-                        <span className="mt-2 block font-mono text-xs text-primary">
+                        <span className="mt-2 block text-xs text-primary">
                           +{formatPrice(addon.priceMin, pricing.currency)} – {formatPrice(addon.priceMax, pricing.currency)}
                         </span>
                       </span>
@@ -188,10 +182,10 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
           {/* Adım 3: Kapsam ayarları */}
           <div>
             <div className="mb-4 flex items-center gap-3">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line font-mono text-xs text-primary">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-xs text-primary">
                 03
               </span>
-              <h2 className="font-mono text-lg font-bold text-fg">Kapsamı ince ayarlayın</h2>
+              <h2 className="font-display text-lg font-normal text-fg">Kapsamı ince ayarlayın</h2>
             </div>
             <div className="card space-y-6 p-5 sm:p-6">
               {pricing.maxExtraPages > 0 ? (
@@ -209,7 +203,7 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
                       >
                         <Minus className="h-3.5 w-3.5" />
                       </button>
-                      <span className="w-8 text-center font-mono text-sm text-fg">{extraPages}</span>
+                      <span className="w-8 text-center text-sm text-fg">{extraPages}</span>
                       <button
                         type="button"
                         onClick={() => setExtraPages((n) => Math.min(pricing.maxExtraPages, n + 1))}
@@ -263,7 +257,7 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
               {estimate.lines.map((line) => (
                 <li key={line.label} className="flex items-start justify-between gap-4">
                   <span className="text-muted">{line.label}</span>
-                  <span className="shrink-0 text-right font-mono text-xs text-fg">
+                  <span className="shrink-0 text-right text-xs text-fg">
                     {formatPrice(line.min, pricing.currency)} – {formatPrice(line.max, pricing.currency)}
                   </span>
                 </li>
@@ -271,14 +265,14 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
             </ul>
             <div className="border-t border-line bg-deep/60 p-5 sm:p-6">
               <p className="text-xs text-muted">Tahmini bütçe aralığı</p>
-              <p className="mt-1 font-mono text-2xl font-bold text-fg sm:text-3xl" aria-live="polite">
+              <p className="mt-1 text-2xl font-semibold text-fg sm:text-3xl" aria-live="polite">
                 {formatPrice(estimate.min, pricing.currency)}
                 <span className="text-muted"> – </span>
                 <span className="text-primary">{formatPrice(estimate.max, pricing.currency)}</span>
               </p>
               <p className="mt-1 text-xs text-muted">Tahmini süre: {selected.timeline}</p>
               <div className="mt-5 flex flex-col gap-2 sm:flex-row lg:flex-col xl:flex-row">
-                <ButtonLink href={pricing.summaryCtaHref} arrow className="flex-1">
+                <ButtonLink href={quoteHref} arrow className="flex-1" onClick={onQuoteRequest}>
                   {pricing.summaryCtaLabel}
                 </ButtonLink>
                 <button

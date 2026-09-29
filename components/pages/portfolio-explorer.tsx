@@ -60,14 +60,14 @@ export function PortfolioExplorer({ projects }: { projects: Project[] }) {
               )}
             >
               {c}
-              <span className="ml-2 font-mono text-[11px] text-muted">
+              <span className="ml-2 text-[11px] text-muted">
                 {c === ALL ? projects.length : projects.filter((p) => p.category === c).length}
               </span>
             </button>
           ))}
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 font-mono text-[11px] tracking-wider text-muted uppercase">Etiket:</span>
+          <span className="mr-1 text-[11px] tracking-wider text-muted uppercase">Etiket:</span>
           {tags.map((t) => (
             <button
               key={t}
@@ -75,7 +75,7 @@ export function PortfolioExplorer({ projects }: { projects: Project[] }) {
               onClick={() => setTag((cur) => (cur === t ? null : t))}
               aria-pressed={tag === t}
               className={cn(
-                "rounded-md border px-2 py-0.5 font-mono text-[11px] transition",
+                "rounded-md border px-2 py-0.5 text-[11px] transition",
                 tag === t ? "border-warm bg-warm/10 text-warm" : "border-line text-muted hover:text-fg",
               )}
             >
@@ -108,10 +108,10 @@ export function PortfolioExplorer({ projects }: { projects: Project[] }) {
               </button>
               <div className="flex flex-1 flex-col p-5 sm:p-6">
                 <div className="flex items-center justify-between text-xs text-muted">
-                  <span className="font-mono text-primary">{project.category}</span>
-                  <span className="font-mono">{project.year}</span>
+                  <span className="text-primary">{project.category}</span>
+                  <span>{project.year}</span>
                 </div>
-                <h2 className="mt-2 font-mono text-lg font-bold text-fg">{project.title}</h2>
+                <h2 className="mt-2 font-display text-lg font-normal text-fg">{project.title}</h2>
                 <p className="mt-1 text-xs text-muted">{project.client}</p>
                 <p className="mt-3 flex-1 text-sm leading-6 text-muted">{project.summary}</p>
                 <div className="mt-4 flex flex-wrap gap-1.5">

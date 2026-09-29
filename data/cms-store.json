@@ -1,4 +1,16 @@
 {
+  "analytics": {
+    "enabled": false,
+    "measurementId": "",
+    "requireConsent": true,
+    "consent": {
+      "title": "Çerez tercihleri",
+      "text": "Sitemizi nasıl kullandığınızı anlamak ve deneyimi iyileştirmek için, onay vermeniz hâlinde Google Analytics analitik çerezlerini kullanırız. Zorunlu çerezler dışında hiçbir çerez onayınız olmadan yerleştirilmez.",
+      "acceptLabel": "Kabul et",
+      "rejectLabel": "Reddet",
+      "settingsLabel": "Çerez Tercihleri"
+    }
+  },
   "general": {
     "brandName": "LrWebs",
     "siteTitle": "LrWebs — Modern Web Geliştirme ve Dijital Ajans",
@@ -822,5 +834,5 @@
       "updatedAt": "2026-09-01"
     }
   },
-  "updatedAt": "2026-09-26T20:47:37.903Z"
+  "updatedAt": "2026-09-29T21:06:43.045Z"
 }

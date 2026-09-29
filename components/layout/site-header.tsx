@@ -78,7 +78,7 @@ export function SiteHeader({ brandName, navigation, drawerNote, email, phone, so
 
           <Link
             href="/"
-            className="font-mono text-lg font-bold tracking-tight text-fg transition hover:text-primary sm:text-xl"
+            className="font-display text-lg font-normal text-fg transition hover:text-primary sm:text-xl"
             aria-label={`${brandName} ana sayfa`}
           >
             {brandName.slice(0, 2)}
@@ -113,7 +113,7 @@ export function SiteHeader({ brandName, navigation, drawerNote, email, phone, so
             className="absolute inset-y-0 left-0 flex w-full max-w-[420px] animate-slide-in flex-col border-r border-line bg-surface"
           >
             <div className="flex h-16 items-center justify-between border-b border-line px-5 sm:h-[4.5rem] sm:px-7">
-              <span className="font-mono text-lg font-bold">
+              <span className="font-display text-lg font-normal">
                 {brandName.slice(0, 2)}
                 <span className="text-primary">{brandName.slice(2)}</span>
               </span>
@@ -142,7 +142,7 @@ export function SiteHeader({ brandName, navigation, drawerNote, email, phone, so
                           active ? "bg-deep text-fg" : "text-muted hover:bg-deep/60 hover:text-fg",
                         )}
                       >
-                        <span className={cn("font-mono text-xs", active ? "text-primary" : "text-muted/60")}>
+                        <span className={cn("text-xs", active ? "text-primary" : "text-muted/60")}>
                           {String(index + 1).padStart(2, "0")}
                         </span>
                         <span className="flex-1 text-lg font-medium">{item.label}</span>
