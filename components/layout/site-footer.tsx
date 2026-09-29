@@ -86,7 +86,11 @@ export function SiteFooter({ cms }: { cms: CmsStore }) {
 
       <div className="border-t border-line">
         <div className="container-wide flex flex-col gap-3 py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>{general.footer.copyright.replace("{year}", String(year))}</p>
+          {cms.footerCredit?.enabled && cms.footerCredit.segments.length > 0 ? (
+            <FooterCredit credit={cms.footerCredit} />
+          ) : (
+            <p>{general.footer.copyright.replace("{year}", String(year))}</p>
+          )}
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <LegalLinks
               className="flex flex-wrap gap-x-6 gap-y-2"
@@ -99,7 +103,6 @@ export function SiteFooter({ cms }: { cms: CmsStore }) {
           </div>
         </div>
       </div>
-      <FooterCredit credit={cms.footerCredit} />
     </footer>
   );
 }

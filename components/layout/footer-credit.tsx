@@ -6,10 +6,11 @@ import type { FooterCreditSettings, FooterSegment } from "@/types/cms";
 const HEX = /^#[0-9a-f]{6}$/i;
 const color = (value: string) => (HEX.test(value) ? value : undefined);
 
-const ALIGN = { left: "justify-start text-left", center: "justify-center text-center", right: "justify-end text-right" };
+/** Telif metnindeki gibi {year} (veya @year) içinde bulunulan yıla dönüşür. */
+const withYear = (text: string) => text.replace(/{year}|@year/g, String(new Date().getFullYear()));
 
 function Segment({ segment: s }: { segment: FooterSegment }) {
-  if (s.type === "text") return <span>{s.text}</span>;
+  if (s.type === "text") return <span>{withYear(s.text)}</span>;
 
   const external = s.newTab ? { target: "_blank", rel: "noopener noreferrer" } : {};
   if (s.type === "link") {
@@ -20,7 +21,7 @@ function Segment({ segment: s }: { segment: FooterSegment }) {
         className="footer-credit-link underline-offset-4 transition-colors hover:underline"
         style={s.color && color(s.color) ? ({ "--fc-link": s.color } as CSSProperties) : undefined}
       >
-        {s.text}
+        {withYear(s.text)}
       </a>
     );
   }
@@ -45,8 +46,11 @@ function Segment({ segment: s }: { segment: FooterSegment }) {
   );
 }
 
-/** Footer'ın en altındaki, yönetim panelinden düzenlenen bağlantılı metin/logo satırı. */
-export function FooterCredit({ credit }: { credit: FooterCreditSettings | undefined }) {
+/**
+ * Footer'ın alt çubuğunda telif metninin yerini alan, yönetim panelinden düzenlenen
+ * bağlantılı metin/logo satırı. Kapalıysa null döner (telif metni gösterilir).
+ */
+export function FooterCredit({ credit, className }: { credit: FooterCreditSettings | undefined; className?: string }) {
   if (!credit?.enabled || credit.segments.length === 0) return null;
   const style = {
     "--fc-link-default": color(credit.linkColor),
@@ -54,18 +58,10 @@ export function FooterCredit({ credit }: { credit: FooterCreditSettings | undefi
   } as CSSProperties;
 
   return (
-    <div className="border-t border-line">
-      <p
-        style={style}
-        className={cn(
-          "container-wide flex flex-wrap items-center gap-x-1.5 gap-y-2 py-4 text-sm text-muted",
-          ALIGN[credit.align] ?? ALIGN.center,
-        )}
-      >
-        {credit.segments.map((s) => (
-          <Segment key={s.id} segment={s} />
-        ))}
-      </p>
-    </div>
+    <p style={style} className={cn("flex flex-wrap items-center gap-x-1.5 gap-y-2", className)}>
+      {credit.segments.map((s) => (
+        <Segment key={s.id} segment={s} />
+      ))}
+    </p>
   );
 }

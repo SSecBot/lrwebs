@@ -85,21 +85,11 @@ export function FooterCreditTab({ value: fc, onChange }: TabProps<FooterCreditSe
   return (
     <div className="space-y-6">
       <Panel
-        title="Footer alt satırı"
-        description="Footer'ın en altında gösterilen, bağlantılı metin ve logolar içerebilen serbest satır (ör. “Tasarım ve geliştirme: [logo]”)."
+        title="Footer telif satırı"
+        description="Açıkken footer'ın alt çubuğunda telif metninin yerine bu satır gösterilir; bağlantılı metin ve logolar içerebilir. Metinlerde {year} yazan yer o yılın sayısına dönüşür (ör. “© {year} LrWebs”)."
       >
         <Toggle label="Sitede göster" checked={fc.enabled} onChange={(v) => set("enabled", v)} />
-        <Grid cols={3}>
-          <SelectField
-            label="Hizalama"
-            value={fc.align}
-            onChange={(v) => set("align", v)}
-            options={[
-              { value: "left", label: "Sola" },
-              { value: "center", label: "Ortaya" },
-              { value: "right", label: "Sağa" },
-            ]}
-          />
+        <Grid>
           <ColorField label="Bağlantı rengi" value={fc.linkColor} onChange={(v) => set("linkColor", v)} emptyLabel="Tema rengi" />
           <ColorField
             label="Üzerine gelince renk"
@@ -152,7 +142,7 @@ export function FooterCreditTab({ value: fc, onChange }: TabProps<FooterCreditSe
                 />
                 <TextField
                   label={s.type === "logo" ? "Alternatif metin" : "Metin"}
-                  hint={s.type === "logo" ? "ekran okuyucular için" : undefined}
+                  hint={s.type === "logo" ? "ekran okuyucular için" : "{year} = yıl"}
                   value={s.text}
                   onChange={(v) => update({ text: v })}
                   maxLength={200}
@@ -221,7 +211,7 @@ export function FooterCreditTab({ value: fc, onChange }: TabProps<FooterCreditSe
       <Panel title="Canlı önizleme" description="Kaydetmeden önce satırın footer'da nasıl görüneceği.">
         <div className="overflow-hidden rounded-xl border border-line bg-deep">
           {fc.enabled ? (
-            <FooterCredit credit={fc} />
+            <FooterCredit credit={fc} className="px-4 py-4 text-sm text-muted" />
           ) : (
             <p className="px-4 py-4 text-center text-xs text-muted">Satır şu an gizli. Göstermek için “Sitede göster”i açın.</p>
           )}

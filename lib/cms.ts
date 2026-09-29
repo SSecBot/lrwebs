@@ -125,13 +125,13 @@ const SECTION_DEFAULTS: Pick<CmsStore, "analytics" | "typography" | "footerCredi
   typography: { headingFont: "pacifico", bodyFont: "poppins", brandFont: "pacifico", headingWeight: 400, baseSize: "md" },
   footerCredit: {
     enabled: false,
-    align: "center",
+    align: "left",
     linkColor: "",
     linkHoverColor: "",
     segments: [
-      { id: "fc-1", type: "text", text: "Bu site", href: "", newTab: false, color: "", imageUrl: "", imageHeight: 20 },
+      { id: "fc-1", type: "text", text: "© {year}", href: "", newTab: false, color: "", imageUrl: "", imageHeight: 20 },
       { id: "fc-2", type: "link", text: "LrWebs", href: "/", newTab: false, color: "", imageUrl: "", imageHeight: 20 },
-      { id: "fc-3", type: "text", text: "tarafından geliştirilmiştir.", href: "", newTab: false, color: "", imageUrl: "", imageHeight: 20 },
+      { id: "fc-3", type: "text", text: "Tüm hakları saklıdır.", href: "", newTab: false, color: "", imageUrl: "", imageHeight: 20 },
     ],
   },
   analytics: {

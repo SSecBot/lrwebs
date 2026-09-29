@@ -8,14 +8,14 @@
   },
   "footerCredit": {
     "enabled": false,
-    "align": "center",
+    "align": "left",
     "linkColor": "",
     "linkHoverColor": "",
     "segments": [
       {
         "id": "fc-1",
         "type": "text",
-        "text": "Bu site",
+        "text": "© {year}",
         "href": "",
         "newTab": false,
         "color": "",
@@ -35,7 +35,7 @@
       {
         "id": "fc-3",
         "type": "text",
-        "text": "tarafından geliştirilmiştir.",
+        "text": "Tüm hakları saklıdır.",
         "href": "",
         "newTab": false,
         "color": "",
