@@ -47,5 +47,7 @@ next-env.d.ts
 /data/.revoked-sessions.json
 /data/*.lock
 /data/*.bak
+/data/backups/
 /public/uploads/*
 !/public/uploads/.gitkeep
+*.lrwebs

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ArchiveRestore,
   BarChart3,
   ChartLine,
   Briefcase,
@@ -25,6 +26,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { logoutAction, saveSectionsAction } from "@/app/actions/admin";
+import { BackupTab } from "@/components/admin/backup-tab";
 import { BlogTab, LegalTab, MessagesTab, PricingTab, ProjectsTab, ServicesTab } from "@/components/admin/tabs-collections";
 import { AboutTab, AnalyticsTab, ContactTab, CopyTab, GeneralTab, HeroTab, StatsTab } from "@/components/admin/tabs-settings";
 import { useToast } from "@/components/ui/toast";
@@ -45,6 +47,7 @@ type TabId =
   | "contact"
   | "copy"
   | "analytics"
+  | "backup"
   | "messages";
 
 const TABS: { id: TabId; label: string; icon: LucideIcon; keys: CmsSectionKey[]; group: "İçerik" | "Site" | "Gelen Kutusu" }[] = [
@@ -60,6 +63,7 @@ const TABS: { id: TabId; label: string; icon: LucideIcon; keys: CmsSectionKey[];
   { id: "contact", label: "İletişim & Form", icon: Mail, keys: ["contact"], group: "Site" },
   { id: "copy", label: "Bölüm & Sayfa Metinleri", icon: Type, keys: ["sections", "pages"], group: "Site" },
   { id: "analytics", label: "Analitik (GA4)", icon: ChartLine, keys: ["analytics"], group: "Site" },
+  { id: "backup", label: "Yedekleme", icon: ArchiveRestore, keys: [], group: "Site" },
   { id: "messages", label: "Gelen Mesajlar", icon: Inbox, keys: [], group: "Gelen Kutusu" },
 ];
 
@@ -310,6 +314,7 @@ export function AdminDashboard({ initialStore, initialMessages }: { initialStore
               <CopyTab sections={cms.sections} pages={cms.pages} onSections={set("sections")} onPages={set("pages")} />
             )}
             {tab === "analytics" && <AnalyticsTab value={cms.analytics} onChange={set("analytics")} />}
+            {tab === "backup" && <BackupTab isDirty={isDirty} />}
             {tab === "messages" && <MessagesTab messages={messages} onChange={setMessages} />}
           </div>
         </main>

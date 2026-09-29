@@ -152,3 +152,38 @@ export async function readUpload(name: string): Promise<{ data: Buffer; ext: Upl
     return null;
   }
 }
+
+/* ---------- Yedekleme / geri yükleme ---------- */
+
+/** Yükleme klasöründeki, sunucunun ürettiği adlara uyan tüm dosyalar. */
+export async function listUploads(): Promise<{ name: string; data: Buffer }[]> {
+  let names: string[] = [];
+  try {
+    names = (await fs.readdir(UPLOAD_DIR)).filter((n) => UPLOAD_NAME.test(n));
+  } catch {
+    return [];
+  }
+  const files = await Promise.all(
+    names.map(async (name) => ({ name, data: await fs.readFile(path.join(/*turbopackIgnore: true*/ UPLOAD_DIR, name)) })),
+  );
+  return files;
+}
+
+/** Yedekten gelen dosyayı ad biçimi, boyut, imza ve (SVG için) içerik güvenliği açısından doğrular. */
+export function isTrustedUploadContent(name: string, data: Buffer): boolean {
+  if (!UPLOAD_NAME.test(name)) return false;
+  const [kind] = name.split("-") as [UploadKind];
+  const ext = name.split(".").pop() as UploadExt;
+  if (!RULES[kind].exts.includes(ext) || data.length === 0 || data.length > RULES[kind].maxBytes) return false;
+  if (!signatureMatches(ext, data)) return false;
+  return ext !== "svg" || svgProblem(data.toString("utf8")) === null;
+}
+
+/** Doğrulanmış yedek dosyasını aynı adla yazar (var olanın üzerine). */
+export async function writeRestoredUpload(name: string, data: Buffer): Promise<void> {
+  if (!UPLOAD_NAME.test(name)) throw new Error("Geçersiz dosya adı.");
+  await fs.mkdir(UPLOAD_DIR, { recursive: true });
+  const target = path.join(/*turbopackIgnore: true*/ UPLOAD_DIR, name);
+  if (path.dirname(target) !== UPLOAD_DIR) throw new Error("Geçersiz dosya yolu.");
+  await fs.writeFile(target, data, { mode: 0o644 });
+}

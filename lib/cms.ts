@@ -136,7 +136,7 @@ const SECTION_DEFAULTS: Pick<CmsStore, "analytics"> = {
   },
 };
 
-function withDefaults(store: CmsStore): CmsStore {
+export function withDefaults(store: CmsStore): CmsStore {
   return { ...SECTION_DEFAULTS, ...store };
 }
 
@@ -152,6 +152,9 @@ async function readStore(): Promise<CmsStore> {
     throw error;
   }
 }
+
+/** Önbelleksiz, doğrudan diskten okuma (yedekleme gibi işlemler için). */
+export const readCmsFresh = () => readStore();
 
 /** İstek başına tekilleştirilmiş CMS okuması. */
 export const getCms = cache(readStore);

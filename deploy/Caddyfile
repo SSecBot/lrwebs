@@ -3,7 +3,13 @@
 
 {$DOMAIN} {
 	encode zstd gzip
-	request_body {
+	# Genel sınır 12 MB; yedek geri yükleme (/api/admin/restore) için 64 MB.
+	@restore path /api/admin/restore
+	request_body @restore {
+		max_size 64MB
+	}
+	@other not path /api/admin/restore
+	request_body @other {
 		max_size 12MB
 	}
 	reverse_proxy lrwebs:3000
