@@ -91,6 +91,14 @@
 }
 
 @layer components {
+  /* Footer alt satırı: panelden ayarlanan bağlantı renkleri (bağlantıya özel renk > genel renk > tema) */
+  .footer-credit-link {
+    color: var(--fc-link, var(--fc-link-default, var(--color-primary)));
+  }
+  .footer-credit-link:hover {
+    color: var(--fc-link-hover, var(--fc-link, var(--fc-link-default, var(--color-primary))));
+  }
+
   .container-wide {
     width: 100%;
     max-width: 1680px;

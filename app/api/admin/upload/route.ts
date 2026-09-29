@@ -27,6 +27,7 @@ function isSameOrigin(request: Request): boolean {
 /**
  * Yönetim paneli dosya yükleme uç noktası.
  * - kind=privacy|kvkk → PDF (≤10 MB), yasal metin modalında gösterilir.
+ * - kind=image → .png / .jpg / .webp / .svg (≤1 MB), CMS'e dokunmaz; yalnızca adres döner.
  * - kind=favicon → .ico / .png / .svg (≤512 KB), tarayıcı sekmesi ikonu olur.
  * Kimlik doğrulama, köken, boyut, uzantı, MIME ve dosya imzası sunucuda doğrulanır;
  * dosya adı sunucu tarafından üretilir.
@@ -57,6 +58,14 @@ export async function POST(request: Request) {
   if (!checked.ok) return fail(checked.message, checked.status);
 
   const url = await storeUpload(kind, checked.ext, checked.buffer);
+
+  // Genel görsel (ör. footer logosu): adres panelde ilgili alana yazılır, kayıtla birlikte yayına alınır.
+  if (kind === "image") {
+    return NextResponse.json(
+      { ok: true, message: "Görsel yüklendi. Yayına almak için kaydedin.", url },
+      { headers: { "Cache-Control": "no-store" } },
+    );
+  }
 
   let previous = "";
   let store: CmsStore;

@@ -1,12 +1,13 @@
 import { z } from "zod";
 import { isSafeSitePath, isSafeUrl, isValidEmail, sanitizeRichText, sanitizeText } from "@/lib/sanitize";
-import { isSafeIconUrl } from "@/lib/site-identity";
+import { isSafeIconUrl, isSafeImageUrl } from "@/lib/site-identity";
 import { extractMeasurementId } from "@/lib/analytics";
 import { FONT_KEYS } from "@/lib/font-catalog";
 import type {
   AboutSettings,
   AnalyticsSettings,
   TypographySettings,
+  FooterCreditSettings,
   BlogPost,
   CmsSectionKey,
   CmsStore,
@@ -53,6 +54,8 @@ const linkAction = z.object({ label: required(60), href: url() });
 
 const FAVICON_MESSAGE =
   "Sekme ikonu .ico, .png veya .svg uzantılı bir site içi yol (ör. /favicon.svg) ya da https:// adresi olmalıdır.";
+
+const IMAGE_MESSAGE = "Logo .png, .jpg, .webp veya .svg uzantılı bir site içi yol ya da https:// adresi olmalıdır.";
 
 function uniqueBy<T>(key: keyof T, message: string) {
   return (items: T[], ctx: z.RefinementCtx) => {
@@ -387,6 +390,47 @@ export const typographySchema: z.ZodType<TypographySettings> = z.object({
   baseSize: z.enum(["sm", "md", "lg"]),
 });
 
+const hexColor = () =>
+  z
+    .string()
+    .max(7)
+    .refine((v) => v === "" || /^#[0-9a-f]{6}$/i.test(v), "Renk #rrggbb biçiminde olmalıdır.");
+
+export const footerCreditSchema: z.ZodType<FooterCreditSettings> = z.object({
+  enabled: z.boolean(),
+  align: z.enum(["left", "center", "right"]),
+  linkColor: hexColor(),
+  linkHoverColor: hexColor(),
+  segments: z
+    .array(
+      z
+        .object({
+          id: id(),
+          type: z.enum(["text", "link", "logo"]),
+          text: text(200),
+          href: url(),
+          newTab: z.boolean(),
+          color: hexColor(),
+          imageUrl: z
+            .string()
+            .max(300)
+            .transform(sanitizeText)
+            .refine((v) => v === "" || isSafeImageUrl(v), IMAGE_MESSAGE),
+          imageHeight: z.number().int().min(12).max(80),
+        })
+        .superRefine((s, ctx) => {
+          if (s.type !== "logo" && s.text.length === 0)
+            ctx.addIssue({ code: "custom", message: "Metin boş bırakılamaz.", path: ["text"] });
+          if (s.type === "link" && s.href === "")
+            ctx.addIssue({ code: "custom", message: "Bağlantı adresi gerekli.", path: ["href"] });
+          if (s.type === "logo" && s.imageUrl === "")
+            ctx.addIssue({ code: "custom", message: "Logo görseli gerekli.", path: ["imageUrl"] });
+        }),
+    )
+    .max(20)
+    .superRefine(uniqueBy("id", "Parça kimlikleri benzersiz olmalıdır.")),
+});
+
 export const sectionSchemas: { [K in CmsSectionKey]: z.ZodType<CmsStore[K]> } = {
   general: generalSchema,
   contact: contactSchema,
@@ -402,6 +446,7 @@ export const sectionSchemas: { [K in CmsSectionKey]: z.ZodType<CmsStore[K]> } = 
   legal: legalSchema,
   analytics: analyticsSchema,
   typography: typographySchema,
+  footerCredit: footerCreditSchema,
 };
 
 export const cmsStoreSchema: z.ZodType<CmsStore> = z.object({

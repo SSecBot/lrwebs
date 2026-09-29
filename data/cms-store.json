@@ -6,6 +6,44 @@
     "headingWeight": 400,
     "baseSize": "md"
   },
+  "footerCredit": {
+    "enabled": false,
+    "align": "center",
+    "linkColor": "",
+    "linkHoverColor": "",
+    "segments": [
+      {
+        "id": "fc-1",
+        "type": "text",
+        "text": "Bu site",
+        "href": "",
+        "newTab": false,
+        "color": "",
+        "imageUrl": "",
+        "imageHeight": 20
+      },
+      {
+        "id": "fc-2",
+        "type": "link",
+        "text": "LrWebs",
+        "href": "/",
+        "newTab": false,
+        "color": "",
+        "imageUrl": "",
+        "imageHeight": 20
+      },
+      {
+        "id": "fc-3",
+        "type": "text",
+        "text": "tarafından geliştirilmiştir.",
+        "href": "",
+        "newTab": false,
+        "color": "",
+        "imageUrl": "",
+        "imageHeight": 20
+      }
+    ]
+  },
   "analytics": {
     "enabled": false,
     "measurementId": "",
@@ -841,5 +879,5 @@
       "updatedAt": "2026-09-01"
     }
   },
-  "updatedAt": "2026-09-29T21:56:54.893Z"
+  "updatedAt": "2026-09-29T22:29:17.485Z"
 }

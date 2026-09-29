@@ -14,8 +14,8 @@ import path from "node:path";
  *   sıkı başlıklarla (nosniff, SVG için sandbox CSP) sunulur.
  */
 
-export type UploadKind = "privacy" | "kvkk" | "favicon";
-export type UploadExt = "pdf" | "png" | "ico" | "svg";
+export type UploadKind = "privacy" | "kvkk" | "favicon" | "image";
+export type UploadExt = "pdf" | "png" | "ico" | "svg" | "jpg" | "webp";
 
 /**
  * Varsayılan: public/uploads. Docker/PaaS kurulumlarında tek bir kalıcı diskte toplamak için
@@ -29,20 +29,23 @@ export const UPLOAD_DIR = path.resolve(
 );
 
 /** Sunucunun ürettiği dosya adlarının tek biçimi. Yol ayırıcı, "..", boşluk veya null bayt içeremez. */
-export const UPLOAD_NAME = /^(privacy|kvkk|favicon)-\d{10,16}-[a-f0-9]{8}\.(pdf|png|ico|svg)$/;
-export const UPLOAD_URL = /^\/api\/uploads\/((privacy|kvkk|favicon)-\d{10,16}-[a-f0-9]{8}\.(pdf|png|ico|svg))$/;
+export const UPLOAD_NAME = /^(privacy|kvkk|favicon|image)-\d{10,16}-[a-f0-9]{8}\.(pdf|png|ico|svg|jpg|webp)$/;
+export const UPLOAD_URL = /^\/api\/uploads\/((privacy|kvkk|favicon|image)-\d{10,16}-[a-f0-9]{8}\.(pdf|png|ico|svg|jpg|webp))$/;
 
 export const CONTENT_TYPES: Record<UploadExt, string> = {
   pdf: "application/pdf",
   png: "image/png",
   ico: "image/x-icon",
   svg: "image/svg+xml",
+  jpg: "image/jpeg",
+  webp: "image/webp",
 };
 
 const RULES: Record<UploadKind, { exts: UploadExt[]; maxBytes: number; label: string }> = {
   privacy: { exts: ["pdf"], maxBytes: 10 * 1024 * 1024, label: "PDF" },
   kvkk: { exts: ["pdf"], maxBytes: 10 * 1024 * 1024, label: "PDF" },
   favicon: { exts: ["png", "ico", "svg"], maxBytes: 512 * 1024, label: ".ico, .png veya .svg" },
+  image: { exts: ["png", "jpg", "webp", "svg"], maxBytes: 1024 * 1024, label: ".png, .jpg, .webp veya .svg" },
 };
 
 const MIME_BY_EXT: Record<UploadExt, string[]> = {
@@ -50,10 +53,12 @@ const MIME_BY_EXT: Record<UploadExt, string[]> = {
   png: ["image/png"],
   ico: ["image/x-icon", "image/vnd.microsoft.icon", "image/ico", "image/icon"],
   svg: ["image/svg+xml"],
+  jpg: ["image/jpeg", "image/pjpeg"],
+  webp: ["image/webp"],
 };
 
 export function isUploadKind(value: unknown): value is UploadKind {
-  return value === "privacy" || value === "kvkk" || value === "favicon";
+  return value === "privacy" || value === "kvkk" || value === "favicon" || value === "image";
 }
 
 export function maxBytesFor(kind: UploadKind): number {
@@ -90,6 +95,10 @@ function signatureMatches(ext: UploadExt, buffer: Buffer): boolean {
     case "ico":
       // ICONDIR: ayrılmış=0, tür=1 (ikon), görüntü sayısı>0
       return buffer.length >= 6 && buffer.readUInt16LE(0) === 0 && buffer.readUInt16LE(2) === 1 && buffer.readUInt16LE(4) > 0;
+    case "jpg":
+      return buffer.length > 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+    case "webp":
+      return buffer.subarray(0, 4).toString("latin1") === "RIFF" && buffer.subarray(8, 12).toString("latin1") === "WEBP";
     case "svg":
       return true; // metin tabanlı; svgProblem ile ayrıca doğrulanır
   }
@@ -107,7 +116,8 @@ export async function validateUpload(kind: UploadKind, file: File): Promise<Vali
 
   // Yalnızca son uzantıya bakılır; "dosya.pdf.exe" gibi çift uzantılar reddedilir.
   const originalName = String(file.name ?? "").replace(/\0/g, "");
-  const ext = originalName.toLowerCase().split(".").pop() as UploadExt;
+  const rawExt = originalName.toLowerCase().split(".").pop();
+  const ext = (rawExt === "jpeg" ? "jpg" : rawExt) as UploadExt;
   if (!rule.exts.includes(ext)) return { ok: false, message: `Yalnızca ${rule.label} dosyaları yüklenebilir.`, status: 415 };
   if (!MIME_BY_EXT[ext].includes(file.type)) {
     return { ok: false, message: "Dosya türü (MIME) uzantıyla uyuşmuyor.", status: 415 };

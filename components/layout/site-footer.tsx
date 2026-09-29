@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { FooterCredit } from "@/components/layout/footer-credit";
 import { ConsentSettingsButton } from "@/components/layout/google-analytics";
 import { LegalLinks } from "@/components/layout/legal-modal";
 import { SocialIcon } from "@/lib/icons";
@@ -98,6 +99,7 @@ export function SiteFooter({ cms }: { cms: CmsStore }) {
           </div>
         </div>
       </div>
+      <FooterCredit credit={cms.footerCredit} />
     </footer>
   );
 }

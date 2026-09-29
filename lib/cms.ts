@@ -121,8 +121,19 @@ async function writeJsonAtomic(file: string, data: unknown, { backup = false } =
 }
 
 /** Sonradan eklenen bölümler için varsayılanlar (eski veri dosyalarıyla geriye dönük uyum). */
-const SECTION_DEFAULTS: Pick<CmsStore, "analytics" | "typography"> = {
+const SECTION_DEFAULTS: Pick<CmsStore, "analytics" | "typography" | "footerCredit"> = {
   typography: { headingFont: "pacifico", bodyFont: "poppins", brandFont: "pacifico", headingWeight: 400, baseSize: "md" },
+  footerCredit: {
+    enabled: false,
+    align: "center",
+    linkColor: "",
+    linkHoverColor: "",
+    segments: [
+      { id: "fc-1", type: "text", text: "Bu site", href: "", newTab: false, color: "", imageUrl: "", imageHeight: 20 },
+      { id: "fc-2", type: "link", text: "LrWebs", href: "/", newTab: false, color: "", imageUrl: "", imageHeight: 20 },
+      { id: "fc-3", type: "text", text: "tarafından geliştirilmiştir.", href: "", newTab: false, color: "", imageUrl: "", imageHeight: 20 },
+    ],
+  },
   analytics: {
     enabled: false,
     measurementId: "",

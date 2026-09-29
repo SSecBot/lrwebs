@@ -80,6 +80,14 @@ export function SiteHeader({ brandName, navigation, drawerNote, email, phone, so
             href="/"
             className="font-brand text-lg text-fg transition hover:text-primary sm:text-xl"
             aria-label={`${brandName} ana sayfa`}
+            onClick={(e) => {
+              // Zaten ana sayfadaysa gezinme yerine sayfanın başına yumuşakça kaydır.
+              if (pathname !== "/" || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+              e.preventDefault();
+              const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+              window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+              if (window.location.hash) history.replaceState(null, "", "/");
+            }}
           >
             {brandName.slice(0, 2)}
             <span className="text-primary">{brandName.slice(2)}</span>

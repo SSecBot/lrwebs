@@ -310,6 +310,36 @@ export interface TypographySettings {
   baseSize: "sm" | "md" | "lg";
 }
 
+export type FooterSegmentType = "text" | "link" | "logo";
+
+/** Footer satırının bir parçası: düz metin, bağlantılı metin veya bağlantılı logo. */
+export interface FooterSegment {
+  id: string;
+  type: FooterSegmentType;
+  /** Metin (link/metin) ya da logo için alternatif metin. */
+  text: string;
+  /** link ve logo için hedef adres (logo için boş bırakılırsa bağlantısız görsel). */
+  href: string;
+  newTab: boolean;
+  /** Bu bağlantıya özel renk (#rrggbb); boşsa genel bağlantı rengi kullanılır. */
+  color: string;
+  /** Logo görseli: yüklenen dosya (/api/uploads/…), site içi yol veya https:// adresi. */
+  imageUrl: string;
+  /** Logo yüksekliği (px). */
+  imageHeight: number;
+}
+
+/** Footer'ın altındaki serbest, bağlantı içerebilen metin satırı (ör. "Tasarım: [logo]"). */
+export interface FooterCreditSettings {
+  enabled: boolean;
+  align: "left" | "center" | "right";
+  /** Bağlantılı metinlerin rengi (#rrggbb); boşsa temanın vurgu rengi. */
+  linkColor: string;
+  /** Üzerine gelindiğindeki renk; boşsa normal renk korunur ve yalnızca altı çizilir. */
+  linkHoverColor: string;
+  segments: FooterSegment[];
+}
+
 export interface CmsStore {
   general: GeneralSettings;
   contact: ContactSettings;
@@ -325,6 +355,7 @@ export interface CmsStore {
   legal: LegalSettings;
   analytics: AnalyticsSettings;
   typography: TypographySettings;
+  footerCredit: FooterCreditSettings;
   updatedAt: string;
 }
 

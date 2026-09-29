@@ -15,7 +15,7 @@ export interface UploadResponse {
 }
 
 interface FileDropzoneProps {
-  kind: "privacy" | "kvkk" | "favicon";
+  kind: "privacy" | "kvkk" | "favicon" | "image";
   /** input[accept] değeri */
   accept: string;
   /** İstemci tarafı ön kontrol için izin verilen uzantılar (sunucu ayrıca doğrular). */

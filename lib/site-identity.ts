@@ -22,6 +22,20 @@ export function isSafeIconUrl(value: string): boolean {
   }
 }
 
+const IMAGE_EXT = /\.(png|jpe?g|webp|svg)$/i;
+
+/** Footer logosu gibi görseller için güvenli adres: site içi yol veya https://, görsel uzantılı. */
+export function isSafeImageUrl(value: string): boolean {
+  if (typeof value !== "string" || value.length === 0 || value.length > 300) return false;
+  if (isSafeSitePath(value)) return IMAGE_EXT.test(value.split(/[?#]/)[0]);
+  if (!/^https:\/\//i.test(value) || !isSafeUrl(value)) return false;
+  try {
+    return IMAGE_EXT.test(new URL(value).pathname);
+  } catch {
+    return false;
+  }
+}
+
 export function iconMimeType(url: string): string {
   const path = url.split(/[?#]/)[0].toLowerCase();
   if (path.endsWith(".svg")) return "image/svg+xml";
