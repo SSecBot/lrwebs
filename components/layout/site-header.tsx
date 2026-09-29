@@ -78,7 +78,7 @@ export function SiteHeader({ brandName, navigation, drawerNote, email, phone, so
 
           <Link
             href="/"
-            className="font-display text-lg font-normal text-fg transition hover:text-primary sm:text-xl"
+            className="font-brand text-lg text-fg transition hover:text-primary sm:text-xl"
             aria-label={`${brandName} ana sayfa`}
           >
             {brandName.slice(0, 2)}
@@ -113,7 +113,7 @@ export function SiteHeader({ brandName, navigation, drawerNote, email, phone, so
             className="absolute inset-y-0 left-0 flex w-full max-w-[420px] animate-slide-in flex-col border-r border-line bg-surface"
           >
             <div className="flex h-16 items-center justify-between border-b border-line px-5 sm:h-[4.5rem] sm:px-7">
-              <span className="font-display text-lg font-normal">
+              <span className="font-brand text-lg">
                 {brandName.slice(0, 2)}
                 <span className="text-primary">{brandName.slice(2)}</span>
               </span>

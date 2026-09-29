@@ -13,9 +13,10 @@
   --color-warm: #f59e08;
   --color-line: #1e293b;
 
-  /* Gövde ve arayüz: Poppins · Başlıklar: Pacifico · Yalnızca kod: sistem eş aralıklı fontu */
-  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-pacifico), "Brush Script MT", cursive;
+  /* Yazı tipleri yönetim panelinden seçilir (app/layout.tsx → --site-font-*). Yalnızca kod: sistem eş aralıklı fontu. */
+  --font-sans: var(--site-font-body, ui-sans-serif, system-ui, sans-serif);
+  --font-display: var(--site-font-heading, ui-sans-serif, system-ui, sans-serif);
+  --font-brand: var(--site-font-brand, ui-sans-serif, system-ui, sans-serif);
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --animate-marquee: marquee var(--marquee-duration, 60s) linear infinite;
@@ -61,6 +62,7 @@
 
 @layer base {
   html {
+    font-size: var(--site-base-size, 16px);
     color-scheme: dark;
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
@@ -104,6 +106,14 @@
     .container-wide {
       padding-inline: 3.5rem;
     }
+  }
+
+  /* Başlık ve logo kalınlığı panelden gelir; font desteklemiyorsa sunucuda en yakın ağırlığa indirgenir. */
+  .font-display {
+    font-weight: var(--site-heading-weight, 400);
+  }
+  .font-brand {
+    font-weight: var(--site-brand-weight, 400);
   }
 
   .eyebrow {

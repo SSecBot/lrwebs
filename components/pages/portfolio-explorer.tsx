@@ -111,7 +111,7 @@ export function PortfolioExplorer({ projects }: { projects: Project[] }) {
                   <span className="text-primary">{project.category}</span>
                   <span>{project.year}</span>
                 </div>
-                <h2 className="mt-2 font-display text-lg font-normal text-fg">{project.title}</h2>
+                <h2 className="mt-2 font-display text-lg text-fg">{project.title}</h2>
                 <p className="mt-1 text-xs text-muted">{project.client}</p>
                 <p className="mt-3 flex-1 text-sm leading-6 text-muted">{project.summary}</p>
                 <div className="mt-4 flex flex-wrap gap-1.5">

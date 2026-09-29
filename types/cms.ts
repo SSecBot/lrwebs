@@ -296,6 +296,20 @@ export interface AnalyticsSettings {
   };
 }
 
+/** Sitedeki yazı tipleri (anahtarlar lib/font-catalog.ts). */
+export interface TypographySettings {
+  /** Başlıklar (h1–h3, bölüm ve kart başlıkları). */
+  headingFont: string;
+  /** Gövde metni ve tüm arayüz yazıları. */
+  bodyFont: string;
+  /** Header/footer'daki marka logosu. */
+  brandFont: string;
+  /** Başlık kalınlığı; font desteklemiyorsa en yakın ağırlık kullanılır. */
+  headingWeight: 400 | 500 | 600 | 700;
+  /** Temel yazı boyutu: tüm ölçüler buna göre ölçeklenir. */
+  baseSize: "sm" | "md" | "lg";
+}
+
 export interface CmsStore {
   general: GeneralSettings;
   contact: ContactSettings;
@@ -310,6 +324,7 @@ export interface CmsStore {
   about: AboutSettings;
   legal: LegalSettings;
   analytics: AnalyticsSettings;
+  typography: TypographySettings;
   updatedAt: string;
 }
 

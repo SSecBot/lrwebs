@@ -85,7 +85,7 @@ export function Modal({ open, onClose, title, subtitle, children, footer, size =
       >
         <header className="flex items-start justify-between gap-4 border-b border-line px-5 py-4 sm:px-6">
           <div className="min-w-0">
-            <h2 id={titleId} className="font-display text-base font-normal text-fg sm:text-lg">
+            <h2 id={titleId} className="font-display text-base text-fg sm:text-lg">
               {title}
             </h2>
             {subtitle ? <div className="mt-1 text-xs text-muted">{subtitle}</div> : null}

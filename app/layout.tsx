@@ -1,24 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Pacifico, Poppins } from "next/font/google";
 import { ToastProvider } from "@/components/ui/toast";
+import type { CSSProperties } from "react";
 import { getCms } from "@/lib/cms";
+import { BASE_SIZES, effectiveWeight, fontStack } from "@/lib/font-catalog";
+import { fontVariables } from "@/lib/fonts";
 import { iconMimeType, resolveFavicon, resolveTitleTemplate } from "@/lib/site-identity";
 import "./globals.css";
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600"],
-  display: "swap",
-});
-
-// Başlıklar: Pacifico (tek ağırlık, 400). latin-ext Türkçe karakterleri (ğ, ş, ı, İ) kapsar.
-const pacifico = Pacifico({
-  variable: "--font-pacifico",
-  subsets: ["latin", "latin-ext"],
-  weight: "400",
-  display: "swap",
-});
 
 export async function generateMetadata(): Promise<Metadata> {
   const { general } = await getCms();
@@ -70,9 +57,20 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  // Yazı tipleri yönetim panelinden gelir (Yazı Tipleri sekmesi); kayıttan sonra anında uygulanır.
+  const { typography: t } = await getCms();
+  const fontStyle = {
+    "--site-font-body": fontStack(t.bodyFont),
+    "--site-font-heading": fontStack(t.headingFont),
+    "--site-font-brand": fontStack(t.brandFont),
+    "--site-heading-weight": String(effectiveWeight(t.headingFont, t.headingWeight)),
+    "--site-brand-weight": String(effectiveWeight(t.brandFont, 700)),
+    "--site-base-size": `${BASE_SIZES[t.baseSize] ?? 16}px`,
+  } as CSSProperties;
+
   return (
-    <html lang="tr" className={`${poppins.variable} ${pacifico.variable} antialiased`}>
+    <html lang="tr" className={`${fontVariables} antialiased`} style={fontStyle}>
       <body className="min-h-dvh">
         <ToastProvider>{children}</ToastProvider>
       </body>

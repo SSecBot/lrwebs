@@ -35,8 +35,8 @@ export function BlurHeadline({ headline, accent, blur }: BlurHeadlineProps) {
   );
 
   const classes =
-    // Pacifico el yazısı bir fonttur; uzun çıkıntıları kesilmesin diye satır yüksekliği geniş tutulur.
-    "font-display text-[1.9rem] leading-[1.4] font-normal text-fg sm:text-5xl sm:leading-[1.35] lg:text-[2.6rem] xl:text-5xl 2xl:text-6xl";
+    // El yazısı fontların (ör. Pacifico) uzun çıkıntıları kesilmesin diye satır yüksekliği geniş tutulur.
+    "font-display text-[1.9rem] leading-[1.4] text-fg sm:text-5xl sm:leading-[1.35] lg:text-[2.6rem] xl:text-5xl 2xl:text-6xl";
 
   if (!blur.enabled) {
     return <h1 className={classes}>{text}</h1>;

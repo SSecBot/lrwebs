@@ -121,7 +121,8 @@ async function writeJsonAtomic(file: string, data: unknown, { backup = false } =
 }
 
 /** Sonradan eklenen bölümler için varsayılanlar (eski veri dosyalarıyla geriye dönük uyum). */
-const SECTION_DEFAULTS: Pick<CmsStore, "analytics"> = {
+const SECTION_DEFAULTS: Pick<CmsStore, "analytics" | "typography"> = {
+  typography: { headingFont: "pacifico", bodyFont: "poppins", brandFont: "pacifico", headingWeight: 400, baseSize: "md" },
   analytics: {
     enabled: false,
     measurementId: "",

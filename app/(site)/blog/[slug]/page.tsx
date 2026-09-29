@@ -92,7 +92,7 @@ export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">
               {readingTime(post.content)} dk okuma
             </span>
           </div>
-          <h1 className="mt-4 font-display text-3xl leading-snug font-normal text-fg sm:text-4xl lg:text-5xl">{post.title}</h1>
+          <h1 className="mt-4 font-display text-3xl leading-snug text-fg sm:text-4xl lg:text-5xl">{post.title}</h1>
           <p className="mt-5 text-base leading-8 text-muted sm:text-lg">{post.excerpt}</p>
           <p className="mt-6 inline-flex items-center gap-2 text-sm text-fg">
             <UserRound className="h-4 w-4 text-primary" aria-hidden="true" />
@@ -134,7 +134,7 @@ export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">
 
         <div className="card mt-16 flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div>
-            <p className="font-display text-lg font-normal text-fg">Benzer bir proje mi planlıyorsunuz?</p>
+            <p className="font-display text-lg text-fg">Benzer bir proje mi planlıyorsunuz?</p>
             <p className="mt-1 text-sm text-muted">Teknik gereksinimlerinizi birlikte değerlendirelim.</p>
           </div>
           <ButtonLink href="/contact" arrow>
@@ -145,7 +145,7 @@ export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">
 
       {related.length ? (
         <section className="container-wide mt-20" aria-labelledby="related-title">
-          <h2 id="related-title" className="font-display text-xl font-normal text-fg sm:text-2xl">
+          <h2 id="related-title" className="font-display text-xl text-fg sm:text-2xl">
             İlgili yazılar
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:gap-6 xl:grid-cols-3">

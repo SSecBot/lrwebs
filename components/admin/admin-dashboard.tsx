@@ -20,6 +20,7 @@ import {
   ShieldCheck,
   Tags,
   Type,
+  TypeOutline,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -27,6 +28,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { logoutAction, saveSectionsAction } from "@/app/actions/admin";
 import { BackupTab } from "@/components/admin/backup-tab";
+import { TypographyTab } from "@/components/admin/typography-tab";
 import { BlogTab, LegalTab, MessagesTab, PricingTab, ProjectsTab, ServicesTab } from "@/components/admin/tabs-collections";
 import { AboutTab, AnalyticsTab, ContactTab, CopyTab, GeneralTab, HeroTab, StatsTab } from "@/components/admin/tabs-settings";
 import { useToast } from "@/components/ui/toast";
@@ -47,6 +49,7 @@ type TabId =
   | "contact"
   | "copy"
   | "analytics"
+  | "typography"
   | "backup"
   | "messages";
 
@@ -62,6 +65,7 @@ const TABS: { id: TabId; label: string; icon: LucideIcon; keys: CmsSectionKey[];
   { id: "about", label: "Hakkımızda", icon: Users, keys: ["about"], group: "İçerik" },
   { id: "contact", label: "İletişim & Form", icon: Mail, keys: ["contact"], group: "Site" },
   { id: "copy", label: "Bölüm & Sayfa Metinleri", icon: Type, keys: ["sections", "pages"], group: "Site" },
+  { id: "typography", label: "Yazı Tipleri", icon: TypeOutline, keys: ["typography"], group: "Site" },
   { id: "analytics", label: "Analitik (GA4)", icon: ChartLine, keys: ["analytics"], group: "Site" },
   { id: "backup", label: "Yedekleme", icon: ArchiveRestore, keys: [], group: "Site" },
   { id: "messages", label: "Gelen Mesajlar", icon: Inbox, keys: [], group: "Gelen Kutusu" },
@@ -195,7 +199,7 @@ export function AdminDashboard({ initialStore, initialMessages }: { initialStore
       {/* Üst çubuk */}
       <header className="sticky top-0 z-40 border-b border-line bg-deep/90 backdrop-blur">
         <div className="flex h-14 items-center gap-3 px-4 sm:px-6">
-          <span className="font-display text-sm font-normal text-fg">
+          <span className="font-brand text-sm text-fg">
             {saved.general.brandName.slice(0, 2)}
             <span className="text-primary">{saved.general.brandName.slice(2)}</span>
             <span className="ml-2 hidden font-normal text-muted sm:inline">/ Yönetim Paneli</span>
@@ -273,7 +277,7 @@ export function AdminDashboard({ initialStore, initialMessages }: { initialStore
           <div className="mx-auto max-w-6xl">
             <div className="mb-6 flex items-center gap-3">
               <active.icon className="h-5 w-5 text-primary" aria-hidden="true" />
-              <h1 className="font-display text-lg font-normal text-fg sm:text-xl">{active.label}</h1>
+              <h1 className="font-display text-lg text-fg sm:text-xl">{active.label}</h1>
             </div>
 
             {Object.keys(errors).length > 0 ? (
@@ -314,6 +318,7 @@ export function AdminDashboard({ initialStore, initialMessages }: { initialStore
               <CopyTab sections={cms.sections} pages={cms.pages} onSections={set("sections")} onPages={set("pages")} />
             )}
             {tab === "analytics" && <AnalyticsTab value={cms.analytics} onChange={set("analytics")} />}
+            {tab === "typography" && <TypographyTab value={cms.typography} onChange={set("typography")} />}
             {tab === "backup" && <BackupTab isDirty={isDirty} />}
             {tab === "messages" && <MessagesTab messages={messages} onChange={setMessages} />}
           </div>

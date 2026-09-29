@@ -2,9 +2,11 @@ import { z } from "zod";
 import { isSafeSitePath, isSafeUrl, isValidEmail, sanitizeRichText, sanitizeText } from "@/lib/sanitize";
 import { isSafeIconUrl } from "@/lib/site-identity";
 import { extractMeasurementId } from "@/lib/analytics";
+import { FONT_KEYS } from "@/lib/font-catalog";
 import type {
   AboutSettings,
   AnalyticsSettings,
+  TypographySettings,
   BlogPost,
   CmsSectionKey,
   CmsStore,
@@ -375,6 +377,16 @@ export const analyticsSchema: z.ZodType<AnalyticsSettings> = z
     path: ["measurementId"],
   });
 
+const fontKey = () => z.string().refine((v) => FONT_KEYS.includes(v), "Katalogda olmayan yazı tipi.");
+
+export const typographySchema: z.ZodType<TypographySettings> = z.object({
+  headingFont: fontKey(),
+  bodyFont: fontKey(),
+  brandFont: fontKey(),
+  headingWeight: z.union([z.literal(400), z.literal(500), z.literal(600), z.literal(700)]),
+  baseSize: z.enum(["sm", "md", "lg"]),
+});
+
 export const sectionSchemas: { [K in CmsSectionKey]: z.ZodType<CmsStore[K]> } = {
   general: generalSchema,
   contact: contactSchema,
@@ -389,6 +401,7 @@ export const sectionSchemas: { [K in CmsSectionKey]: z.ZodType<CmsStore[K]> } = 
   about: aboutSchema,
   legal: legalSchema,
   analytics: analyticsSchema,
+  typography: typographySchema,
 };
 
 export const cmsStoreSchema: z.ZodType<CmsStore> = z.object({

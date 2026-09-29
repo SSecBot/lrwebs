@@ -74,7 +74,7 @@ export function ServicesExplorer({ services }: { services: Service[] }) {
                 </span>
                 <span className="text-xs text-muted/70">{String(i + 1).padStart(2, "0")}</span>
               </div>
-              <h2 className="mt-6 font-display text-xl font-normal text-fg">{service.title}</h2>
+              <h2 className="mt-6 font-display text-xl text-fg">{service.title}</h2>
               <p className="mt-3 flex-1 text-sm leading-7 text-muted">{service.summary}</p>
               <div className="mt-5 flex flex-wrap gap-1.5">
                 {service.features.map((f) => (

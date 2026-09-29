@@ -23,7 +23,7 @@ export default async function ContactPage() {
 
       <section className="container-wide grid gap-6 lg:grid-cols-[1.6fr_1fr] lg:gap-8">
         <div className="card p-5 sm:p-8 lg:p-10">
-          <h2 className="font-display text-xl font-normal text-fg">Proje talebi</h2>
+          <h2 className="font-display text-xl text-fg">Proje talebi</h2>
           <p className="mt-2 text-sm leading-6 text-muted">
             Tüm alanlar zorunludur. Alanlar siz yazarken doğrulanır; göndermeden önce hataları düzeltebilirsiniz.
           </p>
@@ -57,7 +57,7 @@ export default async function ContactPage() {
 
       {contact.details.length ? (
         <section className="container-wide pt-16" aria-labelledby="ops-title">
-          <h2 id="ops-title" className="font-display text-xl font-normal text-fg sm:text-2xl">
+          <h2 id="ops-title" className="font-display text-xl text-fg sm:text-2xl">
             Operasyonel detaylar
           </h2>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -66,7 +66,7 @@ export default async function ContactPage() {
                 <span className="inline-flex rounded-xl border border-line bg-deep p-2.5">
                   <CmsIcon name={d.icon} className="h-5 w-5 text-primary" />
                 </span>
-                <h3 className="mt-4 font-display text-base font-normal text-fg">{d.title}</h3>
+                <h3 className="mt-4 font-display text-base text-fg">{d.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-muted">{d.description}</p>
               </article>
             ))}

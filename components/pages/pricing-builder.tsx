@@ -62,7 +62,7 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
       {/* Adım 1: Paket seçimi */}
       <div className="mb-4 flex items-center gap-3">
         <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-xs text-primary">01</span>
-        <h2 className="font-display text-lg font-normal text-fg">Temel paketi seçin</h2>
+        <h2 className="font-display text-lg text-fg">Temel paketi seçin</h2>
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" role="radiogroup" aria-label="Temel paket">
         {packages.map((pkg) => {
@@ -96,7 +96,7 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
                 >
                   {active ? <Check className="h-3 w-3 text-deep" /> : null}
                 </span>
-                <h3 className="font-display text-xl font-normal text-fg">{pkg.name}</h3>
+                <h3 className="font-display text-xl text-fg">{pkg.name}</h3>
                 <p className="mt-2 text-sm leading-6 text-muted">{pkg.description}</p>
                 <p className="mt-5 text-lg font-semibold text-fg">
                   {formatPrice(pkg.priceMin, pricing.currency)}
@@ -142,7 +142,7 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-xs text-primary">
                   02
                 </span>
-                <h2 className="font-display text-lg font-normal text-fg">Ek modülleri işaretleyin</h2>
+                <h2 className="font-display text-lg text-fg">Ek modülleri işaretleyin</h2>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 {addons.map((addon) => {
@@ -185,7 +185,7 @@ export function PricingBuilder({ pricing }: { pricing: PricingSettings }) {
               <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-xs text-primary">
                 03
               </span>
-              <h2 className="font-display text-lg font-normal text-fg">Kapsamı ince ayarlayın</h2>
+              <h2 className="font-display text-lg text-fg">Kapsamı ince ayarlayın</h2>
             </div>
             <div className="card space-y-6 p-5 sm:p-6">
               {pricing.maxExtraPages > 0 ? (

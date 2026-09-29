@@ -53,17 +53,13 @@ export function RichText({ content, className, compact = false }: { content: str
         switch (block.type) {
           case "h2":
             return (
-              <h2
-                key={i}
-                id={block.id}
-                className="scroll-mt-28 pt-4 font-display text-lg font-normal text-fg first:pt-0 sm:text-xl"
-              >
+              <h2 key={i} id={block.id} className="scroll-mt-28 pt-4 font-display text-lg text-fg first:pt-0 sm:text-xl">
                 {block.text}
               </h2>
             );
           case "h3":
             return (
-              <h3 key={i} id={block.id} className="scroll-mt-28 pt-2 font-display text-base font-normal text-fg">
+              <h3 key={i} id={block.id} className="scroll-mt-28 pt-2 font-display text-base text-fg">
                 {block.text}
               </h3>
             );

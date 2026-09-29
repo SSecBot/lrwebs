@@ -67,7 +67,7 @@ function StaticPreview({ kind }: { kind: DeviceKind }) {
           <span className="h-[2px] w-3 rounded bg-fg/70" />
           <span className="h-[2px] w-3 rounded bg-fg/70" />
         </div>
-        <span className="font-display text-[8px] font-normal text-fg">
+        <span className="font-brand text-[8px] text-fg">
           Lr<span className="text-primary">Webs</span>
         </span>
         <span className="h-2 w-3" />

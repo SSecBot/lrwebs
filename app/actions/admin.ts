@@ -28,6 +28,7 @@ const SECTION_LABELS: Record<CmsSectionKey, string> = {
   about: "Hakkımızda",
   legal: "Yasal Metinler",
   analytics: "Analitik (GA4)",
+  typography: "Yazı Tipleri",
 };
 
 const isSectionKey = (key: string): key is CmsSectionKey => Object.hasOwn(sectionSchemas, key);

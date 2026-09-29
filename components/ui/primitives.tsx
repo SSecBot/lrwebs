@@ -95,7 +95,7 @@ export function SectionHeading({
         <Tag
           id={id}
           className={cn(
-            "font-display font-normal text-fg",
+            "font-display text-fg",
             Tag === "h1" ? "text-3xl leading-tight sm:text-4xl lg:text-5xl" : "text-2xl leading-snug sm:text-3xl lg:text-4xl",
           )}
         >
@@ -151,7 +151,7 @@ export function CoverImage({ src, alt, label, className }: { src: string; alt: s
           backgroundSize: "24px 24px",
         }}
       />
-      <span className="relative font-display text-2xl font-normal text-primary/80">{label ?? "LrWebs"}</span>
+      <span className="relative font-display text-2xl text-primary/80">{label ?? "LrWebs"}</span>
     </div>
   );
 }

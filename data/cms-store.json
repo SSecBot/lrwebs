@@ -1,4 +1,11 @@
 {
+  "typography": {
+    "headingFont": "pacifico",
+    "bodyFont": "poppins",
+    "brandFont": "pacifico",
+    "headingWeight": 400,
+    "baseSize": "md"
+  },
   "analytics": {
     "enabled": false,
     "measurementId": "",
@@ -834,5 +841,5 @@
       "updatedAt": "2026-09-01"
     }
   },
-  "updatedAt": "2026-09-29T21:47:50.007Z"
+  "updatedAt": "2026-09-29T21:56:54.893Z"
 }

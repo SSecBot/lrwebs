@@ -15,7 +15,7 @@ export function SiteFooter({ cms }: { cms: CmsStore }) {
     <footer className="relative mt-24 border-t border-line bg-deep/80 backdrop-blur">
       <div className="container-wide grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
         <div className="max-w-md space-y-4">
-          <Link href="/" className="font-display text-xl font-normal">
+          <Link href="/" className="font-brand text-xl">
             {general.brandName.slice(0, 2)}
             <span className="text-primary">{general.brandName.slice(2)}</span>
           </Link>
