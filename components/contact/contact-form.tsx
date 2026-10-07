@@ -1,12 +1,14 @@
 "use client";
 
 import { Check, LoaderCircle, Send } from "lucide-react";
-import { useId, useState, useSyncExternalStore, useTransition } from "react";
+import { useEffect, useId, useState, useSyncExternalStore, useTransition } from "react";
 import { submitContact } from "@/app/actions/contact";
+import { checkCoupon } from "@/app/actions/pricing";
 import { QuoteSummary } from "@/components/contact/quote-summary";
 import { useToast } from "@/components/ui/toast";
 import { currencyCode, trackEvent } from "@/lib/analytics";
-import { computeEstimate, normalizeSelection, selectionFromSearch } from "@/lib/pricing";
+import { computeEstimate, normalizeSelection, QUOTE_KEYS, selectionFromSearch, type CouponInfo } from "@/lib/pricing";
+import { useToday } from "@/lib/use-today";
 import { isValidEmail } from "@/lib/sanitize";
 import { cn } from "@/lib/utils";
 import type { ContactSettings, PricingSettings } from "@/types/cms";
@@ -38,24 +40,46 @@ function validate(values: Values): Partial<Record<Field, string>> {
 export function ContactForm({
   form,
   pricing,
+  today: serverToday,
   className,
 }: {
   form: ContactSettings["form"];
   /** Verilirse fiyatlandırma seçimleri formda gösterilir ve mesaja eklenir. */
   pricing?: PricingSettings;
+  /** Sunucuda sayfa üretildiği gün (kampanya tarihleri için). */
+  today: string;
   className?: string;
 }) {
   const toast = useToast();
   const search = useSyncExternalStore(subscribeLocation, getSearch, getServerSearch);
   const [dismissedSearch, setDismissedSearch] = useState<string | null>(null);
   const selection = pricing && search !== dismissedSearch ? normalizeSelection(pricing, selectionFromSearch(search)) : null;
-  const estimate = pricing && selection ? computeEstimate(pricing, selection) : null;
+  const today = useToday(serverToday);
+
+  // Fiyatlandırmada uygulanan kupon (?kupon=) sunucuda yeniden doğrulanır; kodlar sayfada bulunmaz.
+  const couponCode = selection?.coupon ?? "";
+  const [checkedCoupon, setCheckedCoupon] = useState<{ code: string; info: CouponInfo | null } | null>(null);
+  useEffect(() => {
+    if (!couponCode || checkedCoupon?.code === couponCode) return;
+    let cancelled = false;
+    checkCoupon(couponCode)
+      .then((result) => {
+        if (!cancelled) setCheckedCoupon({ code: couponCode, info: result.ok ? result.coupon : null });
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [couponCode, checkedCoupon?.code]);
+  const coupon = checkedCoupon?.code === couponCode ? checkedCoupon.info : null;
+
+  const estimate = pricing && selection ? computeEstimate(pricing, selection, { today, coupon }) : null;
 
   const removeQuote = () => {
     setDismissedSearch(window.location.search);
     // Seçimleri adres çubuğundan da temizle (paylaşılan bağlantıda tekrar görünmesin).
     const url = new URL(window.location.href);
-    for (const key of ["paket", "modul", "sayfa", "oncelik"]) url.searchParams.delete(key);
+    for (const key of Object.values(QUOTE_KEYS)) url.searchParams.delete(key);
     window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
   };
   const uid = useId();
@@ -90,6 +114,7 @@ export function ContactForm({
             quote_package: estimate?.packageName,
             value: estimate?.min,
             currency: estimate && pricing ? currencyCode(pricing.currency) : undefined,
+            discount: estimate?.discount?.name,
           });
           if (estimate) removeQuote();
           toast.success(form.successMessage);

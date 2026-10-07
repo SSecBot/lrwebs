@@ -7,17 +7,19 @@ export function ContactSection({
   copy,
   contact,
   pricing,
+  today,
 }: {
   copy: SectionCopy;
   contact: ContactSettings;
   pricing?: PricingSettings;
+  today: string;
 }) {
   return (
     <section id="iletisim" className="container-wide py-16 sm:py-24" aria-labelledby="contact-title">
       <div className="card grid gap-10 p-5 sm:p-8 lg:grid-cols-[1.5fr_1fr] lg:gap-14 lg:p-12">
         <div>
           <SectionHeading id="contact-title" eyebrow={copy.eyebrow} title={copy.title} description={copy.description} />
-          <ContactForm form={contact.form} pricing={pricing} className="mt-8" />
+          <ContactForm form={contact.form} pricing={pricing} today={today} className="mt-8" />
         </div>
         <aside className="space-y-4 lg:border-l lg:border-line lg:pl-10">
           <ContactChannels contact={contact} />

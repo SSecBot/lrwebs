@@ -4,6 +4,8 @@ import { Calculator, ExternalLink, FileText, Mail, MailOpen, Trash2, Wand2, X } 
 import { useState, useTransition } from "react";
 import { deleteMessageAction, removeLegalPdfAction, setMessageReadAction } from "@/app/actions/admin";
 import { Grid, IconField, NumberField, Panel, SmallButton, TagsField, TextField, Toggle } from "@/components/admin/fields";
+import { formatDiscountAmount } from "@/lib/pricing";
+import { DiscountsPanel } from "@/components/admin/discounts-panel";
 import { FileDropzone } from "@/components/admin/file-dropzone";
 import { ListEditor } from "@/components/admin/list-editor";
 import { MarkdownEditor, SummaryField } from "@/components/admin/markdown-editor";
@@ -456,6 +458,8 @@ export function PricingTab({ value: pricing, onChange }: TabProps<PricingSetting
           )}
         />
       </Panel>
+
+      <DiscountsPanel pricing={pricing} onChange={(v) => set("discounts", v)} />
     </div>
   );
 }
@@ -607,11 +611,26 @@ function QuoteDetails({ quote }: { quote: QuoteSnapshot }) {
             </span>
           </li>
         ))}
+        {quote.discount ? (
+          <li className="flex justify-between gap-4 text-warm">
+            <span>
+              İndirim: {quote.discount.name} ({quote.discount.label}){quote.discount.code ? ` · kod ${quote.discount.code}` : ""}
+            </span>
+            <span className="font-mono">{formatDiscountAmount(quote.discount.min, quote.discount.max, quote.currency)}</span>
+          </li>
+        ) : null}
       </ul>
       <p className="mt-3 flex justify-between gap-4 border-t border-line pt-3 text-sm">
         <span className="text-muted">Tahmini bütçe</span>
-        <span className="font-semibold text-fg">
-          {price(quote.min)} – {price(quote.max)}
+        <span className="text-right">
+          {quote.discount && quote.originalMin !== undefined && quote.originalMax !== undefined ? (
+            <span className="mr-2 text-xs text-muted line-through decoration-muted/70">
+              {price(quote.originalMin)} – {price(quote.originalMax)}
+            </span>
+          ) : null}
+          <span className="font-semibold text-fg">
+            {price(quote.min)} – {price(quote.max)}
+          </span>
         </span>
       </p>
     </div>

@@ -1,4 +1,4 @@
-import { Calculator, Timer, X } from "lucide-react";
+import { Calculator, Tag, Timer, X } from "lucide-react";
 import type { QuoteEstimate } from "@/lib/pricing";
 import { formatPrice } from "@/lib/utils";
 
@@ -51,6 +51,18 @@ export function QuoteSummary({
             </li>
           ))}
         </ul>
+      ) : null}
+
+      {estimate.discount ? (
+        <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-warm">
+          <Tag className="h-3.5 w-3.5" aria-hidden="true" />
+          {estimate.discount.name} ({estimate.discount.label}
+          {estimate.discount.code ? ` · ${estimate.discount.code}` : ""}) uygulandı
+          <span className="text-muted line-through decoration-muted/70">
+            <span className="sr-only">İndirimsiz: </span>
+            {formatPrice(estimate.originalMin, currency)} – {formatPrice(estimate.originalMax, currency)}
+          </span>
+        </p>
       ) : null}
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 text-xs">

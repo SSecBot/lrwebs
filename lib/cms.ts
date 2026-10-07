@@ -160,7 +160,8 @@ const SECTION_DEFAULTS: Pick<CmsStore, "analytics" | "typography" | "footerCredi
 export function withDefaults(store: CmsStore): CmsStore {
   // Nesne bölümlerinde eksik alanlar da doldurulur (ör. eski GA4 ayarları → dahili analitik).
   const analytics = { ...SECTION_DEFAULTS.analytics, ...pick(store.analytics, Object.keys(SECTION_DEFAULTS.analytics)) };
-  return { ...SECTION_DEFAULTS, ...store, analytics };
+  const pricing = store.pricing && !Array.isArray(store.pricing.discounts) ? { ...store.pricing, discounts: [] } : store.pricing;
+  return { ...SECTION_DEFAULTS, ...store, analytics, pricing };
 }
 
 async function readStore(): Promise<CmsStore> {

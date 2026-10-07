@@ -13,6 +13,7 @@ export const EVENT_LABELS: Record<string, string> = {
   generate_lead: "İletişim formu gönderildi",
   pricing_quote_request: "Fiyat teklifi istendi",
   pricing_package_select: "Fiyat paketi seçildi",
+  pricing_coupon_apply: "İndirim kodu uygulandı",
 };
 
 export type EventProps = Record<string, string | number | boolean | undefined>;

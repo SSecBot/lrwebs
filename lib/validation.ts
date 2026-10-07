@@ -49,6 +49,12 @@ const isoDate = () =>
     .max(40)
     .refine((v) => !Number.isNaN(new Date(v).getTime()), "Geçersiz tarih.");
 
+const dayString = () =>
+  z
+    .string()
+    .max(10)
+    .refine((v) => v === "" || (/^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(`${v}T00:00:00Z`))), "Geçersiz tarih.");
+
 const linkAction = z.object({ label: required(60), href: url() });
 
 const FAVICON_MESSAGE =
@@ -320,6 +326,48 @@ export const pricingSchema: z.ZodType<PricingSettings> = z.object({
     )
     .max(30)
     .superRefine(uniqueBy("id", "Modül kimlikleri benzersiz olmalıdır.")),
+  discounts: z
+    .array(
+      z
+        .object({
+          id: id(),
+          name: required(60),
+          enabled: z.boolean(),
+          type: z.enum(["percent", "fixed"]),
+          value: z.number().finite().positive("İndirim değeri 0'dan büyük olmalıdır.").max(100_000_000),
+          appliesTo: z.enum(["package", "total"]),
+          packageIds: z.array(id()).max(8),
+          code: z
+            .string()
+            .max(30)
+            .transform((v) => v.trim().toUpperCase())
+            .refine(
+              (v) => v === "" || /^[A-Z0-9_-]{3,30}$/.test(v),
+              "Kod 3–30 karakter; yalnızca harf, rakam, - ve _ içerebilir.",
+            ),
+          startsAt: dayString(),
+          endsAt: dayString(),
+        })
+        .refine((d) => d.type !== "percent" || d.value <= 90, {
+          message: "Yüzde indirim en fazla %90 olabilir.",
+          path: ["value"],
+        })
+        .refine((d) => !d.startsAt || !d.endsAt || d.endsAt >= d.startsAt, {
+          message: "Bitiş tarihi başlangıçtan önce olamaz.",
+          path: ["endsAt"],
+        }),
+    )
+    .max(30)
+    .superRefine(uniqueBy("id", "İndirim kimlikleri benzersiz olmalıdır."))
+    .superRefine((list, ctx) => {
+      const seen = new Set<string>();
+      list.forEach((d, i) => {
+        if (!d.code) return;
+        if (seen.has(d.code))
+          ctx.addIssue({ code: "custom", message: "Bu kupon kodu başka bir indirimde kullanılıyor.", path: [i, "code"] });
+        seen.add(d.code);
+      });
+    }),
 });
 
 export const aboutSchema: z.ZodType<AboutSettings> = z.object({

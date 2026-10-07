@@ -3,7 +3,7 @@
 import { randomUUID } from "node:crypto";
 import { clientIp, rateLimit } from "@/lib/auth";
 import { addMessage, getCms } from "@/lib/cms";
-import { buildQuoteSnapshot, normalizeSelection, type QuoteSelection } from "@/lib/pricing";
+import { buildQuoteSnapshot, findCoupon, normalizeSelection, todayKey, type QuoteSelection } from "@/lib/pricing";
 import { contactMessageSchema, flattenIssues } from "@/lib/validation";
 import type { ActionResult } from "@/types/cms";
 
@@ -48,7 +48,10 @@ export async function submitContact(input: ContactInput): Promise<ActionResult> 
   if (input.quote) {
     const { pricing } = await getCms();
     const selection = normalizeSelection(pricing, input.quote);
-    quote = selection ? (buildQuoteSnapshot(pricing, selection) ?? undefined) : undefined;
+    const today = todayKey();
+    // Kupon sunucuda yeniden doğrulanır; geçersiz/süresi dolmuş kod sessizce yok sayılır.
+    const coupon = selection?.coupon ? findCoupon(pricing, selection.coupon, today) : null;
+    quote = selection ? (buildQuoteSnapshot(pricing, selection, { today, coupon }) ?? undefined) : undefined;
   }
 
   await addMessage({

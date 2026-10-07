@@ -221,6 +221,34 @@ export interface PricingAddon {
   visible: boolean;
 }
 
+/**
+ * Fiyatlandırma indirimi.
+ * - Kod boşsa "kampanya": koşulları sağlayan herkese otomatik uygulanır ve sitede gösterilir.
+ * - Kod doluysa "kupon": yalnızca kodu giren ziyaretçiye uygulanır; kod sayfa kaynağında yer almaz.
+ * Aynı anda yalnızca bir indirim uygulanır: ziyaretçi için en avantajlı olan.
+ */
+export interface PricingDiscount {
+  id: string;
+  /** Sitede ve teklif özetinde görünen ad (ör. "Yaz kampanyası"). */
+  name: string;
+  enabled: boolean;
+  type: "percent" | "fixed";
+  /** Yüzde (1–90) veya tutar. */
+  value: number;
+  /** "package": yalnızca paket fiyatına, "total": paket + modüller + ek sayfalara uygulanır. */
+  appliesTo: "package" | "total";
+  /** Geçerli olduğu paketler; boşsa tüm paketler. */
+  packageIds: string[];
+  /** Kupon kodu (büyük harf); boşsa otomatik kampanya. */
+  code: string;
+  /** Geçerlilik başlangıcı / bitişi (YYYY-MM-DD, iki gün dahil); boşsa sınırsız. */
+  startsAt: string;
+  endsAt: string;
+}
+
+/** İstemciye gönderilebilen indirim (kupon kodu çıkarılmış). */
+export type PublicDiscount = Omit<PricingDiscount, "code"> & { coupon: boolean };
+
 export interface PricingSettings {
   currency: string;
   builderTitle: string;
@@ -235,6 +263,7 @@ export interface PricingSettings {
   summaryCtaHref: string;
   packages: PricingPackage[];
   addons: PricingAddon[];
+  discounts: PricingDiscount[];
 }
 
 export interface ValueItem {
@@ -376,6 +405,10 @@ export interface QuoteSnapshot {
   min: number;
   max: number;
   currency: string;
+  /** Uygulanan indirim (varsa) ve indirimsiz tutar. */
+  discount?: { name: string; label: string; code?: string; min: number; max: number };
+  originalMin?: number;
+  originalMax?: number;
 }
 
 export interface ContactMessage {

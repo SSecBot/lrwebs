@@ -2,6 +2,10 @@ import { ContactSection } from "@/components/home/contact-section";
 import { HeroSection } from "@/components/home/hero-section";
 import { AboutSummary, BlogGrid, ProjectsCarousel, ServicesPreview, StatsSection } from "@/components/home/sections";
 import { getCms } from "@/lib/cms";
+import { publicPricing, todayKey } from "@/lib/pricing";
+
+// Tarihli kampanyaların zamanında görünmesi/kalkması için saatte bir yeniden üretilir.
+export const revalidate = 3600;
 
 export default async function HomePage() {
   const cms = await getCms();
@@ -37,7 +41,7 @@ export default async function HomePage() {
       <AboutSummary copy={cms.sections.about} about={cms.about} />
       <ProjectsCarousel copy={cms.sections.projects} projects={projects} />
       <BlogGrid copy={cms.sections.blog} posts={posts} />
-      <ContactSection copy={cms.sections.contact} contact={cms.contact} pricing={cms.pricing} />
+      <ContactSection copy={cms.sections.contact} contact={cms.contact} pricing={publicPricing(cms.pricing)} today={todayKey()} />
     </>
   );
 }

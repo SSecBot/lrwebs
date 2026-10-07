@@ -3,6 +3,10 @@ import { ContactForm } from "@/components/contact/contact-form";
 import { BusinessHours, ContactChannels } from "@/components/contact/contact-info";
 import { PageHeader } from "@/components/ui/primitives";
 import { getCms } from "@/lib/cms";
+import { publicPricing, todayKey } from "@/lib/pricing";
+
+// Tarihli kampanyaların zamanında görünmesi/kalkması için saatte bir yeniden üretilir.
+export const revalidate = 3600;
 import { CmsIcon, SocialIcon } from "@/lib/icons";
 import { pageMetadata } from "@/lib/seo";
 import { safeHref } from "@/lib/utils";
@@ -27,7 +31,7 @@ export default async function ContactPage() {
           <p className="mt-2 text-sm leading-6 text-muted">
             Tüm alanlar zorunludur. Alanlar siz yazarken doğrulanır; göndermeden önce hataları düzeltebilirsiniz.
           </p>
-          <ContactForm form={contact.form} pricing={cms.pricing} className="mt-8" />
+          <ContactForm form={contact.form} pricing={publicPricing(cms.pricing)} today={todayKey()} className="mt-8" />
         </div>
 
         <aside className="space-y-4">
