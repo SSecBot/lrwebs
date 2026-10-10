@@ -16,8 +16,8 @@ export function InteractiveBackground() {
     if (!canvas || !ctx) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const SPACING = 30;
-    const RADIUS = 150;
+    const SPACING = 32;
+    const RADIUS = 130;
     let width = 0;
     let height = 0;
     let dpr = 1;
@@ -48,16 +48,16 @@ export function InteractiveBackground() {
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (pointer.active && dist < RADIUS) {
             const t = 1 - dist / RADIUS;
-            const push = t * t * 6;
+            const push = t * t * 3;
             const nx = x + (dx / (dist || 1)) * push;
             const ny = y + (dy / (dist || 1)) * push;
-            ctx.fillStyle = `rgba(6, 182, 212, ${0.18 + t * 0.62})`;
+            ctx.fillStyle = `rgba(6, 182, 212, ${0.12 + t * 0.33})`;
             ctx.beginPath();
-            ctx.arc(nx, ny, 1 + t * 1.1, 0, Math.PI * 2);
+            ctx.arc(nx, ny, 0.8 + t * 0.6, 0, Math.PI * 2);
             ctx.fill();
           } else {
-            ctx.fillStyle = "rgba(148, 163, 184, 0.13)";
-            ctx.fillRect(x - 0.6, y - 0.6, 1.2, 1.2);
+            ctx.fillStyle = "rgba(148, 163, 184, 0.08)";
+            ctx.fillRect(x - 0.5, y - 0.5, 1, 1);
           }
         }
       }

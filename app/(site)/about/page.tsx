@@ -50,10 +50,8 @@ export default async function AboutPage() {
         </h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {about.values.map((value) => (
-            <article key={value.id} className="card card-hover p-6">
-              <span className="inline-flex rounded-xl border border-line bg-deep p-2.5">
-                <CmsIcon name={value.icon} className="h-5 w-5 text-primary" />
-              </span>
+            <article key={value.id} className="card p-6">
+              <CmsIcon name={value.icon} className="h-5 w-5 text-primary" />
               <h3 className="mt-5 font-display text-base text-fg">{value.title}</h3>
               <p className="mt-2 text-sm leading-6 text-muted">{value.description}</p>
             </article>
@@ -66,14 +64,13 @@ export default async function AboutPage() {
         <h2 id="stack-title" className="font-display text-2xl text-fg sm:text-3xl">
           {about.stackTitle}
         </h2>
-        <div className="mt-8 grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-8 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 xl:grid-cols-4">
           {about.techStack.map((group) => (
-            <div key={group.id} className="bg-surface/90 p-6 backdrop-blur">
-              <p className="eyebrow mb-4">{group.category}</p>
+            <div key={group.id} className="bg-deep p-6">
+              <p className="mb-4 text-xs font-medium text-muted">{group.category}</p>
               <ul className="space-y-2.5">
                 {group.items.map((item) => (
-                  <li key={item} className="flex items-center gap-3 text-sm text-fg">
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
+                  <li key={item} className="text-sm text-fg">
                     {item}
                   </li>
                 ))}
@@ -91,7 +88,7 @@ export default async function AboutPage() {
         <ol className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {about.process.map((step, i) => (
             <li key={step.id} className="card relative p-6">
-              <span className="text-4xl font-semibold text-line">{String(i + 1).padStart(2, "0")}</span>
+              <span className="font-mono text-xs text-primary">{String(i + 1).padStart(2, "0")}</span>
               <h3 className="mt-3 font-display text-base text-fg">{step.title}</h3>
               <p className="mt-2 text-sm leading-6 text-muted">{step.description}</p>
               {i < about.process.length - 1 ? (

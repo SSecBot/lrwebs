@@ -9,14 +9,12 @@ export function ContactChannels({ contact }: { contact: ContactSettings }) {
   ].filter(Boolean) as { icon: typeof Mail; label: string; value: string; href: string }[];
 
   return (
-    <ul className="space-y-3">
+    <ul className="divide-y divide-line rounded-xl border border-line">
       {items.map(({ icon: Icon, label, value, href }) => (
-        <li key={label} className="flex items-start gap-4 rounded-xl border border-line bg-deep/50 p-4">
-          <span className="rounded-lg border border-line bg-surface p-2">
-            <Icon className="h-4 w-4 text-primary" aria-hidden="true" />
-          </span>
+        <li key={label} className="flex items-start gap-3.5 px-4 py-3.5">
+          <Icon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
           <div className="min-w-0">
-            <p className="text-[11px] tracking-wider text-muted uppercase">{label}</p>
+            <p className="text-xs text-muted">{label}</p>
             {href ? (
               <a href={href} className="mt-0.5 block break-words text-sm text-fg transition hover:text-primary">
                 {value}
@@ -34,10 +32,10 @@ export function ContactChannels({ contact }: { contact: ContactSettings }) {
 export function BusinessHours({ contact }: { contact: ContactSettings }) {
   if (contact.businessHours.length === 0) return null;
   return (
-    <div className="rounded-xl border border-line bg-deep/50 p-4">
-      <p className="mb-3 flex items-center gap-2 text-[11px] tracking-wider text-muted uppercase">
+    <div className="rounded-xl border border-line p-4">
+      <p className="mb-3 flex items-center gap-2 text-xs text-muted">
         <Clock className="h-3.5 w-3.5 text-warm" aria-hidden="true" />
-        Çalışma Saatleri
+        Çalışma saatleri
       </p>
       <dl className="space-y-2 text-sm">
         {contact.businessHours.map((h) => (

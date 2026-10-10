@@ -157,11 +157,23 @@ const SECTION_DEFAULTS: Pick<CmsStore, "analytics" | "typography" | "footerCredi
   },
 };
 
+/**
+ * Yayındaki gerçek adres: SITE_URL ortam değişkeni tanımlıysa her zaman o kullanılır.
+ * Böylece yerelde alınmış bir yedek geri yüklense bile sitemap, canonical ve paylaşım
+ * önizlemeleri "localhost" adresine dönmez.
+ */
+function siteUrlFromEnv(): string | null {
+  const value = process.env.SITE_URL?.trim().replace(/\/+$/, "");
+  return value && /^https?:\/\/[^\s/?#]+$/i.test(value) ? value : null;
+}
+
 export function withDefaults(store: CmsStore): CmsStore {
   // Nesne bölümlerinde eksik alanlar da doldurulur (ör. eski GA4 ayarları → dahili analitik).
   const analytics = { ...SECTION_DEFAULTS.analytics, ...pick(store.analytics, Object.keys(SECTION_DEFAULTS.analytics)) };
   const pricing = store.pricing && !Array.isArray(store.pricing.discounts) ? { ...store.pricing, discounts: [] } : store.pricing;
-  return { ...SECTION_DEFAULTS, ...store, analytics, pricing };
+  const envUrl = siteUrlFromEnv();
+  const general = envUrl && store.general ? { ...store.general, siteUrl: envUrl } : store.general;
+  return { ...SECTION_DEFAULTS, ...store, analytics, pricing, general };
 }
 
 async function readStore(): Promise<CmsStore> {

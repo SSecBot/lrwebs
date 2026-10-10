@@ -210,11 +210,7 @@ export function DeviceShowcase({ devices }: { devices: HeroSettings["devices"] }
 
       {devices.showLabels ? (
         <div className="mt-6 flex flex-col items-center gap-3">
-          <div
-            className="inline-flex rounded-xl border border-line bg-surface/70 p-1 backdrop-blur"
-            role="tablist"
-            aria-label="Cihaz görünümü"
-          >
+          <div className="inline-flex rounded-lg border border-line bg-deep p-1" role="tablist" aria-label="Cihaz görünümü">
             {DEVICES.map((kind) => {
               const Icon = ICON[kind];
               const active = order[0] === kind;

@@ -66,21 +66,16 @@ export function ServicesExplorer({ services }: { services: Service[] }) {
         <p className="card p-10 text-center text-sm text-muted">Aramanızla eşleşen bir hizmet bulunamadı.</p>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
-          {filtered.map((service, i) => (
+          {filtered.map((service) => (
             <article key={service.id} id={service.slug} className="card card-hover flex scroll-mt-28 flex-col p-6 sm:p-8">
-              <div className="flex items-start justify-between gap-4">
-                <span className="rounded-xl border border-line bg-deep p-3">
-                  <CmsIcon name={service.icon} className="h-6 w-6 text-primary" />
-                </span>
-                <span className="text-xs text-muted/70">{String(i + 1).padStart(2, "0")}</span>
-              </div>
-              <h2 className="mt-6 font-display text-xl text-fg">{service.title}</h2>
+              <CmsIcon name={service.icon} className="h-6 w-6 text-primary" />
+              <h2 className="mt-5 font-display text-xl text-fg">{service.title}</h2>
               <p className="mt-3 flex-1 text-sm leading-7 text-muted">{service.summary}</p>
-              <div className="mt-5 flex flex-wrap gap-1.5">
+              <p className="meta-list mt-5">
                 {service.features.map((f) => (
-                  <Tag key={f}>{f}</Tag>
+                  <span key={f}>{f}</span>
                 ))}
-              </div>
+              </p>
               <div className="mt-6 flex items-center justify-between border-t border-line pt-5">
                 <span className="inline-flex items-center gap-1.5 text-xs text-muted">
                   <Clock className="h-3.5 w-3.5 text-warm" aria-hidden="true" />

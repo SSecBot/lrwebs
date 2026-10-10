@@ -212,9 +212,21 @@ export function trafficSource(referrer: string, utmSource: string, ownHost: stri
 
 let lastCleanup = 0;
 
+/** Günlük dosya üst sınırı: kötü niyetli yoğun istekler diski dolduramaz (~250 bin kayıt). */
+const MAX_DAY_BYTES = 50 * 1024 * 1024;
+const fullDays = new Set<string>();
+
 export async function appendRecord(record: AnalyticsRecord): Promise<void> {
+  const day = dayKey(record.t);
+  if (fullDays.has(day)) return;
   await fs.mkdir(ANALYTICS_DIR, { recursive: true });
-  const file = path.join(/*turbopackIgnore: true*/ ANALYTICS_DIR, `${dayKey(record.t)}.ndjson`);
+  const file = path.join(/*turbopackIgnore: true*/ ANALYTICS_DIR, `${day}.ndjson`);
+  const size = (await fs.stat(file).catch(() => null))?.size ?? 0;
+  if (size >= MAX_DAY_BYTES) {
+    fullDays.add(day);
+    console.warn(`[analytics] ${day} günlük kayıt sınırına ulaştı; bu gün için yeni kayıt alınmıyor.`);
+    return;
+  }
   // Tek satırlık O_APPEND yazmaları eşzamanlı isteklerde birbirine karışmaz.
   await fs.appendFile(file, `${JSON.stringify(record)}\n`, { mode: 0o600 });
 }
@@ -244,6 +256,7 @@ export async function clearAnalytics(): Promise<number> {
   const files = await listDayFiles();
   await Promise.all(files.map((n) => fs.rm(path.join(/*turbopackIgnore: true*/ ANALYTICS_DIR, n), { force: true })));
   parsedCache.clear();
+  fullDays.clear();
   return files.length;
 }
 

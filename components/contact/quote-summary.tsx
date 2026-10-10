@@ -46,7 +46,7 @@ export function QuoteSummary({
       {extras.length ? (
         <ul className="mt-3 flex flex-wrap gap-1.5">
           {extras.map((e) => (
-            <li key={e} className="rounded-md border border-line bg-deep/60 px-2 py-0.5 text-[11px] text-fg/90">
+            <li key={e} className="rounded bg-fg/[0.05] px-2 py-0.5 text-[11px] text-fg/90">
               {e}
             </li>
           ))}

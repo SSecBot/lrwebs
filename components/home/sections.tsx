@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Clock } from "lucide-react";
-import { ButtonLink, CoverImage, SectionHeading, SmartLink, Tag } from "@/components/ui/primitives";
+import { ButtonLink, CoverImage, SectionHeading, SmartLink } from "@/components/ui/primitives";
 import { CmsIcon } from "@/lib/icons";
 import { formatDate, readingTime, safeHref } from "@/lib/utils";
 import type { AboutSettings, BlogPost, Project, SectionCopy, Service, StatsSettings } from "@/types/cms";
@@ -28,20 +28,18 @@ export function StatsSection({ stats }: { stats: StatsSettings }) {
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:gap-6">
-        {stats.items.map((item, i) => (
-          <article key={item.id} className="card card-hover group relative overflow-hidden p-6 sm:p-8 lg:p-10">
+        {stats.items.map((item) => (
+          <article key={item.id} className="card group relative overflow-hidden p-6 sm:p-8 lg:p-10">
             <div className="flex items-start justify-between gap-6">
               <div>
-                <p className="text-5xl font-bold tracking-tight text-fg sm:text-6xl lg:text-7xl">
+                <p className="text-5xl font-semibold tracking-tight text-fg tabular-nums sm:text-6xl lg:text-7xl">
                   {item.value}
-                  <span className={i === 0 ? "text-primary" : "text-warm"}>{item.suffix}</span>
+                  <span className="text-primary">{item.suffix}</span>
                 </p>
                 <h3 className="mt-4 text-lg font-semibold text-fg">{item.label}</h3>
                 <p className="mt-2 max-w-md text-sm leading-6 text-muted">{item.description}</p>
               </div>
-              <span className="rounded-xl border border-line bg-deep p-3">
-                <CmsIcon name={item.icon} className={i === 0 ? "h-6 w-6 text-primary" : "h-6 w-6 text-warm"} />
-              </span>
+              <CmsIcon name={item.icon} className="mt-2 h-6 w-6 shrink-0 text-muted/70" />
             </div>
           </article>
         ))}
@@ -63,22 +61,17 @@ export function ServicesPreview({ copy, services }: { copy: SectionCopy; service
         action={<SectionLink copy={copy} />}
       />
       <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        {services.map((service, i) => (
+        {services.map((service) => (
           <Link key={service.id} href={`/services#${service.slug}`} className="card card-hover group flex flex-col p-6 lg:p-7">
-            <div className="flex items-center justify-between">
-              <span className="rounded-xl border border-line bg-deep p-2.5">
-                <CmsIcon name={service.icon} className="h-5 w-5 text-primary" />
-              </span>
-              <span className="text-xs text-muted/70">{String(i + 1).padStart(2, "0")}</span>
-            </div>
-            <h3 className="mt-6 font-display text-lg text-fg">{service.title}</h3>
+            <CmsIcon name={service.icon} className="h-5 w-5 text-primary" />
+            <h3 className="mt-5 font-display text-lg text-fg">{service.title}</h3>
             <p className="mt-3 flex-1 text-sm leading-6 text-muted">{service.summary}</p>
-            <div className="mt-5 flex flex-wrap gap-1.5">
+            <p className="meta-list mt-5">
               {service.features.slice(0, 3).map((f) => (
-                <Tag key={f}>{f}</Tag>
+                <span key={f}>{f}</span>
               ))}
-            </div>
-            <span className="mt-6 inline-flex items-center gap-1.5 text-sm text-primary">
+            </p>
+            <span className="mt-6 inline-flex items-center gap-1.5 text-sm text-fg/80 transition-colors group-hover:text-primary">
               Detayları incele
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
             </span>
@@ -142,9 +135,7 @@ function ProjectCard({ project, hidden = false }: { project: Project; hidden?: b
           label={project.title.slice(0, 2)}
           className="transition duration-500 group-hover:scale-[1.03]"
         />
-        <span className="absolute top-3 left-3 rounded-md border border-line bg-deep/80 px-2 py-0.5 text-[11px] text-fg backdrop-blur">
-          {project.category}
-        </span>
+        <span className="absolute top-3 left-3 rounded bg-deep/90 px-2 py-0.5 text-[11px] text-fg">{project.category}</span>
       </div>
       <div className="flex flex-1 flex-col p-5">
         <div className="flex items-center justify-between gap-3 text-xs text-muted">
@@ -153,11 +144,11 @@ function ProjectCard({ project, hidden = false }: { project: Project; hidden?: b
         </div>
         <h3 className="mt-2 font-display text-base text-fg">{project.title}</h3>
         <p className="mt-2 line-clamp-2 flex-1 text-sm leading-6 text-muted">{project.summary}</p>
-        <div className="mt-4 flex flex-wrap gap-1.5">
+        <p className="meta-list mt-4">
           {project.tags.slice(0, 3).map((t) => (
-            <Tag key={t}>{t}</Tag>
+            <span key={t}>{t}</span>
           ))}
-        </div>
+        </p>
         <div className="mt-5 flex items-center justify-between border-t border-line pt-4 text-sm">
           <Link
             href={`/portfolio?proje=${project.slug}`}
@@ -241,7 +232,7 @@ export function BlogCard({ post, priority = false }: { post: BlogPost; priority?
           {post.title}
         </h3>
         <p className="mt-2 line-clamp-3 flex-1 text-sm leading-6 text-muted">{post.excerpt}</p>
-        <span className="mt-5 inline-flex items-center gap-1.5 text-sm text-primary">
+        <span className="mt-5 inline-flex items-center gap-1.5 text-sm text-fg/80 transition-colors group-hover:text-primary">
           Yazıyı oku
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
         </span>

@@ -67,9 +67,7 @@ export default async function ContactPage() {
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {contact.details.map((d) => (
               <article key={d.id} className="card p-6">
-                <span className="inline-flex rounded-xl border border-line bg-deep p-2.5">
-                  <CmsIcon name={d.icon} className="h-5 w-5 text-primary" />
-                </span>
+                <CmsIcon name={d.icon} className="h-5 w-5 text-primary" />
                 <h3 className="mt-4 font-display text-base text-fg">{d.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-muted">{d.description}</p>
               </article>

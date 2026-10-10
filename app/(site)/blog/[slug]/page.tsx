@@ -7,6 +7,7 @@ import { ReadingProgress } from "@/components/pages/reading-progress";
 import { RichText } from "@/components/rich-text";
 import { ButtonLink, CoverImage, Tag } from "@/components/ui/primitives";
 import { getCms } from "@/lib/cms";
+import { serializeJsonLd } from "@/lib/seo";
 import { extractHeadings } from "@/lib/markdown";
 import { formatDate, readingTime } from "@/lib/utils";
 
@@ -74,7 +75,7 @@ export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">
   return (
     <>
       <ReadingProgress />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
       <article className="container-wide pt-28 sm:pt-36">
         <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-muted transition hover:text-fg">
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
@@ -100,7 +101,7 @@ export default async function BlogPostPage({ params }: PageProps<"/blog/[slug]">
           </p>
         </header>
 
-        <div className="mt-10 aspect-[21/9] overflow-hidden rounded-2xl border border-line">
+        <div className="mt-10 aspect-[21/9] overflow-hidden rounded-xl border border-line">
           <CoverImage src={post.coverImage} alt={post.title} label={post.category} />
         </div>
 

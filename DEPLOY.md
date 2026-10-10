@@ -54,7 +54,7 @@ nano .env
 ```
 
 - `DOMAIN` — alan adınız (ör. `lrwebs.com`)
-- `SITE_URL` — `https://lrwebs.com`
+- `SITE_URL` — `https://lrwebs.com` (tanımlıysa paneldeki "Site adresi"nin yerine her zaman bu kullanılır; sitemap, canonical ve paylaşım önizlemeleri bu adresle üretilir)
 - `ADMIN_PASSCODE` — **en az 12 karakter**; zayıf parolayla konteyner başlamaz
 - `ADMIN_SESSION_SECRET` — şu komutun çıktısı:
 

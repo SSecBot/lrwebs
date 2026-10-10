@@ -84,7 +84,14 @@ export async function POST(request: Request) {
 
   const ip = await clientIp();
   const limiterKey = createHash("sha256").update(`${ip}|${ua}`).digest("hex").slice(0, 24);
-  if (!rateLimit(`analytics:${limiterKey}`, 120, 60_000)) return new Response(null, { status: 429 });
+  // Tarayıcı başına, IP başına (tarayıcı kimliğini değiştirerek sınırı aşmaya karşı) ve toplam sınır.
+  if (
+    !rateLimit(`analytics:${limiterKey}`, 120, 60_000) ||
+    !rateLimit(`analytics-ip:${ip}`, 600, 60_000) ||
+    !rateLimit("analytics:global", 6000, 60_000)
+  ) {
+    return new Response(null, { status: 429 });
+  }
 
   let raw: string;
   try {

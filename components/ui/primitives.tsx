@@ -7,9 +7,9 @@ type Variant = "primary" | "secondary" | "ghost";
 
 export const buttonStyles = (variant: Variant = "primary", className?: string) =>
   cn(
-    "group inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition duration-200 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50",
+    "group inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-medium transition-colors duration-200 disabled:pointer-events-none disabled:opacity-50",
     variant === "primary" && "bg-primary text-deep hover:bg-[#22c3de]",
-    variant === "secondary" && "border border-line bg-surface/60 text-fg backdrop-blur hover:border-primary/60",
+    variant === "secondary" && "border border-line text-fg hover:border-muted/60 hover:bg-surface",
     variant === "ghost" && "px-0 py-0 text-primary hover:text-fg",
     className,
   );
@@ -110,12 +110,7 @@ export function SectionHeading({
 
 export function Tag({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <span
-      className={cn(
-        "inline-flex items-center rounded-md border border-line bg-deep/60 px-2 py-0.5 text-[11px] text-muted",
-        className,
-      )}
-    >
+    <span className={cn("inline-flex items-center rounded px-2 py-0.5 text-[11px] text-muted bg-fg/[0.05]", className)}>
       {children}
     </span>
   );
@@ -148,7 +143,7 @@ export function CoverImage({ src, alt, label, className }: { src: string; alt: s
         className="absolute inset-0 opacity-40"
         style={{
           backgroundImage: "linear-gradient(#1e293b 1px, transparent 1px), linear-gradient(90deg, #1e293b 1px, transparent 1px)",
-          backgroundSize: "24px 24px",
+          backgroundSize: "32px 32px",
         }}
       />
       <span className="relative font-display text-2xl text-primary/80">{label ?? "LrWebs"}</span>

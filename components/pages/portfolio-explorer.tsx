@@ -67,7 +67,7 @@ export function PortfolioExplorer({ projects }: { projects: Project[] }) {
           ))}
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="mr-1 text-[11px] tracking-wider text-muted uppercase">Etiket:</span>
+          <span className="mr-1 text-xs text-muted">Etiket:</span>
           {tags.map((t) => (
             <button
               key={t}
@@ -114,11 +114,11 @@ export function PortfolioExplorer({ projects }: { projects: Project[] }) {
                 <h2 className="mt-2 font-display text-lg text-fg">{project.title}</h2>
                 <p className="mt-1 text-xs text-muted">{project.client}</p>
                 <p className="mt-3 flex-1 text-sm leading-6 text-muted">{project.summary}</p>
-                <div className="mt-4 flex flex-wrap gap-1.5">
+                <p className="meta-list mt-4">
                   {project.tags.map((t) => (
-                    <Tag key={t}>{t}</Tag>
+                    <span key={t}>{t}</span>
                   ))}
-                </div>
+                </p>
                 <div className="mt-5 flex items-center justify-between border-t border-line pt-4 text-sm">
                   <button type="button" onClick={() => setProject(project.slug)} className="text-muted transition hover:text-fg">
                     Vaka detayı

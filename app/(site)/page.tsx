@@ -3,6 +3,7 @@ import { HeroSection } from "@/components/home/hero-section";
 import { AboutSummary, BlogGrid, ProjectsCarousel, ServicesPreview, StatsSection } from "@/components/home/sections";
 import { getCms } from "@/lib/cms";
 import { publicPricing, todayKey } from "@/lib/pricing";
+import { serializeJsonLd } from "@/lib/seo";
 
 // Tarihli kampanyaların zamanında görünmesi/kalkması için saatte bir yeniden üretilir.
 export const revalidate = 3600;
@@ -30,11 +31,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        // JSON.stringify çıktısındaki "<" karakterleri kaçışlanarak script enjeksiyonu engellenir.
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\u003c") }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
       <HeroSection hero={cms.hero} />
       <StatsSection stats={cms.stats} />
       <ServicesPreview copy={cms.sections.services} services={services} />

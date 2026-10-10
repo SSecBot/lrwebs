@@ -69,7 +69,7 @@ export function BlogExplorer({ posts }: { posts: BlogPost[] }) {
       </div>
 
       <div className="mb-10 flex flex-wrap items-center gap-1.5">
-        <span className="mr-1 text-[11px] tracking-wider text-muted uppercase">Etiket:</span>
+        <span className="mr-1 text-xs text-muted">Etiket:</span>
         {tags.map((t) => (
           <button
             key={t}

@@ -144,7 +144,7 @@ export function PricingBuilder({ pricing, today: serverToday }: { pricing: Prici
 
       {/* Adım 1: Paket seçimi */}
       <div className="mb-4 flex items-center gap-3">
-        <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-xs text-primary">01</span>
+        <span className="font-mono text-xs text-primary">01</span>
         <h2 className="font-display text-lg text-fg">Temel paketi seçin</h2>
       </div>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3" role="radiogroup" aria-label="Temel paket">
@@ -164,19 +164,17 @@ export function PricingBuilder({ pricing, today: serverToday }: { pricing: Prici
                 role="radio"
                 aria-checked={active}
                 onClick={() => setPackageId(pkg.id)}
-                className="flex flex-1 flex-col rounded-2xl p-6 text-left sm:p-7"
+                className="flex flex-1 flex-col rounded-xl p-6 text-left sm:p-7"
               >
                 {pkg.highlighted || offer ? (
                   <span className="absolute top-5 right-5 flex flex-col items-end gap-1">
                     {offer ? (
-                      <span className="rounded-md bg-warm px-2 py-0.5 text-[10px] font-semibold tracking-wider text-deep uppercase">
+                      <span className="rounded bg-warm px-2 py-0.5 text-[11px] font-semibold text-deep">
                         {offer.discount.label} indirim
                       </span>
                     ) : null}
                     {pkg.highlighted ? (
-                      <span className="rounded-md bg-warm/10 px-2 py-0.5 text-[10px] tracking-wider text-warm uppercase">
-                        Önerilen
-                      </span>
+                      <span className="rounded bg-warm/10 px-2 py-0.5 text-[11px] font-medium text-warm">Önerilen</span>
                     ) : null}
                   </span>
                 ) : null}
@@ -245,9 +243,7 @@ export function PricingBuilder({ pricing, today: serverToday }: { pricing: Prici
           {addons.length ? (
             <div>
               <div className="mb-4 flex items-center gap-3">
-                <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-xs text-primary">
-                  02
-                </span>
+                <span className="font-mono text-xs text-primary">02</span>
                 <h2 className="font-display text-lg text-fg">Ek modülleri işaretleyin</h2>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -288,9 +284,7 @@ export function PricingBuilder({ pricing, today: serverToday }: { pricing: Prici
           {/* Adım 3: Kapsam ayarları */}
           <div>
             <div className="mb-4 flex items-center gap-3">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-line text-xs text-primary">
-                03
-              </span>
+              <span className="font-mono text-xs text-primary">03</span>
               <h2 className="font-display text-lg text-fg">Kapsamı ince ayarlayın</h2>
             </div>
             <div className="card space-y-6 p-5 sm:p-6">
